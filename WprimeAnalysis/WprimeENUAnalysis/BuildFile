@@ -1,0 +1,30 @@
+<use name=root>
+<use name=FWCore/Framework>
+<use name=FWCore/PluginManager>
+<use name=FWCore/ParameterSet>
+<use name=FWCore/ServiceRegistry>
+<use name=DataFormats/Math>
+<use name=DataFormats/EgammaCandidates>
+<use name=Geometry/CaloGeometry>
+<use name=PhysicsTools/UtilAlgos>
+<use name=RecoEgamma/EgammaIsolationAlgos>
+<use name=PhysicsTools/RecoAlgos>
+<use name=PhysicsTools/PatUtils>
+<use name=DataFormats/PatCandidates>
+<flags EDM_PLUGIN=1>
+<export>
+#   <lib name=WprimeAnalysisWprimeENUAnalysis>
+   <use name=root>
+   <use name=FWCore/Framework>
+   <use name=FWCore/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <use name=FWCore/ServiceRegistry>
+   <use name=DataFormats/Math>
+   <use name=DataFormats/EgammaCandidates>
+   <use name=Geometry/CaloGeometry>
+   <use name=PhysicsTools/UtilAlgos>
+   <use name=RecoEgamma/EgammaIsolationAlgos>
+   <use name=PhysicsTools/RecoAlgos>
+   <use name=PhysicsTools/PatUtils>
+   <use name=DataFormats/PatCandidates>
+</export>
