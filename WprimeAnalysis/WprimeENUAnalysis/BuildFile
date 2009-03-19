@@ -11,6 +11,11 @@
 <use name=PhysicsTools/RecoAlgos>
 <use name=PhysicsTools/PatUtils>
 <use name=DataFormats/PatCandidates>
+<use name=DataFormats/L1GlobalTrigger>
+<use name=DataFormats/L1GlobalMuonTrigger>
+<use name=DataFormats/L1GlobalCaloTrigger>
+<use name=CondFormats/L1TObjects>
+<use name=CondFormats/DataRecord>
 <flags EDM_PLUGIN=1>
 <export>
 #   <lib name=WprimeAnalysisWprimeENUAnalysis>
@@ -26,5 +31,9 @@
    <use name=RecoEgamma/EgammaIsolationAlgos>
    <use name=PhysicsTools/RecoAlgos>
    <use name=PhysicsTools/PatUtils>
-   <use name=DataFormats/PatCandidates>
+   <use name=DataFormats/L1GlobalTrigger>
+   <use name=DataFormats/L1GlobalMuonTrigger>
+   <use name=DataFormats/L1GlobalCaloTrigger>
+   <use name=CondFormats/L1TObjects>
+   <use name=CondFormats/DataRecord>
 </export>
