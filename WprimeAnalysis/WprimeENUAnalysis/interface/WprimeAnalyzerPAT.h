@@ -8,6 +8,7 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 
+#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -42,6 +43,7 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
       edm::InputTag metLabel_ ;
       edm::InputTag jetLabel_ ;
       edm::InputTag hlTriggerResults_ ;
+      edm::InputTag L1GlobalTrigger_  ;
       std::string electronID_;
       edm::InputTag  TrkIsolationProducer_ ;
       edm::InputTag  EcalIsolationProducer_ ;
@@ -74,7 +76,7 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
       std::vector<double> * MCelePz_;
       std::vector<double> * MCeleEta_;
       std::vector<double> * MCelePhi_;
-      std::vector<int> * MCelePid_;
+      std::vector<int>    * MCelePid_;
 
       int NeleCand_;
       std::vector<int>  * isMCmatched_;
@@ -93,10 +95,10 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
       std::vector<double> * eleHcalIsolD2_;
 
 
-      double met_;
-      double mex_;
-      double mey_;
-      double metPhi_;
+      double Met_;
+      double Mex_;
+      double Mey_;
+      double MetPhi_;
 
       double uncorrMet_;
       double uncorrMex_;
@@ -111,11 +113,19 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
       std::vector<double> * jetEta_;
       std::vector<double> * jetPhi_;
 
+
+
+
+      int L1SingleEG10_;
+      int L1SingleEG12_;
+      int L1SingleEG15_;
+
+      int HLTEle15_;
       int HLTLooseIsoEle15_;
       int HLT_EM80_        ;
       int HLT_EM200_       ;
-      int HLT_Photon15_       ;
-      int HLT_Photon25_       ;
+      int HLTPhoton15_       ;
+      int HLTPhoton25_       ;
 
 
 };

@@ -52,7 +52,14 @@
 
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "FWCore/Framework/interface/TriggerNames.h"
-#include "DataFormats/Common/interface/View.h"
+
+#include "CondFormats/L1TObjects/interface/L1GtTriggerMenu.h"
+#include "CondFormats/DataRecord/interface/L1GtTriggerMenuRcd.h"
+#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
+#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetup.h"
+#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "L1Trigger/GlobalTriggerAnalyzer/interface/L1GtUtils.h"
 
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
@@ -74,8 +81,9 @@ WprimeAnalyzerPAT::WprimeAnalyzerPAT(const edm::ParameterSet& iConfig)
   eleLabel_      = iConfig.getParameter<edm::InputTag>("electronTag");
   metLabel_      = iConfig.getParameter<edm::InputTag>("metTag");
   jetLabel_      = iConfig.getParameter<edm::InputTag>("jetTag");
-  hlTriggerResults_   = iConfig.getParameter<edm::InputTag>("TriggerResults");
 
+  hlTriggerResults_   = iConfig.getParameter<edm::InputTag>("TriggerResults");
+  
   electronID_         = iConfig.getUntrackedParameter<std::string>("electronID") ;
 
   
@@ -158,10 +166,10 @@ WprimeAnalyzerPAT::beginJob(const edm::EventSetup&)
   tTreeUtilities_->Branch("eleHcalIsolD1_","std::vector<double>",&eleHcalIsolD1_);
   tTreeUtilities_->Branch("eleHcalIsolD2_","std::vector<double>",&eleHcalIsolD2_);
   
-  tTreeUtilities_->Branch("met_",&met_,"met_/D");
-  tTreeUtilities_->Branch("mex_",&mex_,"mex_/D");
-  tTreeUtilities_->Branch("mey_",&mey_,"mey_/D");
-  tTreeUtilities_->Branch("metPhi_",&metPhi_,"metPhi_/D");
+  tTreeUtilities_->Branch("Met_",&Met_,"Met_/D");
+  tTreeUtilities_->Branch("Mex_",&Mex_,"Mex_/D");
+  tTreeUtilities_->Branch("Mey_",&Mey_,"Mey_/D");
+  tTreeUtilities_->Branch("MetPhi_",&MetPhi_,"MetPhi_/D");
 
   tTreeUtilities_->Branch("uncorrMet_",&uncorrMet_,"uncorrMet_/D");
   tTreeUtilities_->Branch("uncorrMex_",&uncorrMex_,"uncorrMex_/D");
@@ -176,11 +184,15 @@ WprimeAnalyzerPAT::beginJob(const edm::EventSetup&)
   tTreeUtilities_->Branch("jetEta_","std::vector<double>",&jetEta_);
   tTreeUtilities_->Branch("jetPhi_","std::vector<double>",&jetPhi_);
 
+  tTreeUtilities_->Branch("L1SingleEG10_",&L1SingleEG10_,"L1SingleEG10_/I");			  
+  tTreeUtilities_->Branch("L1SingleEG12_",&L1SingleEG12_,"L1SingleEG12_/I");			  
+  tTreeUtilities_->Branch("L1SingleEG15_",&L1SingleEG15_,"L1SingleEG15_/I");			  
   tTreeUtilities_->Branch("HLTLooseIsoEle15_",&HLTLooseIsoEle15_,"HLTLooseIsoEle15_/I");			  
+  tTreeUtilities_->Branch("HLTEle15_",&HLTEle15_,"HLTEle15_/I");			  
   tTreeUtilities_->Branch("HLT_EM80_",&HLT_EM80_,"HLT_EM80_/I");			  
   tTreeUtilities_->Branch("HLT_EM200_",&HLT_EM200_,"HLT_EM200_/I");			  
-  tTreeUtilities_->Branch("HLT_Photon15_",&HLT_Photon15_,"HLT_Photon15_/I");
-  tTreeUtilities_->Branch("HLT_Photon25_",&HLT_Photon25_,"HLT_Photon25_/I");
+  tTreeUtilities_->Branch("HLTPhoton15_",&HLTPhoton15_,"HLTPhoton15_/I");
+  tTreeUtilities_->Branch("HLTPhoton25_",&HLTPhoton25_,"HLTPhoton25_/I");
 			  
 
 }
@@ -217,10 +229,10 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   eleHcalIsolD1_->clear();
   eleHcalIsolD2_->clear();
 
-  met_    = 0 ;
-  mex_    = 0 ;
-  mey_    = 0 ;
-  metPhi_ = 0;
+  Met_    = 0 ;
+  Mex_    = 0 ;
+  Mey_    = 0 ;
+  MetPhi_ = 0;
 
   uncorrMet_    = 0 ;
   uncorrMex_    = 0 ;
@@ -235,12 +247,15 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   jetEta_ ->clear(); 
   jetPhi_ ->clear(); 
 
-
+  L1SingleEG10_     = 0;
+  L1SingleEG12_     = 0;
+  L1SingleEG15_     = 0;
   HLTLooseIsoEle15_ = 0;
+  HLTEle15_         = 0; 
+  HLTPhoton15_      = 0;
+  HLTPhoton25_      = 0;
   HLT_EM80_         = 0;
   HLT_EM200_        = 0;
-  HLT_Photon15_     = 0;
-  HLT_Photon25_     = 0;
 
   // Read in electrons
   Handle<View<pat::Electron> > electronHandle;
@@ -290,11 +305,13 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
     eleCharge_ ->push_back( electron.gsfTrack()->charge() );
     
     eleId_ ->push_back( electron.electronID(electronID_));
-
+    
     // need to add isolations
  
-    
-    
+    eleTrkIsol_   ->push_back( electron.trackIso());
+    eleEcalIsol_  ->push_back( electron.ecalIso());
+    eleHcalIsolD1_->push_back( electron.userIso(0));
+    eleHcalIsolD2_->push_back( electron.userIso(1));
     
   }// end loop over electron candidates
 
@@ -307,10 +324,10 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   for ( unsigned int i=0; i<mets.size(); ++i ) {
     pat::MET met = mets.at(i);
     // corrected MET
-    met_ = met.et();
-    mex_ = met.px();
-    mey_ = met.py();
-    metPhi_ = met.phi(); 
+    Met_ = met.et();
+    Mex_ = met.px();
+    Mey_ = met.py();
+    MetPhi_ = met.phi(); 
 
     // Uncorrected MET
     uncorrMet_ = met.uncorrectedPt(pat::MET::uncorrALL);
@@ -337,6 +354,20 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   }
   
   
+  //**********L1 INFO
+  edm::ESHandle<L1GtTriggerMenu> menuRcd;
+  iSetup.get<L1GtTriggerMenuRcd>().get(menuRcd) ;
+  const L1GtTriggerMenu* menu = menuRcd.product();
+
+  edm::Handle< L1GlobalTriggerReadoutRecord > gtRecord;
+  iEvent.getByLabel( edm::InputTag("gtDigis"), gtRecord);
+  const DecisionWord dWord = gtRecord->decisionWord();  // this will get the decision word *before* masking disabled bits
+
+  if ( menu->gtAlgorithmResult( "L1_SingleEG10", dWord) ) L1SingleEG10_ = 1;
+  if ( menu->gtAlgorithmResult( "L1_SingleEG12", dWord) ) L1SingleEG12_ = 1;
+  if ( menu->gtAlgorithmResult( "L1_SingleEG15", dWord) ) L1SingleEG15_ = 1;
+
+
   //********** HLT INFO 
   edm::TriggerNames triggerNames_;
   Handle<TriggerResults> hltresults;
@@ -352,11 +383,12 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
       const unsigned int n(hlNames_.size());
       for (unsigned int i = 0; i < n; ++i)
 	{
+	  if(hlNames_[i]=="HLT_Ele15_LW_L1R" && hltresults->accept(i)) HLTEle15_ = 1;
 	  if(hlNames_[i]=="HLT_LooseIsoEle15_LW_L1R" && hltresults->accept(i)) HLTLooseIsoEle15_ = 1;
 	  if(hlNames_[i]=="HLT_EM80" && hltresults->accept(i)) HLT_EM80_ = 1;
 	  if(hlNames_[i]=="HLT_EM200" && hltresults->accept(i)) HLT_EM200_ = 1;
-	  if(hlNames_[i]=="HLT_Photon15_L1R" && hltresults->accept(i)) HLT_Photon15_ = 1;
-	  if(hlNames_[i]=="HLT_Photon25_L1R" && hltresults->accept(i)) HLT_Photon25_ = 1;	  
+	  if(hlNames_[i]=="HLT_Photon15_L1R" && hltresults->accept(i)) HLTPhoton15_ = 1;
+	  if(hlNames_[i]=="HLT_Photon25_L1R" && hltresults->accept(i)) HLTPhoton25_ = 1;	  
 	}
     }
 
