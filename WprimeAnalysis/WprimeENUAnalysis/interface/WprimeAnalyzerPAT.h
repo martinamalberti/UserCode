@@ -42,9 +42,11 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
       edm::InputTag eleLabel_ ;
       edm::InputTag metLabel_ ;
       edm::InputTag jetLabel_ ;
+      edm::InputTag muonLabel_ ;
       edm::InputTag hlTriggerResults_ ;
       edm::InputTag L1GlobalTrigger_  ;
       std::string electronID_;
+      std::string btagAlgo_;
       edm::InputTag  TrkIsolationProducer_ ;
       edm::InputTag  EcalIsolationProducer_ ;
       edm::InputTag  HcalIsolationProducerDepth1_ ;
@@ -71,61 +73,74 @@ class WprimeAnalyzerPAT : public edm::EDAnalyzer {
 
       TTree * tTreeUtilities_;
 
-      std::vector<double> * MCelePx_;
-      std::vector<double> * MCelePy_;
-      std::vector<double> * MCelePz_;
-      std::vector<double> * MCeleEta_;
-      std::vector<double> * MCelePhi_;
-      std::vector<int>    * MCelePid_;
+      std::vector<double> * MCelePx;
+      std::vector<double> * MCelePy;
+      std::vector<double> * MCelePz;
+      std::vector<double> * MCeleEta;
+      std::vector<double> * MCelePhi;
+      std::vector<int>    * MCelePid;
 
-      int NeleCand_;
-      std::vector<int>  * isMCmatched_;
-      std::vector<double> * elePx_;
-      std::vector<double> * elePy_;
-      std::vector<double> * elePz_;
-      std::vector<double> * eleE_;
-      std::vector<double> * eleEt_;
-      std::vector<double> * eleEta_;
-      std::vector<double> * elePhi_;
-      std::vector<float>  * eleCharge_;
-      std::vector<float>  * eleId_;
-      std::vector<double> * eleTrkIsol_;
-      std::vector<double> * eleEcalIsol_;
-      std::vector<double> * eleHcalIsolD1_;
-      std::vector<double> * eleHcalIsolD2_;
+      std::vector<double> * MCmuonPx;
+      std::vector<double> * MCmuonPy;
+      std::vector<double> * MCmuonPz;
+      std::vector<double> * MCmuonEta;
+      std::vector<double> * MCmuonPhi;
+      std::vector<int>    * MCmuonPid;
 
+      int NeleCand;
+      std::vector<int>  * isMCmatched;
+      std::vector<double> * elePx;
+      std::vector<double> * elePy;
+      std::vector<double> * elePz;
+      std::vector<double> * eleE;
+      std::vector<double> * eleEt;
+      std::vector<double> * eleEta;
+      std::vector<double> * elePhi;
+      std::vector<double>  * eleCharge;
+      std::vector<double>  * eleId;
+      std::vector<double>  * eleSigmaIEtaIEta;
+      std::vector<double>  * eleE1x5;
+      std::vector<double>  * eleE2x5;
+      std::vector<double>  * eleE5x5;
 
-      double Met_;
-      double Mex_;
-      double Mey_;
-      double MetPhi_;
-
-      double uncorrMet_;
-      double uncorrMex_;
-      double uncorrMey_;
-      double uncorrMetPhi_;
-
-      int Njets_;
-      std::vector<double> * jetPx_;
-      std::vector<double> * jetPy_;
-      std::vector<double> * jetPz_;
-      std::vector<double> * jetPt_;
-      std::vector<double> * jetEta_;
-      std::vector<double> * jetPhi_;
+      std::vector<double> * eleTrkIsol;
+      std::vector<double> * eleEcalIsol;
+      std::vector<double> * eleHcalIsolD1;
+      std::vector<double> * eleHcalIsolD2;
 
 
+      double Met;
+      double Mex;
+      double Mey;
+      double MetPhi;
+
+      double uncorrMet;
+      double uncorrMex;
+      double uncorrMey;
+      double uncorrMetPhi;
+
+      int Njets;
+      std::vector<double> * jetPx;
+      std::vector<double> * jetPy;
+      std::vector<double> * jetPz;
+      std::vector<double> * jetPt;
+      std::vector<double> * jetEta;
+      std::vector<double> * jetPhi;
+      std::vector<double> * jetBdisc;
 
 
-      int L1SingleEG10_;
-      int L1SingleEG12_;
-      int L1SingleEG15_;
+      std::vector<double> * muonPt;
+      std::vector<double> * muonEta;
+      std::vector<double> * muonPhi;
 
-      int HLTEle15_;
-      int HLTLooseIsoEle15_;
-      int HLT_EM80_        ;
-      int HLT_EM200_       ;
-      int HLTPhoton15_       ;
-      int HLTPhoton25_       ;
+      int HLTEle15;
+      int HLTEle10;  
+      int HLTEle20;
+
+      int HLTLooseIsoEle15; 
+    
+      int HLTPhoton15;
+      int HLTPhoton25;
 
 
 };
