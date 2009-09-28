@@ -47,22 +47,21 @@
 
 #include <Math/GenVector/VectorUtil.h>
 #include "DataFormats/GeometryVector/interface/VectorUtil.h"
-#include "PhysicsTools/Utilities/interface/deltaR.h"
+
 #include <CLHEP/Vector/LorentzVector.h>
 
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "FWCore/Framework/interface/TriggerNames.h"
 
-#include "CondFormats/L1TObjects/interface/L1GtTriggerMenu.h"
-#include "CondFormats/DataRecord/interface/L1GtTriggerMenuRcd.h"
-#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetupFwd.h"
-#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutSetup.h"
-#include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
 #include "FWCore/Framework/interface/ESHandle.h"
-#include "L1Trigger/GlobalTriggerAnalyzer/interface/L1GtUtils.h"
 
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+#include "DataFormats/RecoCandidate/interface/IsoDeposit.h"
+
+#include "DataFormats/MuonReco/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonFwd.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 
 #include "WprimeAnalysis/WprimeENUAnalysis/interface/WprimeAnalyzerPAT.h"
 
@@ -70,8 +69,12 @@
 #define PI 3.141592654
 #define TWOPI 6.283185308
 
+
+
+using namespace cms;
 using namespace edm;
 using namespace std;
+using namespace reco;
 
 
 
@@ -81,12 +84,13 @@ WprimeAnalyzerPAT::WprimeAnalyzerPAT(const edm::ParameterSet& iConfig)
   eleLabel_      = iConfig.getParameter<edm::InputTag>("electronTag");
   metLabel_      = iConfig.getParameter<edm::InputTag>("metTag");
   jetLabel_      = iConfig.getParameter<edm::InputTag>("jetTag");
+  muonLabel_     = iConfig.getParameter<edm::InputTag>("muonTag");
 
   hlTriggerResults_   = iConfig.getParameter<edm::InputTag>("TriggerResults");
   
   electronID_         = iConfig.getUntrackedParameter<std::string>("electronID") ;
-
-  
+  btagAlgo_           = iConfig.getUntrackedParameter<std::string>("btagAlgo") ;
+   
   EvtCounter = 0 ;
 
 }
@@ -114,85 +118,120 @@ WprimeAnalyzerPAT::beginJob(const edm::EventSetup&)
 
   //---- Tree creation ----
   tTreeUtilities_ = fs->make<TTree>("tTreeUtilities","tTreeUtilities");
-  MCelePx_  = new std::vector<double>; // MCtruth
-  MCelePy_  = new std::vector<double>; // MCtruth
-  MCelePz_  = new std::vector<double>; // MCtruth
-  MCeleEta_ = new std::vector<double>;    // MCtruth
-  MCelePhi_ = new std::vector<double>;    // MCtruth
-  MCelePid_ = new std::vector<int>;    // MCtruth
+ 
+  MCelePx    = new std::vector<double>; // MCtruth
+  MCelePy    = new std::vector<double>; // MCtruth
+  MCelePz    = new std::vector<double>; // MCtruth
+  MCeleEta   = new std::vector<double>;    // MCtruth
+  MCelePhi   = new std::vector<double>;    // MCtruth
+  MCelePid   = new std::vector<int>;    // MCtruth
   
-  isMCmatched_  = new std::vector<int>; // MC truth matching 
-  elePx_  = new std::vector<double>; // track momentum 
-  elePy_  = new std::vector<double>; // track momentum 
-  elePz_  = new std::vector<double>; // track momentum 
-  eleE_ = new std::vector<double>;    // SC energy
-  eleEt_ = new std::vector<double>;   // SC transverse energy
-  eleEta_ = new std::vector<double>;  // SC pseudorapidity
-  elePhi_ = new std::vector<double>;  // SC phi
-  eleCharge_ = new std::vector<float>;  // electron charge
-  eleId_ = new std::vector<float>;      // electron ID
-  eleTrkIsol_ = new std::vector<double>; // track isolation
-  eleEcalIsol_ = new std::vector<double>; // ecal isolation
-  eleHcalIsolD1_ = new std::vector<double>; // hcal isolation
-  eleHcalIsolD2_ = new std::vector<double>; // hcal isolation
+  MCmuonPx   = new std::vector<double>; // MCtruth
+  MCmuonPy   = new std::vector<double>; // MCtruth
+  MCmuonPz   = new std::vector<double>; // MCtruth
+  MCmuonEta  = new std::vector<double>;    // MCtruth
+  MCmuonPhi  = new std::vector<double>;    // MCtruth
+  MCmuonPid  = new std::vector<int>;    // MCtruth
 
-  jetPx_  = new std::vector<double>; // 
-  jetPy_  = new std::vector<double>; // 
-  jetPz_  = new std::vector<double>; // 
-  jetPt_  = new std::vector<double>; // 
-  jetEta_  = new std::vector<double>; // 
-  jetPhi_  = new std::vector<double>; // 
+  isMCmatched = new std::vector<int>; // MC truth matching 
+  elePx       = new std::vector<double>; // track momentum 
+  elePy       = new std::vector<double>; // track momentum 
+  elePz       = new std::vector<double>; // track momentum 
+  eleE        = new std::vector<double>;    // SC energy
+  eleEt       = new std::vector<double>;   // SC transverse energy
+  eleEta      = new std::vector<double>;  // ele pseudorapidity
+  elePhi      = new std::vector<double>;  // ele phi
+  eleCharge   = new std::vector<double>;  // electron charge
+  eleId       = new std::vector<double>;      // electron ID
 
-  tTreeUtilities_->Branch("MCelePx_","std::vector<double>",&MCelePx_);
-  tTreeUtilities_->Branch("MCelePy_","std::vector<double>",&MCelePy_);
-  tTreeUtilities_->Branch("MCelePz_","std::vector<double>",&MCelePz_);
-  tTreeUtilities_->Branch("MCeleEta_","std::vector<double>",&MCeleEta_);
-  tTreeUtilities_->Branch("MCelePhi_","std::vector<double>",&MCelePhi_);
-  tTreeUtilities_->Branch("MCelePid_","std::vector<int>",&MCelePid_);
+  eleSigmaIEtaIEta = new std::vector<double>;    // sigmaIEtaIEta
+  eleE1x5          = new std::vector<double>;
+  eleE2x5          = new std::vector<double>;
+  eleE5x5          = new std::vector<double>;
 
-  tTreeUtilities_->Branch("NeleCand_",&NeleCand_,"NeleCand_/I");
-  tTreeUtilities_->Branch("isMCmatched_","std::vector<int>",&isMCmatched_);
-  tTreeUtilities_->Branch("elePx_","std::vector<double>",&elePx_);
-  tTreeUtilities_->Branch("elePy_","std::vector<double>",&elePy_);
-  tTreeUtilities_->Branch("elePz_","std::vector<double>",&elePz_);
-  tTreeUtilities_->Branch("eleE_","std::vector<double>",&eleE_);
-  tTreeUtilities_->Branch("eleEt_","std::vector<double>",&eleEt_);
-  tTreeUtilities_->Branch("eleEta_","std::vector<double>",&eleEta_);
-  tTreeUtilities_->Branch("elePhi_","std::vector<double>",&elePhi_);
-  tTreeUtilities_->Branch("eleId_","std::vector<float>",&eleId_);
-  tTreeUtilities_->Branch("eleCharge_","std::vector<float>",&eleCharge_);
-  tTreeUtilities_->Branch("eleTrkIsol_","std::vector<double>",&eleTrkIsol_);
-  tTreeUtilities_->Branch("eleEcalIsol_","std::vector<double>",&eleEcalIsol_);
-  tTreeUtilities_->Branch("eleHcalIsolD1_","std::vector<double>",&eleHcalIsolD1_);
-  tTreeUtilities_->Branch("eleHcalIsolD2_","std::vector<double>",&eleHcalIsolD2_);
+  eleTrkIsol       = new std::vector<double>; // track isolation
+  eleEcalIsol      = new std::vector<double>; // ecal isolation
+  eleHcalIsolD1    = new std::vector<double>; // hcal isolation
+  eleHcalIsolD2    = new std::vector<double>; // hcal isolation
+
+  jetPx     = new std::vector<double>; // 
+  jetPy     = new std::vector<double>; // 
+  jetPz     = new std::vector<double>; // 
+  jetPt     = new std::vector<double>; // 
+  jetEta    = new std::vector<double>; // 
+  jetPhi    = new std::vector<double>; // 
+  jetBdisc  = new std::vector<double>; // 
+
+  muonPt    = new std::vector<double>; 
+  muonEta   = new std::vector<double>; 
+  muonPhi   = new std::vector<double>; 
+
+
+  tTreeUtilities_->Branch("MCelePx","std::vector<double>",&MCelePx);
+  tTreeUtilities_->Branch("MCelePy","std::vector<double>",&MCelePy);
+  tTreeUtilities_->Branch("MCelePz","std::vector<double>",&MCelePz);
+  tTreeUtilities_->Branch("MCeleEta","std::vector<double>",&MCeleEta);
+  tTreeUtilities_->Branch("MCelePhi","std::vector<double>",&MCelePhi);
+  tTreeUtilities_->Branch("MCelePid","std::vector<int>",&MCelePid);
+
+  tTreeUtilities_->Branch("MCmuonPx","std::vector<double>",&MCmuonPx);
+  tTreeUtilities_->Branch("MCmuonPy","std::vector<double>",&MCmuonPy);
+  tTreeUtilities_->Branch("MCmuonPz","std::vector<double>",&MCmuonPz);
+  tTreeUtilities_->Branch("MCmuonEta","std::vector<double>",&MCmuonEta);
+  tTreeUtilities_->Branch("MCmuonPhi","std::vector<double>",&MCmuonPhi);
+  tTreeUtilities_->Branch("MCmuonPid","std::vector<int>",&MCmuonPid);
+
+  tTreeUtilities_->Branch("NeleCand",&NeleCand,"NeleCand/I");
+  tTreeUtilities_->Branch("isMCmatched","std::vector<int>",&isMCmatched);
+  tTreeUtilities_->Branch("elePx","std::vector<double>",&elePx);
+  tTreeUtilities_->Branch("elePy","std::vector<double>",&elePy);
+  tTreeUtilities_->Branch("elePz","std::vector<double>",&elePz);
+  tTreeUtilities_->Branch("eleE","std::vector<double>",&eleE);
+  tTreeUtilities_->Branch("eleEt","std::vector<double>",&eleEt);
+  tTreeUtilities_->Branch("eleEta","std::vector<double>",&eleEta);
+  tTreeUtilities_->Branch("elePhi","std::vector<double>",&elePhi);
+  tTreeUtilities_->Branch("eleId","std::vector<double>",&eleId);
+ 
+  tTreeUtilities_->Branch("eleSigmaIEtaIEta","std::vector<double>",&eleSigmaIEtaIEta);
+  tTreeUtilities_->Branch("eleE1x5","std::vector<double>",&eleE1x5);
+  tTreeUtilities_->Branch("eleE2x5","std::vector<double>",&eleE2x5);
+  tTreeUtilities_->Branch("eleE5x5","std::vector<double>",&eleE5x5);
+ 
+  tTreeUtilities_->Branch("eleCharge","std::vector<double>",&eleCharge);
+  tTreeUtilities_->Branch("eleTrkIsol","std::vector<double>",&eleTrkIsol);
+  tTreeUtilities_->Branch("eleEcalIsol","std::vector<double>",&eleEcalIsol);
+  tTreeUtilities_->Branch("eleHcalIsolD1","std::vector<double>",&eleHcalIsolD1);
+  tTreeUtilities_->Branch("eleHcalIsolD2","std::vector<double>",&eleHcalIsolD2);
   
-  tTreeUtilities_->Branch("Met_",&Met_,"Met_/D");
-  tTreeUtilities_->Branch("Mex_",&Mex_,"Mex_/D");
-  tTreeUtilities_->Branch("Mey_",&Mey_,"Mey_/D");
-  tTreeUtilities_->Branch("MetPhi_",&MetPhi_,"MetPhi_/D");
+  tTreeUtilities_->Branch("Met",&Met,"Met/D");
+  tTreeUtilities_->Branch("Mex",&Mex,"Mex/D");
+  tTreeUtilities_->Branch("Mey",&Mey,"Mey/D");
+  tTreeUtilities_->Branch("MetPhi",&MetPhi,"MetPhi/D");
 
-  tTreeUtilities_->Branch("uncorrMet_",&uncorrMet_,"uncorrMet_/D");
-  tTreeUtilities_->Branch("uncorrMex_",&uncorrMex_,"uncorrMex_/D");
-  tTreeUtilities_->Branch("uncorrMey_",&uncorrMey_,"uncorrMey_/D");
-  tTreeUtilities_->Branch("uncorrMetPhi_",&uncorrMetPhi_,"uncorrMetPhi_/D");
+  tTreeUtilities_->Branch("uncorrMet",&uncorrMet,"uncorrMet/D");
+  tTreeUtilities_->Branch("uncorrMex",&uncorrMex,"uncorrMex/D");
+  tTreeUtilities_->Branch("uncorrMey",&uncorrMey,"uncorrMey/D");
+  tTreeUtilities_->Branch("uncorrMetPhi",&uncorrMetPhi,"uncorrMetPhi/D");
 
-  tTreeUtilities_->Branch("Njets_",&Njets_,"Njets_/I");
-  tTreeUtilities_->Branch("jetPx_","std::vector<double>",&jetPx_);
-  tTreeUtilities_->Branch("jetPy_","std::vector<double>",&jetPy_);
-  tTreeUtilities_->Branch("jetPz_","std::vector<double>",&jetPz_);
-  tTreeUtilities_->Branch("jetPt_","std::vector<double>",&jetPt_);
-  tTreeUtilities_->Branch("jetEta_","std::vector<double>",&jetEta_);
-  tTreeUtilities_->Branch("jetPhi_","std::vector<double>",&jetPhi_);
+  tTreeUtilities_->Branch("Njets",&Njets,"Njets/I");
+  tTreeUtilities_->Branch("jetPx","std::vector<double>",&jetPx);
+  tTreeUtilities_->Branch("jetPy","std::vector<double>",&jetPy);
+  tTreeUtilities_->Branch("jetPz","std::vector<double>",&jetPz);
+  tTreeUtilities_->Branch("jetPt","std::vector<double>",&jetPt);
+  tTreeUtilities_->Branch("jetEta","std::vector<double>",&jetEta);
+  tTreeUtilities_->Branch("jetPhi","std::vector<double>",&jetPhi);
+  tTreeUtilities_->Branch("jetBdisc","std::vector<double>",&jetBdisc);
 
-  tTreeUtilities_->Branch("L1SingleEG10_",&L1SingleEG10_,"L1SingleEG10_/I");			  
-  tTreeUtilities_->Branch("L1SingleEG12_",&L1SingleEG12_,"L1SingleEG12_/I");			  
-  tTreeUtilities_->Branch("L1SingleEG15_",&L1SingleEG15_,"L1SingleEG15_/I");			  
-  tTreeUtilities_->Branch("HLTLooseIsoEle15_",&HLTLooseIsoEle15_,"HLTLooseIsoEle15_/I");			  
-  tTreeUtilities_->Branch("HLTEle15_",&HLTEle15_,"HLTEle15_/I");			  
-  tTreeUtilities_->Branch("HLT_EM80_",&HLT_EM80_,"HLT_EM80_/I");			  
-  tTreeUtilities_->Branch("HLT_EM200_",&HLT_EM200_,"HLT_EM200_/I");			  
-  tTreeUtilities_->Branch("HLTPhoton15_",&HLTPhoton15_,"HLTPhoton15_/I");
-  tTreeUtilities_->Branch("HLTPhoton25_",&HLTPhoton25_,"HLTPhoton25_/I");
+  tTreeUtilities_->Branch("muonPt","std::vector<double>",&muonPt);
+  tTreeUtilities_->Branch("muonEta","std::vector<double>",&muonEta);
+  tTreeUtilities_->Branch("muonPhi","std::vector<double>",&muonPhi);
+
+  tTreeUtilities_->Branch("HLTLooseIsoEle15",&HLTLooseIsoEle15,"HLTLooseIsoEle15/I");		  
+  tTreeUtilities_->Branch("HLTEle15",&HLTEle15,"HLTEle15/I");			  
+  tTreeUtilities_->Branch("HLTEle10",&HLTEle10,"HLTEle10/I");			  
+  tTreeUtilities_->Branch("HLTEle20",&HLTEle20,"HLTEle20/I");			  
+  tTreeUtilities_->Branch("HLTPhoton15",&HLTPhoton15,"HLTPhoton15/I");
+  tTreeUtilities_->Branch("HLTPhoton25",&HLTPhoton25,"HLTPhoton25/I");
 			  
 
 }
@@ -206,134 +245,161 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   EvtCounter++;
  
   //---- clear the vectors ----
-  MCelePx_ ->clear(); 
-  MCelePy_ ->clear(); 
-  MCelePz_ ->clear(); 
-  MCeleEta_ ->clear(); 
-  MCelePhi_ ->clear(); 
-  MCelePid_ ->clear(); 
- 
-  NeleCand_    = 0;
-  isMCmatched_ ->clear(); 
-  elePx_ ->clear(); 
-  elePy_ ->clear(); 
-  elePz_ ->clear(); 
-  eleE_  ->clear();
-  eleEt_ ->clear();
-  eleEta_->clear();
-  elePhi_->clear();
-  eleId_ ->clear();
-  eleCharge_ ->clear();
-  eleTrkIsol_ ->clear();
-  eleEcalIsol_->clear();
-  eleHcalIsolD1_->clear();
-  eleHcalIsolD2_->clear();
+  MCelePx  -> clear(); 
+  MCelePy  -> clear(); 
+  MCelePz  -> clear(); 
+  MCeleEta -> clear(); 
+  MCelePhi -> clear(); 
+  MCelePid -> clear(); 
 
-  Met_    = 0 ;
-  Mex_    = 0 ;
-  Mey_    = 0 ;
-  MetPhi_ = 0;
+  MCmuonPx  -> clear();
+  MCmuonPy  -> clear();
+  MCmuonPz  -> clear();
+  MCmuonEta -> clear();
+  MCmuonPhi -> clear();
+  MCmuonPid -> clear();
 
-  uncorrMet_    = 0 ;
-  uncorrMex_    = 0 ;
-  uncorrMey_    = 0 ;
-  uncorrMetPhi_ = 0;
+  NeleCand    =  0;
+  isMCmatched -> clear(); 
+  elePx  -> clear(); 
+  elePy  -> clear(); 
+  elePz  -> clear(); 
+  eleE   -> clear();
+  eleEt  -> clear();
+  eleEta -> clear();
+  elePhi -> clear();
+  eleCharge ->clear();
 
-  Njets_ = 0;
-  jetPx_ ->clear(); 
-  jetPy_ ->clear(); 
-  jetPz_ ->clear(); 
-  jetPt_ ->clear(); 
-  jetEta_ ->clear(); 
-  jetPhi_ ->clear(); 
+  eleId  -> clear();
+  eleSigmaIEtaIEta -> clear();
+  eleE1x5 -> clear();
+  eleE2x5 -> clear();
+  eleE5x5 -> clear();
 
-  L1SingleEG10_     = 0;
-  L1SingleEG12_     = 0;
-  L1SingleEG15_     = 0;
-  HLTLooseIsoEle15_ = 0;
-  HLTEle15_         = 0; 
-  HLTPhoton15_      = 0;
-  HLTPhoton25_      = 0;
-  HLT_EM80_         = 0;
-  HLT_EM200_        = 0;
+  eleTrkIsol    -> clear();
+  eleEcalIsol   -> clear();
+  eleHcalIsolD1 -> clear();
+  eleHcalIsolD2 -> clear();
 
-  // Read in electrons
+  Met    = 0 ;
+  Mex    = 0 ;
+  Mey    = 0 ;
+  MetPhi = 0;
+
+  uncorrMet    = 0 ;
+  uncorrMex    = 0 ;
+  uncorrMey    = 0 ;
+  uncorrMetPhi = 0;
+
+  Njets = 0;
+  jetPx    -> clear(); 
+  jetPy    -> clear(); 
+  jetPz    -> clear(); 
+  jetPt    -> clear(); 
+  jetEta   -> clear(); 
+  jetPhi   -> clear(); 
+  jetBdisc -> clear(); 
+
+  muonPt  -> clear(); 
+  muonEta -> clear(); 
+  muonPhi -> clear(); 
+  
+  HLTLooseIsoEle15 = 0;
+  HLTEle15         = 0; 
+  HLTEle10         = 0; 
+  HLTEle20         = 0; 
+  HLTPhoton15      = 0;
+  HLTPhoton25      = 0;
+  
+  // some Gen Level infos
+  Handle<GenParticleCollection> genParticles;
+  iEvent.getByLabel("genParticles", genParticles);
+  for(size_t i = 0; i < genParticles->size(); ++ i) {
+
+    const GenParticle & p = (*genParticles)[i];
+    if ( abs(p.pdgId()) == 11 && abs(p.mother(0)->pdgId())== 24 && p.status()==3){
+      MCelePx  -> push_back( p.px() );
+      MCelePy  -> push_back( p.py() );
+      MCelePz  -> push_back( p.pz() );
+      MCeleEta -> push_back( p.eta() );
+      MCelePhi -> push_back( p.phi() );
+      MCelePid -> push_back( p.pdgId() );
+    }
+    if ( abs(p.pdgId()) == 13 && abs(p.mother(0)->pdgId())== 24 && p.status()==3){
+      MCmuonPx  -> push_back( p.px() );
+      MCmuonPy  -> push_back( p.py() );
+      MCmuonPz  -> push_back( p.pz() );
+      MCmuonEta -> push_back( p.eta() );
+      MCmuonPhi -> push_back( p.phi() );
+      MCmuonPid -> push_back( p.pdgId() );
+    }
+  }
+
+
+  // *********** ELECTRONS 
   Handle<View<pat::Electron> > electronHandle;
   iEvent.getByLabel(eleLabel_,electronHandle);
   View<pat::Electron> electrons = *electronHandle;
 
  
+  NeleCand = electrons.size();
   
-  NeleCand_ = electrons.size();
   // Loop over electrons
   for ( unsigned int i=0; i<electrons.size(); ++i ) {
   
     pat::Electron electron = electrons.at(i);
 
-    const reco::Particle * mcMatch =  electron.genLepton();
-    if (mcMatch) {
-      isMCmatched_->push_back(1);
-      MCelePx_  -> push_back( mcMatch->px() );
-      MCelePy_  -> push_back( mcMatch->py() );
-      MCelePz_  -> push_back( mcMatch->pz() );
-      MCeleEta_ -> push_back( mcMatch->eta() );
-      MCelePhi_ -> push_back( mcMatch->phi() );
-      MCelePid_ -> push_back( mcMatch->pdgId() );
-    }
-    else {
-      isMCmatched_->push_back(0);
-      MCelePx_  -> push_back( -9999.);
-      MCelePy_  -> push_back( -9999.);
-      MCelePz_  -> push_back( -9999.);
-      MCeleEta_ -> push_back( -9999.);
-      MCelePhi_ -> push_back( -9999 );
-      MCelePid_ -> push_back( -9999 );
-    }
-
+    // keep only e/gamma electrons 
+    //if ( electron.isEcalDriven() == false) continue;
 
     reco::SuperClusterRef scRef = electron.superCluster();
     double R  = TMath::Sqrt(scRef->x()*scRef->x() + scRef->y()*scRef->y() +scRef->z()*scRef->z());
     double Rt = TMath::Sqrt(scRef->x()*scRef->x() + scRef->y()*scRef->y());
 
-    elePx_ -> push_back( electron.trackMomentumAtVtx().x() );
-    elePy_ -> push_back( electron.trackMomentumAtVtx().y() );
-    elePz_ -> push_back( electron.trackMomentumAtVtx().z() );
-    eleE_  -> push_back( scRef->energy());
-    eleEt_ -> push_back( scRef->energy() * (Rt/R) );
-    eleEta_-> push_back( scRef->eta());
-    elePhi_-> push_back( scRef->phi());
-    eleCharge_ ->push_back( electron.gsfTrack()->charge() );
+    elePx  -> push_back( electron.trackMomentumAtVtx().x() );
+    elePy  -> push_back( electron.trackMomentumAtVtx().y() );
+    elePz  -> push_back( electron.trackMomentumAtVtx().z() );
+    eleE   -> push_back( scRef->energy());
+    eleEt  -> push_back( scRef->energy() * (Rt/R) );
+    eleEta -> push_back( scRef->eta());
+    elePhi -> push_back( scRef->phi());
+    eleCharge -> push_back( electron.gsfTrack()->charge() );
     
-    eleId_ ->push_back( electron.electronID(electronID_));
+    // electron ID
+    eleId            -> push_back( electron.electronID(electronID_));
+    eleSigmaIEtaIEta -> push_back( electron.scSigmaIEtaIEta());
+    eleE1x5          -> push_back(electron.scE1x5());
+    eleE2x5          -> push_back(electron.scE2x5Max());
+    eleE5x5          -> push_back(electron.scE5x5());
+
     
-    // need to add isolations
- 
-    eleTrkIsol_   ->push_back( electron.trackIso());
-    eleEcalIsol_  ->push_back( electron.ecalIso());
-    eleHcalIsolD1_->push_back( electron.userIso(0));
-    eleHcalIsolD2_->push_back( electron.userIso(1));
-    
+    // electron isolation 
+    eleTrkIsol    -> push_back(electron.dr03EcalRecHitSumEt()) ;
+    eleEcalIsol   -> push_back(electron.dr03HcalDepth1TowerSumEt()) ;
+    eleHcalIsolD1 -> push_back(electron.dr03HcalDepth2TowerSumEt()) ;
+    eleHcalIsolD2 -> push_back(electron.dr03TkSumPt()) ;
+
+
   }// end loop over electron candidates
 
 
-  //********* MET  from Calo Towers 
-  // 
+  //********* MET  
   edm::Handle<edm::View<pat::MET> > metHandle;
   iEvent.getByLabel(metLabel_,metHandle);
   View<pat::MET>  mets = *metHandle;
   for ( unsigned int i=0; i<mets.size(); ++i ) {
     pat::MET met = mets.at(i);
     // corrected MET
-    Met_ = met.et();
-    Mex_ = met.px();
-    Mey_ = met.py();
-    MetPhi_ = met.phi(); 
+    Met    = met.et();
+    Mex    = met.px();
+    Mey    = met.py();
+    MetPhi = met.phi(); 
 
     // Uncorrected MET
-    uncorrMet_ = met.uncorrectedPt(pat::MET::uncorrALL);
-    uncorrMex_ = met.corEx(pat::MET::uncorrALL);
-    uncorrMey_ = met.corEy(pat::MET::uncorrALL);
-    uncorrMetPhi_ = met.uncorrectedPhi(pat::MET::uncorrALL); 
+    uncorrMet    = met.uncorrectedPt(pat::MET::uncorrALL);
+    uncorrMex    = met.corEx(pat::MET::uncorrALL);
+    uncorrMey    = met.corEy(pat::MET::uncorrALL);
+    uncorrMetPhi = met.uncorrectedPhi(pat::MET::uncorrALL); 
 
   }
 
@@ -342,30 +408,29 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   iEvent.getByLabel(jetLabel_,jetHandle);
   View<pat::Jet> jets = *jetHandle;
    
-  Njets_ = jets.size();
+  Njets = jets.size();
   for ( unsigned int i=0; i<jets.size(); ++i ) {
     pat::Jet jet = jets.at(i);
-    jetPx_->push_back(jet.px());
-    jetPy_->push_back(jet.py());
-    jetPz_->push_back(jet.pz());
-    jetPt_->push_back(jet.pt());
-    jetEta_->push_back(jet.eta());
-    jetPhi_->push_back(jet.phi());
+    jetPx    -> push_back(jet.px());
+    jetPy    -> push_back(jet.py());
+    jetPz    -> push_back(jet.pz());
+    jetPt    -> push_back(jet.pt());
+    jetEta   -> push_back(jet.eta());
+    jetPhi   -> push_back(jet.phi());
+    jetBdisc -> push_back(jet.bDiscriminator( btagAlgo_));
   }
-  
-  
-  //**********L1 INFO
-  edm::ESHandle<L1GtTriggerMenu> menuRcd;
-  iSetup.get<L1GtTriggerMenuRcd>().get(menuRcd) ;
-  const L1GtTriggerMenu* menu = menuRcd.product();
+   
 
-  edm::Handle< L1GlobalTriggerReadoutRecord > gtRecord;
-  iEvent.getByLabel( edm::InputTag("gtDigis"), gtRecord);
-  const DecisionWord dWord = gtRecord->decisionWord();  // this will get the decision word *before* masking disabled bits
-
-  if ( menu->gtAlgorithmResult( "L1_SingleEG10", dWord) ) L1SingleEG10_ = 1;
-  if ( menu->gtAlgorithmResult( "L1_SingleEG12", dWord) ) L1SingleEG12_ = 1;
-  if ( menu->gtAlgorithmResult( "L1_SingleEG15", dWord) ) L1SingleEG15_ = 1;
+  //**********  MUONS
+  Handle<pat::MuonCollection> muons;
+  iEvent.getByLabel( muonLabel_ , muons);
+  for (pat::MuonCollection::const_iterator muon = muons->begin();  muon != muons->end(); ++muon){
+    if(muon->isGlobalMuon()){
+      muonPt  -> push_back(muon->pt());
+      muonEta -> push_back(muon->eta());
+      muonPhi -> push_back(muon->phi());
+    }
+  }
 
 
   //********** HLT INFO 
@@ -375,7 +440,6 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
   if (&hltresults) 
     {
       int ntrigs=(*hltresults).size();
-      
       if (ntrigs==0){std::cout << "%HLTInfo -- No trigger name given in TriggerResults of the input " << std::endl;}
       triggerNames_.init(*hltresults);
       hlNames_=triggerNames_.triggerNames();
@@ -383,12 +447,12 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
       const unsigned int n(hlNames_.size());
       for (unsigned int i = 0; i < n; ++i)
 	{
-	  if(hlNames_[i]=="HLT_Ele15_LW_L1R" && hltresults->accept(i)) HLTEle15_ = 1;
-	  if(hlNames_[i]=="HLT_LooseIsoEle15_LW_L1R" && hltresults->accept(i)) HLTLooseIsoEle15_ = 1;
-	  if(hlNames_[i]=="HLT_EM80" && hltresults->accept(i)) HLT_EM80_ = 1;
-	  if(hlNames_[i]=="HLT_EM200" && hltresults->accept(i)) HLT_EM200_ = 1;
-	  if(hlNames_[i]=="HLT_Photon15_L1R" && hltresults->accept(i)) HLTPhoton15_ = 1;
-	  if(hlNames_[i]=="HLT_Photon25_L1R" && hltresults->accept(i)) HLTPhoton25_ = 1;	  
+	  if(hlNames_[i]=="HLT_Ele10_SW_L1R" && hltresults->accept(i)) HLTEle10 = 1;	  	  
+	  if(hlNames_[i]=="HLT_Ele15_LW_L1R" && hltresults->accept(i)) HLTEle15 = 1;
+	  if(hlNames_[i]=="HLT_Ele15_SW_LooseTrackIso_L1R" && hltresults->accept(i)) HLTLooseIsoEle15 = 1;
+	  if(hlNames_[i]=="HLT_Ele20_SW_L1R" && hltresults->accept(i)) HLTEle20 = 1;
+	  if(hlNames_[i]=="HLT_Photon15_L1R" && hltresults->accept(i)) HLTPhoton15 = 1;
+	  if(hlNames_[i]=="HLT_Photon25_L1R" && hltresults->accept(i)) HLTPhoton25 = 1;	  
 	}
     }
 
@@ -403,40 +467,53 @@ WprimeAnalyzerPAT::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 void 
 WprimeAnalyzerPAT::endJob() {
   
-  delete MCelePx_ ; 
-  delete MCelePy_ ; 
-  delete MCelePz_ ; 
-  delete MCeleEta_ ; 
-  delete MCelePhi_ ; 
-  delete MCelePid_ ; 
- 
- 
-  delete isMCmatched_ ; 
-  delete elePx_ ; 
-  delete elePy_ ; 
-  delete elePz_ ; 
-  delete eleE_  ;
-  delete eleEt_ ;
-  delete eleEta_;
-  delete elePhi_;
-  delete eleId_ ;
-  delete eleCharge_ ;
-  delete eleTrkIsol_ ;
-  delete eleEcalIsol_;
-  delete eleHcalIsolD1_;
-  delete eleHcalIsolD2_;
+  delete MCelePx  ; 
+  delete MCelePy  ; 
+  delete MCelePz  ; 
+  delete MCeleEta ; 
+  delete MCelePhi ; 
+  delete MCelePid ; 
 
-  delete jetPx_ ; 
-  delete jetPy_ ; 
-  delete jetPz_ ; 
-  delete jetPt_ ; 
-  delete jetEta_ ; 
-  delete jetPhi_ ; 
+  delete MCmuonPx ; 
+  delete MCmuonPy ; 
+  delete MCmuonPz ; 
+  delete MCmuonEta ; 
+  delete MCmuonPhi ; 
+  delete MCmuonPid ; 
 
+  delete isMCmatched ; 
+  delete elePx ; 
+  delete elePy ; 
+  delete elePz ; 
+  delete eleE  ;
+  delete eleEt ;
+  delete eleEta;
+  delete elePhi;
+  delete eleId ;
+  delete eleSigmaIEtaIEta;
+  delete eleE1x5;
+  delete eleE2x5;
+  delete eleE5x5;
+  delete eleCharge     ;
+  delete eleTrkIsol    ;
+  delete eleEcalIsol   ;
+  delete eleHcalIsolD1 ;
+  delete eleHcalIsolD2 ;
 
+  delete jetPx    ; 
+  delete jetPy    ; 
+  delete jetPz    ; 
+  delete jetPt    ; 
+  delete jetEta   ; 
+  delete jetPhi   ;  
+  delete jetBdisc ; 
+  
+  delete muonPt  ;
+  delete muonEta ;
+  delete muonPhi ;
+  
   cout << "Analyzed " << EvtCounter <<" events"<< endl;
-  //cout << "Writing information into file: " << thefile->GetName() << endl;
-
+  
 
 
 }
