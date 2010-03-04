@@ -54,24 +54,10 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            )
 
 
-process.myvalidation = cms.EDFilter("EcalValidation",
-    superClusterCollection_EB = cms.InputTag("correctedHybridSuperClusters"),
-    superClusterCollection_EE = cms.InputTag("correctedMulti5x5SuperClustersWithPreshower"),
-    basicClusterCollection_EE = cms.InputTag("multi5x5BasicClusters","multi5x5EndcapBasicClusters"),
-    recHitCollection_EE       = cms.InputTag("ecalRecHit","EcalRecHitsEE"),
-    recHitCollection_EB       = cms.InputTag("ecalRecHit","EcalRecHitsEB"),
-    basicClusterCollection_EB = cms.InputTag("hybridSuperClusters","hybridBarrelBasicClusters"),
-    recHitCollection_ES       = cms.InputTag("ecalPreshowerRecHit","EcalRecHitsES"),
-    ClusterCollectionX_ES     = cms.InputTag("multi5x5SuperClustersWithPreshower","preshowerXClusters"),
-    ClusterCollectionY_ES     = cms.InputTag("multi5x5SuperClustersWithPreshower","preshowerYClusters"),
-                                    
-    ethrEB = cms.double(0.800), # to be checked
-    ethrEE = cms.double(1.200)  # to be checked
-                                    
-)
+process.load("Validation.EcalValidation.ecalvalidation_cfi")
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('histo_validation.root')
+    fileName = cms.string('EcalValidation.root')
 )
 
 process.p = cms.Path(
@@ -79,6 +65,6 @@ process.p = cms.Path(
     *process.hltLevel1GTSeed
     *process.noscraping
     *process.primaryVertexFilter
-    *process.myvalidation
+    *process.ecalvalidation
     )
 

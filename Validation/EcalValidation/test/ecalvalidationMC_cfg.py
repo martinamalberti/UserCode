@@ -17,7 +17,7 @@ process.source = cms.Source("PoolSource",
     '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0013/F6E3FFAC-6113-DF11-AF06-001BFCDBD15E.root',
     '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0012/BA183BD4-3813-DF11-B015-00304867902C.root',
     '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0012/A6D53A27-3813-DF11-B460-0026189437FA.root'
-    
+     
     )
 )
 
@@ -54,24 +54,11 @@ process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                            )
 
 
-process.myvalidation = cms.EDFilter("EcalValidation",
-    superClusterCollection_EB = cms.InputTag("correctedHybridSuperClusters"),
-    superClusterCollection_EE = cms.InputTag("correctedMulti5x5SuperClustersWithPreshower"),
-    basicClusterCollection_EE = cms.InputTag("multi5x5BasicClusters","multi5x5EndcapBasicClusters"),
-    recHitCollection_EE       = cms.InputTag("ecalRecHit","EcalRecHitsEE"),
-    recHitCollection_EB       = cms.InputTag("ecalRecHit","EcalRecHitsEB"),
-    basicClusterCollection_EB = cms.InputTag("hybridSuperClusters","hybridBarrelBasicClusters"),
-    recHitCollection_ES       = cms.InputTag("ecalPreshowerRecHit","EcalRecHitsES"),
-    ClusterCollectionX_ES     = cms.InputTag("multi5x5SuperClustersWithPreshower","preshowerXClusters"),
-    ClusterCollectionY_ES     = cms.InputTag("multi5x5SuperClustersWithPreshower","preshowerYClusters"),
-                                    
-    ethrEB = cms.double(0.800),
-    ethrEE = cms.double(1.200)
-                                    
-)
+
+process.load("Validation.EcalValidation.ecalvalidation_cfi")
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string('histo_validation.root')
+    fileName = cms.string('EcalValidation.root')
 )
 
 process.p = cms.Path(
@@ -79,6 +66,6 @@ process.p = cms.Path(
 #    process.hltLevel1GTSeed*
 #    process.noscraping*
 #    process.primaryVertexFilter*
-     process.myvalidation
+     process.ecalvalidation
     )
 
