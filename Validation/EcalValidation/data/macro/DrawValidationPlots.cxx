@@ -20,6 +20,8 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   gROOT->SetStyle("Plain");
   gStyle->SetPalette(1); 
   gStyle->SetOptStat(10);
+  gStyle->SetPadTickX(1);
+  gStyle->SetPadTickY(1);
 
   if (!infile1 || !infile2) {
     cout << " No input file specified !" << endl;
@@ -139,59 +141,59 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   for (int i = 0; i < 2 ; i++) {
     
     // number of events (needed for normalization)
-    h_numberOfEvents[i]           = (TH1D*)f[i]->Get("myvalidation/h_numberOfEvents") ; 
+    h_numberOfEvents[i]           = (TH1D*)f[i]->Get("ecalvalidation/h_numberOfEvents") ; 
 
     // rec hits
-    h_recHits_EB_size[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EB_size") ;
-    h_recHits_EEP_size[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEP_size") ;
-    h_recHits_EEM_size[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEM_size") ;
-    h_recHits_ES_size[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_ES_size") ;
+    h_recHits_EB_size[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EB_size") ;
+    h_recHits_EEP_size[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEP_size") ;
+    h_recHits_EEM_size[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEM_size") ;
+    h_recHits_ES_size[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_ES_size") ;
  
-    h_recHits_EB_energy[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EB_energy") ;
-    h_recHits_EEP_energy[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEP_energy") ;
-    h_recHits_EEM_energy[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEM_energy") ;
-    h_recHits_ES_energy[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_ES_energy") ;
+    h_recHits_EB_energy[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EB_energy") ;
+    h_recHits_EEP_energy[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEP_energy") ;
+    h_recHits_EEM_energy[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEM_energy") ;
+    h_recHits_ES_energy[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_ES_energy") ;
   
-    h_recHits_EB_energyMax[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EB_energyMax") ;
-    h_recHits_EEP_energyMax[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEP_energyMax") ;
-    h_recHits_EEM_energyMax[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEM_energyMax") ;
-    h_recHits_ES_energyMax[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_ES_energyMax") ;
+    h_recHits_EB_energyMax[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EB_energyMax") ;
+    h_recHits_EEP_energyMax[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEP_energyMax") ;
+    h_recHits_EEM_energyMax[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEM_energyMax") ;
+    h_recHits_ES_energyMax[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_ES_energyMax") ;
   
-    h_recHits_EB_time[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EB_time") ;
-    h_recHits_EEP_time[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEP_time") ;
-    h_recHits_EEM_time[i]    = (TH1D*)f[i]->Get("myvalidation/h_recHits_EEM_time") ;
-    h_recHits_ES_time[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_ES_time") ;
+    h_recHits_EB_time[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EB_time") ;
+    h_recHits_EEP_time[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEP_time") ;
+    h_recHits_EEM_time[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EEM_time") ;
+    h_recHits_ES_time[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_ES_time") ;
 
-    h_recHits_eta[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_eta") ;
-    h_recHits_EB_phi[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EB_phi") ;
-    h_recHits_EE_phi[i]     = (TH1D*)f[i]->Get("myvalidation/h_recHits_EE_phi") ;
+    h_recHits_eta[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_eta") ;
+    h_recHits_EB_phi[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EB_phi") ;
+    h_recHits_EE_phi[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_recHits_EE_phi") ;
 
 
     // Super Clusters ----------------------------------------------
-    h_superClusters_EB_size[i]    = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EB_size") ;
-    h_superClusters_EEP_size[i]   = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEP_size") ;
-    h_superClusters_EEM_size[i]   = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEM_size") ;
+    h_superClusters_EB_size[i]    = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EB_size") ;
+    h_superClusters_EEP_size[i]   = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEP_size") ;
+    h_superClusters_EEM_size[i]   = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEM_size") ;
     
-    h_superClusters_EB_nXtals[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EB_nXtals") ;
-    h_superClusters_EEP_nXtals[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEP_nXtals") ;
-    h_superClusters_EEM_nXtals[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEM_nXtals") ;
+    h_superClusters_EB_nXtals[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EB_nXtals") ;
+    h_superClusters_EEP_nXtals[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEP_nXtals") ;
+    h_superClusters_EEM_nXtals[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEM_nXtals") ;
    
-    h_superClusters_EB_nBC[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EB_nBC") ;
-    h_superClusters_EEP_nBC[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEP_nBC") ;
-    h_superClusters_EEM_nBC[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEM_nBC") ;
+    h_superClusters_EB_nBC[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EB_nBC") ;
+    h_superClusters_EEP_nBC[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEP_nBC") ;
+    h_superClusters_EEM_nBC[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEM_nBC") ;
    
-    h_superClusters_EB_energy[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EB_energy") ;
-    h_superClusters_EEP_energy[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEP_energy") ;
-    h_superClusters_EEM_energy[i]  = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EEM_energy") ;
+    h_superClusters_EB_energy[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EB_energy") ;
+    h_superClusters_EEP_energy[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEP_energy") ;
+    h_superClusters_EEM_energy[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EEM_energy") ;
  
-    h_superClusters_eta[i]       = (TH1D*)f[i]->Get("myvalidation/h_superClusters_eta") ;
-    h_superClusters_EB_phi[i]     = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EB_phi") ;
-    h_superClusters_EE_phi[i]     = (TH1D*)f[i]->Get("myvalidation/h_superClusters_EE_phi") ;
+    h_superClusters_eta[i]       = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_eta") ;
+    h_superClusters_EB_phi[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EB_phi") ;
+    h_superClusters_EE_phi[i]     = (TH1D*)f[i]->Get("ecalvalidation/h_superClusters_EE_phi") ;
 
    
-    h_esClusters_energy_plane1[i] = (TH1D*)f[i]->Get("myvalidation/h_esClusters_energy_plane1") ;
-    h_esClusters_energy_plane2[i] = (TH1D*)f[i]->Get("myvalidation/h_esClusters_energy_plane2") ;
-    h_esClusters_energy_ratio[i]  = (TH1D*)f[i]->Get("myvalidation/h_esClusters_energy_ratio") ;
+    h_esClusters_energy_plane1[i] = (TH1D*)f[i]->Get("ecalvalidation/h_esClusters_energy_plane1") ;
+    h_esClusters_energy_plane2[i] = (TH1D*)f[i]->Get("ecalvalidation/h_esClusters_energy_plane2") ;
+    h_esClusters_energy_ratio[i]  = (TH1D*)f[i]->Get("ecalvalidation/h_esClusters_energy_ratio") ;
 
   }
 
@@ -363,7 +365,6 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 
   // rec hits timing
   cRecHits[12]->cd();
-  cRecHits[12]->SetLogy();
   h_recHits_EB_time[0]->SetTitle("Rec Hits Time (EB)");
   h_recHits_EB_time[0]->GetXaxis()->SetTitle("time (ns)");
   h_recHits_EB_time[0]->SetLineColor(4);
@@ -375,7 +376,6 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[12]->Print(name);
   
   cRecHits[13]->cd();
-  cRecHits[13]->SetLogy();
   h_recHits_EEP_time[0]->SetTitle("Rec Hits Time (EE+)");
   h_recHits_EEP_time[0]->GetXaxis()->SetTitle("time (ns)");
   h_recHits_EEP_time[0]->SetLineColor(4);
@@ -387,7 +387,6 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[13]->Print(name);
 
   cRecHits[14]->cd();
-  cRecHits[14]->SetLogy();
   h_recHits_EEM_time[0]->SetTitle("Rec Hits Time (EE-)");
   h_recHits_EEM_time[0]->GetXaxis()->SetTitle("time (ns)");
   h_recHits_EEM_time[0]->SetLineColor(4);
@@ -399,7 +398,6 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[14]->Print(name);
 
   cRecHits[15]->cd();
-  cRecHits[15]->SetLogy();
   h_recHits_ES_time[0]->SetTitle("Rec Hits Time (ES)");
   h_recHits_ES_time[0]->GetXaxis()->SetTitle("time (ns)");
   h_recHits_ES_time[0]->SetLineColor(4);
