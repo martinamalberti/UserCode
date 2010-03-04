@@ -22,36 +22,56 @@ for i
   esac
 done
 
+if [ "X"${file1} == "X" ]
+    then
+    echo "MISSING INPUT FILE NAME for the first dataset! Please give a valid one!"
+    echo $usage
+    exit
+fi
+
+if [ "X"${file2} == "X" ]
+    then
+    echo "MISSING INPUT FILE NAME for the second dataset! Please give a valid one!"
+    echo $usage
+    exit
+fi
+
 if [ "X"${htmldir} == "X" ]
     then
-    htmldir=/afs/cern.ch/user/m/malberti/public/html/EcalValidation
+    htmldir=/afs/cern.ch/user/c/ccecal/scratch0/www/ValidationPlots
     echo "using default htmldir:" ${htmldir}
 fi
 
 
 if [ "X"${httpdir} == "X" ]
     then
-    httpdir=http://cmsdoc.cern.ch/~malberti/EcalValidation
+    httpdir=http://test-ecal-cosmics.web.cern.ch/test-ecal-cosmics/ValidationPlots/
     echo "using default httpdir:" ${httpdir}
 fi
 
 echo 'Preparing Validation Webpages' 
 
-mkdir tmpdir;
-
 # specify directories here
+#my_cmssw_base='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/PFG_devel_350/src'
+#work_dir='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/PFG_devel_350/src/Validation/EcalValidation';
+#echo $work_dir
+
 my_cmssw_base='/afs/cern.ch/user/m/malberti/scratch1/CMSSW_3_5_0/src'
 work_dir='/afs/cern.ch/user/m/malberti/scratch1/CMSSW_3_5_0/src/Validation/EcalValidation';
 #echo $work_dir
 
-plots_dir=${work_dir}/plots/tmpdir;
+out_dir=${file1}_vs_${file2};
+echo ${out_dir}
+
+plots_dir=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/ValidationPlots/${out_dir};
+
+mkdir ${plots_dir}
 
 #cp ${work_dir}/test/CrabWork/crab_${file1}/res/EcalValidation_${file1}.root ${plots_dir}
 #cp ${work_dir}/test/CrabWork/crab_${file2}/res/EcalValidation_${file2}.root ${plots_dir}
 
-cp ${work_dir}/test/EcalValidation_${file1}.root ${plots_dir}
-cp ${work_dir}/test/EcalValidation_${file2}.root ${plots_dir}
-
+cp ${work_dir}/test/crab/${file1}/EcalValidation_${file1}.root ${plots_dir}
+cp ${work_dir}/test/crab/${file2}/EcalValidation_${file2}.root ${plots_dir}
 
 cd ${my_cmssw_base}/Validation/EcalValidation/data/macro
 
@@ -75,7 +95,7 @@ root -b <<!
 .q
 !
 
-outdir=${file1}_vs_${file2};
+
 
 echo 'Making webpage for '${file1}' vs '${file2}''
 
@@ -104,6 +124,11 @@ cat > ${plots_dir}/index.html <<EOF
 
 <FONT color="Black">
 
+<h4> Datasets </h4>
+<ul>
+ <li> Link to ${file1} in DBS <BR>
+ <li> Link to ${file2} in DBS <BR>
+</ul> 
 
 <h4> Validation Plots </h4>
 <ul>
@@ -130,141 +155,132 @@ cat > ${plots_dir}/index.html <<EOF
 
 <h3><A name="RecHitsMultiplicity"> Rec Hits Multiplicity  </h3>
 
-<A HREF=${httpdir}/${outdir}/recHits_EB_size.png> <img height="300" src="${httpdir}/${outdir}/recHits_EB_size.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEP_size.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEP_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EB_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_size.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEM_size.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEM_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEP_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_size.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_ES_size.png> <img height="300" src="${httpdir}/${outdir}/recHits_ES_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEM_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_size.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/recHits_ES_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_size.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEnergy"> Rec Hits Energy </h3>
 
-<A HREF=${httpdir}/${outdir}/recHits_EB_energy.png> <img height="300" src="${httpdir}/${outdir}/recHits_EB_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EB_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_energy.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEP_energy.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEP_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEP_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_energy.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEM_energy.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEM_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEM_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_energy.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_ES_energy.png> <img height="300" src="${httpdir}/${outdir}/recHits_ES_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_ES_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_energy.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEnergyMax"> Rec Hits Max Energy </h3>
 
-<A HREF=${httpdir}/${outdir}/recHits_EB_energyMax.png> <img height="300" src="${httpdir}/${outdir}/recHits_EB_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EB_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEP_energyMax.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEP_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEP_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEM_energyMax.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEM_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEM_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_ES_energyMax.png> <img height="300" src="${httpdir}/${outdir}/recHits_ES_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_ES_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_energyMax.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsTime"> Rec Hits Time </h3>
 
-<A HREF=${httpdir}/${outdir}/recHits_EB_time.png> <img height="300" src="${httpdir}/${outdir}/recHits_EB_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EB_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_time.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEP_time.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEP_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEP_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_time.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EEM_time.png> <img height="300" src="${httpdir}/${outdir}/recHits_EEM_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EEM_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_time.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_ES_time.png> <img height="300" src="${httpdir}/${outdir}/recHits_ES_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_ES_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_time.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEtaPhi"> Rec Hits Eta/Phi </h3>
 
-<A HREF=${httpdir}/${outdir}/recHits_eta.png> <img height="200" src="${httpdir}/${outdir}/recHits_eta.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_eta.png> <img height="200" src="${httpdir}/${out_dir}/recHits_eta.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EB_phi.png> <img height="200" src="${httpdir}/${outdir}/recHits_EB_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EB_phi.png> <img height="200" src="${httpdir}/${out_dir}/recHits_EB_phi.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/recHits_EE_phi.png> <img height="200" src="${httpdir}/${outdir}/recHits_EE_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/recHits_EE_phi.png> <img height="200" src="${httpdir}/${out_dir}/recHits_EE_phi.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfSuperClusters"> Number of SuperClusters </h3>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EB_size.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EB_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EB_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_size.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEP_size.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEP_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEP_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_size.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEM_size.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEM_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEM_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_size.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfCrystalsInSC">  Number of Crystals per SuperCluster </h3>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EB_nXtals.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EB_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EB_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_nXtals.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEP_nXtals.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEP_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEP_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_nXtals.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEM_nXtals.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEM_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEM_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_nXtals.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfBCInSC">  Number of Basic Clusters per SuperCluster </h3>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EB_nBC.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EB_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EB_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_nBC.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEP_nBC.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEP_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEP_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_nBC.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EEM_nBC.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EEM_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EEM_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_nBC.png"> </A>
 
 <hr>
 
 <h3><A name="SuperClustersEtaPhi">  Super Clusters Eta/Phi </h3>
 
-<A HREF=${httpdir}/${outdir}/superClusters_eta.png> <img height="200" src="${httpdir}/${outdir}/superClusters_eta.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_eta.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_eta.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EB_phi.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EB_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EB_phi.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_phi.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/superClusters_EE_phi.png> <img height="200" src="${httpdir}/${outdir}/superClusters_EE_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/superClusters_EE_phi.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EE_phi.png"> </A>
 
 <hr>
 
 <h3><A name="ESclusters"> ES clusters  </h3>
 
-<A HREF=${httpdir}/${outdir}/clusters_ES_plane1_energy.png> <img height="200" src="${httpdir}/${outdir}/clusters_ES_plane1_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/clusters_ES_plane1_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_plane1_energy.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/clusters_ES_plane2_energy.png> <img height="200" src="${httpdir}/${outdir}/clusters_ES_plane2_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/clusters_ES_plane2_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_plane2_energy.png"> </A>
 
-<A HREF=${httpdir}/${outdir}/clusters_ES_ratio_energy.png> <img height="200" src="${httpdir}/${outdir}/clusters_ES_ratio_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/clusters_ES_ratio_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_ratio_energy.png"> </A>
 
 <hr>
 
 <h3><A name="Pi0peak"> Pi0 peak  </h3>
 
-<A HREF=${httpdir}/${outdir}/pi0_EB_mass.png> <img height="200" src="${httpdir}/${outdir}/pi0_EB_mass.png"> </A>
-<A HREF=${httpdir}/${outdir}/pi0_EE_mass.png> <img height="200" src="${httpdir}/${outdir}/pi0_EE_mass.png"> </A>
+<A HREF=${httpdir}/${out_dir}/pi0_EB_mass.png> <img height="200" src="${httpdir}/${out_dir}/pi0_EB_mass.png"> </A>
+<A HREF=${httpdir}/${out_dir}/pi0_EE_mass.png> <img height="200" src="${httpdir}/${out_dir}/pi0_EE_mass.png"> </A>
 
 <hr>
 
 <br>
-<h3> <A name="RootFile1"> ROOT File ${file1} </h3> <A HREF=${httpdir}/${outdir}/EcalValidation_${file1}.root> EcalValidation_${file1}.root </A>
+<h3> <A name="RootFile1"> ROOT File ${file1} </h3> <A HREF=${httpdir}/${out_dir}/EcalValidation_${file1}.root> EcalValidation_${file1}.root </A>
 
 <br>
 <h3> <A name="RootFile2"> ROOT File ${file2} </h3>
-<A HREF=${httpdir}/${outdir}/EcalValidation_${file2}.root> EcalValidation_${file2}.root </A>
+<A HREF=${httpdir}/${out_dir}/EcalValidation_${file2}.root> EcalValidation_${file2}.root </A>
 
 </FONT>
 </BODY>
 </HTML>
 
 EOF
-
-
-
-mkdir ${htmldir}/${outdir}
-cp ${plots_dir}/index.html ${htmldir}/${outdir}
-cp ${plots_dir}/*.png ${htmldir}/${outdir}
-cp ${plots_dir}/EcalValidation_${file1}.root ${htmldir}/${outdir}
-cp ${plots_dir}/EcalValidation_${file2}.root ${htmldir}/${outdir}
-
-
 
 
 
