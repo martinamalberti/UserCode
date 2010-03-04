@@ -46,11 +46,11 @@ work_dir='/afs/cern.ch/user/m/malberti/scratch1/CMSSW_3_5_0/src/Validation/EcalV
 
 plots_dir=${work_dir}/plots/tmpdir;
 
-cp ${work_dir}/test/CrabWork/crab_${file1}/res/histo_validation_${file1}.root ${plots_dir}
-cp ${work_dir}/test/CrabWork/crab_${file2}/res/histo_validation_${file2}.root ${plots_dir}
+#cp ${work_dir}/test/CrabWork/crab_${file1}/res/EcalValidation_${file1}.root ${plots_dir}
+#cp ${work_dir}/test/CrabWork/crab_${file2}/res/EcalValidation_${file2}.root ${plots_dir}
 
-#cp ${work_dir}/test/histo_validation_${file1}.root ${plots_dir}
-#cp ${work_dir}/test/histo_validation_${file2}.root ${plots_dir}
+cp ${work_dir}/test/EcalValidation_${file1}.root ${plots_dir}
+cp ${work_dir}/test/EcalValidation_${file2}.root ${plots_dir}
 
 
 cd ${my_cmssw_base}/Validation/EcalValidation/data/macro
@@ -59,17 +59,19 @@ cd ${my_cmssw_base}/Validation/EcalValidation/data/macro
 echo
 echo 'To make plots, run in ROOT:'
 
-echo '.x '${my_cmssw_base}/'Validation/EcalValidation/data/macro/DrawValidationPlots.cxx("'${plots_dir}'/histo_validation_'${file1}'.root","'${plots_dir}'/histo_validation_'${file2}'.root" ,"png", "'${plots_dir}'")'
+echo '.x '${my_cmssw_base}/'Validation/EcalValidation/data/macro/DrawValidationPlots.cxx("'${plots_dir}'/EcalValidation_'${file1}'.root","'${plots_dir}'/EcalValidation_'${file2}'.root" ,"png", "'${plots_dir}'")'
 echo
 
+echo '.x '${my_cmssw_base}/'Validation/EcalValidation/data/macro/DrawValidationPlotsPi0.cxx("'${plots_dir}'/EcalValidation_'${file1}'.root","'${plots_dir}'/EcalValidation_'${file2}'.root" ,"png", "'${plots_dir}'")'
+echo
 
 # run root command in batch
 
 root -b <<!
 
-.x ${my_cmssw_base}/Validation/EcalValidation/data/macro/DrawValidationPlots.cxx("${plots_dir}/histo_validation_${file1}.root","${plots_dir}/histo_validation_${file2}.root","png","${plots_dir}")
+.x ${my_cmssw_base}/Validation/EcalValidation/data/macro/DrawValidationPlots.cxx("${plots_dir}/EcalValidation_${file1}.root","${plots_dir}/EcalValidation_${file2}.root","png","${plots_dir}")
 
-
+.x ${my_cmssw_base}/Validation/EcalValidation/data/macro/DrawValidationPlotsPi0.cxx("${plots_dir}/EcalValidation_${file1}.root","${plots_dir}/EcalValidation_${file2}.root","png","${plots_dir}")
 .q
 !
 
@@ -115,6 +117,7 @@ cat > ${plots_dir}/index.html <<EOF
  <li><A href="#NumberOfBCInSC"> Number of Basic Clusters per SuperCluster </A><BR>
  <li><A href="#SuperClustersEtaPhi"> Super Clusters Eta/Phi </A><BR>
  <li><A href="#ESclusters"> ES clusters  </A><BR>
+ <li><A href="#Pi0peak"> Pi0 peak  </A><BR>
 </ul>
 <h4> Root Files </h4> 
 <ul>
@@ -231,15 +234,21 @@ cat > ${plots_dir}/index.html <<EOF
 
 <A HREF=${httpdir}/${outdir}/clusters_ES_ratio_energy.png> <img height="200" src="${httpdir}/${outdir}/clusters_ES_ratio_energy.png"> </A>
 
+<hr>
+
+<h3><A name="Pi0peak"> Pi0 peak  </h3>
+
+<A HREF=${httpdir}/${outdir}/pi0_EB_mass.png> <img height="200" src="${httpdir}/${outdir}/pi0_EB_mass.png"> </A>
+<A HREF=${httpdir}/${outdir}/pi0_EE_mass.png> <img height="200" src="${httpdir}/${outdir}/pi0_EE_mass.png"> </A>
 
 <hr>
 
 <br>
-<h3> <A name="RootFile1"> ROOT File ${file1} </h3> <A HREF=${httpdir}/${outdir}/histo_validation_${file1}.root> histo_validation_${file1}.root </A>
+<h3> <A name="RootFile1"> ROOT File ${file1} </h3> <A HREF=${httpdir}/${outdir}/EcalValidation_${file1}.root> EcalValidation_${file1}.root </A>
 
 <br>
 <h3> <A name="RootFile2"> ROOT File ${file2} </h3>
-<A HREF=${httpdir}/${outdir}/histo_validation_${file2}.root> histo_validation_${file2}.root </A>
+<A HREF=${httpdir}/${outdir}/EcalValidation_${file2}.root> EcalValidation_${file2}.root </A>
 
 </FONT>
 </BODY>
@@ -252,8 +261,8 @@ EOF
 mkdir ${htmldir}/${outdir}
 cp ${plots_dir}/index.html ${htmldir}/${outdir}
 cp ${plots_dir}/*.png ${htmldir}/${outdir}
-cp ${plots_dir}/histo_validation_${file1}.root ${htmldir}/${outdir}
-cp ${plots_dir}/histo_validation_${file2}.root ${htmldir}/${outdir}
+cp ${plots_dir}/EcalValidation_${file1}.root ${htmldir}/${outdir}
+cp ${plots_dir}/EcalValidation_${file2}.root ${htmldir}/${outdir}
 
 
 
