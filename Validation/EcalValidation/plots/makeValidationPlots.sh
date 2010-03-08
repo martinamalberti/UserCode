@@ -99,7 +99,11 @@ root -b <<!
 
 echo 'Making webpage for '${file1}' vs '${file2}''
 
+data_set_1=`\grep datasetpath ${work_dir}/test/crab/${file1}/crab.cfg | tr "=" " " | awk '{print $2}'`;
+echo ${data_set_1}
 
+data_set_2=`\grep datasetpath ${work_dir}/test/crab/${file2}/crab.cfg | tr "=" " " | awk '{print $2}'`;
+echo ${data_set_2}
 
 cat > ${plots_dir}/index.html <<EOF
 
@@ -126,9 +130,11 @@ cat > ${plots_dir}/index.html <<EOF
 
 <h4> Datasets </h4>
 <ul>
- <li> Link to ${file1} in DBS <BR>
- <li> Link to ${file2} in DBS <BR>
+ <li> <FONT color="Blue"> ${data_set_1} </FONT> <BR>
+ <li> <FONT color="Red"> ${data_set_2}  </FONT> <BR>
 </ul> 
+
+
 
 <h4> Validation Plots </h4>
 <ul>
