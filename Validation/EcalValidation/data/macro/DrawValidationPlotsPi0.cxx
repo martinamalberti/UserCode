@@ -71,16 +71,19 @@ void DrawValidationPlotsPi0(Char_t* infile1 = 0,
 
   float nEvents1 = h_numberOfEvents[0]->GetBinContent(1);
   float nEvents2 = h_numberOfEvents[1]->GetBinContent(1);
-  
+  float s        = nEvents1/nEvents2;
+  float maxY;
 
   // pi0 mass
   c[0]->cd();
   h_Pi0_EB_mass[0]->SetTitle("Pi0 peak (EB)");
   h_Pi0_EB_mass[0]->GetXaxis()->SetTitle("mass (GeV)");
   h_Pi0_EB_mass[0]->GetXaxis()->SetRangeUser(minvMin,minvMax);
+  maxY = max(h_Pi0_EB_mass[0]->GetMaximum(), h_Pi0_EB_mass[1]->GetMaximum()*s);
+  h_Pi0_EB_mass[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_Pi0_EB_mass[0]->SetLineColor(4);
   h_Pi0_EB_mass[0]->Draw(); 
-  h_Pi0_EB_mass[1]->Scale(nEvents1/nEvents2);
+  h_Pi0_EB_mass[1]->Scale(s);
   h_Pi0_EB_mass[1]->SetLineColor(2);
   h_Pi0_EB_mass[1]->Draw("same"); 
   sprintf(name,"%s/pi0_EB_mass.%s",dirName,fileType); 
@@ -91,9 +94,11 @@ void DrawValidationPlotsPi0(Char_t* infile1 = 0,
   h_Pi0_EE_mass[0]->SetTitle("Pi0 peak (EE)");
   h_Pi0_EE_mass[0]->GetXaxis()->SetTitle("mass (GeV)");
   h_Pi0_EE_mass[0]->GetXaxis()->SetRangeUser(minvMin,minvMax);
+  maxY = max(h_Pi0_EE_mass[0]->GetMaximum(), h_Pi0_EE_mass[1]->GetMaximum()*s);
+  h_Pi0_EE_mass[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_Pi0_EE_mass[0]->SetLineColor(4);
   h_Pi0_EE_mass[0]->Draw(); 
-  h_Pi0_EE_mass[1]->Scale(nEvents1/nEvents2);
+  h_Pi0_EE_mass[1]->Scale(s);
   h_Pi0_EE_mass[1]->SetLineColor(2);
   h_Pi0_EE_mass[1]->Draw("same"); 
   sprintf(name,"%s/pi0_EE_mass.%s",dirName,fileType); 

@@ -10,6 +10,7 @@
 //      return 0;
 // }
 
+#include <algorithm>
 
 void DrawValidationPlots(Char_t* infile1 = 0, 
 		     Char_t* infile2 = 0, 
@@ -56,8 +57,9 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   }
   
 
-  float nMaxHits = 2000;
-  float eMaxHits = 200;
+  float nMaxHits = 5000;
+  float eMinHits = -1.0;
+  float eMaxHits = 10;
   float nMaxBC   = 100;
   float eMaxBC   = 200;
   float nMaxSC   = 100;
@@ -200,7 +202,8 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 
   float nEvents1 = h_numberOfEvents[0]->GetBinContent(1);
   float nEvents2 = h_numberOfEvents[1]->GetBinContent(1);
-  
+  float s        = nEvents1/nEvents2;
+  float maxY;
 
   // Rec Hits number
   cRecHits[0]->cd();
@@ -210,7 +213,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_EB_size[0]->GetXaxis()->SetRangeUser(0,nMaxHits);
   h_recHits_EB_size[0]->SetLineColor(4);
   h_recHits_EB_size[0]->Draw(); 
-  h_recHits_EB_size[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EB_size[1]->Scale(s);
   h_recHits_EB_size[1]->SetLineColor(2);
   h_recHits_EB_size[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EB_size.%s",dirName,fileType); 
@@ -223,7 +226,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_EEP_size[0]->GetXaxis()->SetRangeUser(0,nMaxHits);
   h_recHits_EEP_size[0]->SetLineColor(4);
   h_recHits_EEP_size[0]->Draw(); 
-  h_recHits_EEP_size[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEP_size[1]->Scale(s);
   h_recHits_EEP_size[1]->SetLineColor(2);
   h_recHits_EEP_size[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEP_size.%s",dirName,fileType); 
@@ -236,7 +239,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_EEM_size[0]->GetXaxis()->SetRangeUser(0,nMaxHits);
   h_recHits_EEM_size[0]->SetLineColor(4);
   h_recHits_EEM_size[0]->Draw(); 
-  h_recHits_EEM_size[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEM_size[1]->Scale(s);
   h_recHits_EEM_size[1]->SetLineColor(2);
   h_recHits_EEM_size[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEM_size.%s",dirName,fileType); 
@@ -249,7 +252,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_ES_size[0]->GetXaxis()->SetRangeUser(0,nMaxHits);
   h_recHits_ES_size[0]->SetLineColor(4);
   h_recHits_ES_size[0]->Draw(); 
-  h_recHits_ES_size[1]->Scale(nEvents1/nEvents2);
+  h_recHits_ES_size[1]->Scale(s);
   h_recHits_ES_size[1]->SetLineColor(2);
   h_recHits_ES_size[1]->Draw("same"); 
   sprintf(name,"%s/recHits_ES_size.%s",dirName,fileType); 
@@ -261,10 +264,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[4]->SetLogy();
   h_recHits_EB_energy[0]->SetTitle("Rec Hits Energy (EB)");
   h_recHits_EB_energy[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EB_energy[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EB_energy[0]->GetXaxis()->SetRangeUser(eMinHits,eMaxHits);
   h_recHits_EB_energy[0]->SetLineColor(4);
   h_recHits_EB_energy[0]->Draw(); 
-  h_recHits_EB_energy[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EB_energy[1]->Scale(s);
   h_recHits_EB_energy[1]->SetLineColor(2);
   h_recHits_EB_energy[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EB_energy.%s",dirName,fileType); 
@@ -274,10 +277,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[5]->SetLogy();
   h_recHits_EEP_energy[0]->SetTitle("Rec Hits Energy (EE+)");
   h_recHits_EEP_energy[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EEP_energy[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EEP_energy[0]->GetXaxis()->SetRangeUser(eMinHits,eMaxHits);
   h_recHits_EEP_energy[0]->SetLineColor(4);
   h_recHits_EEP_energy[0]->Draw(); 
-  h_recHits_EEP_energy[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEP_energy[1]->Scale(s);
   h_recHits_EEP_energy[1]->SetLineColor(2);
   h_recHits_EEP_energy[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEP_energy.%s",dirName,fileType); 
@@ -287,10 +290,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[6]->SetLogy();
   h_recHits_EEM_energy[0]->SetTitle("Rec Hits Energy (EE-)");
   h_recHits_EEM_energy[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EEM_energy[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EEM_energy[0]->GetXaxis()->SetRangeUser(eMinHits,eMaxHits);
   h_recHits_EEM_energy[0]->SetLineColor(4);
   h_recHits_EEM_energy[0]->Draw(); 
-  h_recHits_EEM_energy[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEM_energy[1]->Scale(s);
   h_recHits_EEM_energy[1]->SetLineColor(2);
   h_recHits_EEM_energy[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEM_energy.%s",dirName,fileType); 
@@ -300,10 +303,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[7]->SetLogy();
   h_recHits_ES_energy[0]->SetTitle("Rec Hits Energy(ES)");
   h_recHits_ES_energy[0]->GetXaxis()->SetTitle("energy (GeV)");
-  //h_recHits_ES_energy[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  //h_recHits_ES_energy[0]->GetXaxis()->SetRangeUser(eMinHits,eMaxHits);
   h_recHits_ES_energy[0]->SetLineColor(4);
   h_recHits_ES_energy[0]->Draw(); 
-  h_recHits_ES_energy[1]->Scale(nEvents1/nEvents2);
+  h_recHits_ES_energy[1]->Scale(s);
   h_recHits_ES_energy[1]->SetLineColor(2);
   h_recHits_ES_energy[1]->Draw("same"); 
   sprintf(name,"%s/recHits_ES_energy.%s",dirName,fileType); 
@@ -315,10 +318,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[8]->SetLogy();
   h_recHits_EB_energyMax[0]->SetTitle("Rec Hits Max Energy (EB)");
   h_recHits_EB_energyMax[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EB_energyMax[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EB_energyMax[0]->GetXaxis()->SetRangeUser(0,150);
   h_recHits_EB_energyMax[0]->SetLineColor(4);
   h_recHits_EB_energyMax[0]->Draw(); 
-  h_recHits_EB_energyMax[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EB_energyMax[1]->Scale(s);
   h_recHits_EB_energyMax[1]->SetLineColor(2);
   h_recHits_EB_energyMax[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EB_energyMax.%s",dirName,fileType); 
@@ -328,10 +331,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[9]->SetLogy();
   h_recHits_EEP_energyMax[0]->SetTitle("Rec Hits Max Energy (EE+)");
   h_recHits_EEP_energyMax[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EEP_energyMax[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EEP_energyMax[0]->GetXaxis()->SetRangeUser(0,150);
   h_recHits_EEP_energyMax[0]->SetLineColor(4);
   h_recHits_EEP_energyMax[0]->Draw(); 
-  h_recHits_EEP_energyMax[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEP_energyMax[1]->Scale(s);
   h_recHits_EEP_energyMax[1]->SetLineColor(2);
   h_recHits_EEP_energyMax[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEP_energyMax.%s",dirName,fileType); 
@@ -341,10 +344,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[10]->SetLogy();
   h_recHits_EEM_energyMax[0]->SetTitle("Rec Hits Max Energy (EE-)");
   h_recHits_EEM_energyMax[0]->GetXaxis()->SetTitle("energy (GeV)");
-  h_recHits_EEM_energyMax[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  h_recHits_EEM_energyMax[0]->GetXaxis()->SetRangeUser(0,150);
   h_recHits_EEM_energyMax[0]->SetLineColor(4);
   h_recHits_EEM_energyMax[0]->Draw(); 
-  h_recHits_EEM_energyMax[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEM_energyMax[1]->Scale(s);
   h_recHits_EEM_energyMax[1]->SetLineColor(2);
   h_recHits_EEM_energyMax[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEM_energyMax.%s",dirName,fileType); 
@@ -354,10 +357,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[11]->SetLogy();
   h_recHits_ES_energyMax[0]->SetTitle("Rec Hits Max Energy(ES)");
   h_recHits_ES_energyMax[0]->GetXaxis()->SetTitle("energy (GeV)");
-  //h_recHits_ES_energyMax[0]->GetXaxis()->SetRangeUser(0,eMaxHits);
+  //h_recHits_ES_energyMax[0]->GetXaxis()->SetRangeUser(eMinHits,eMaxHits);
   h_recHits_ES_energyMax[0]->SetLineColor(4);
   h_recHits_ES_energyMax[0]->Draw(); 
-  h_recHits_ES_energyMax[1]->Scale(nEvents1/nEvents2);
+  h_recHits_ES_energyMax[1]->Scale(s);
   h_recHits_ES_energyMax[1]->SetLineColor(2);
   h_recHits_ES_energyMax[1]->Draw("same"); 
   sprintf(name,"%s/recHits_ES_energyMax.%s",dirName,fileType); 
@@ -367,9 +370,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[12]->cd();
   h_recHits_EB_time[0]->SetTitle("Rec Hits Time (EB)");
   h_recHits_EB_time[0]->GetXaxis()->SetTitle("time (ns)");
+  maxY = max(h_recHits_EB_time[0]->GetMaximum(), h_recHits_EB_time[1]->GetMaximum()*s);
+  h_recHits_EB_time[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_recHits_EB_time[0]->SetLineColor(4);
   h_recHits_EB_time[0]->Draw(); 
-  h_recHits_EB_time[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EB_time[1]->Scale(s);
   h_recHits_EB_time[1]->SetLineColor(2);
   h_recHits_EB_time[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EB_time.%s",dirName,fileType); 
@@ -378,9 +383,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[13]->cd();
   h_recHits_EEP_time[0]->SetTitle("Rec Hits Time (EE+)");
   h_recHits_EEP_time[0]->GetXaxis()->SetTitle("time (ns)");
+  maxY = max(h_recHits_EEP_time[0]->GetMaximum(), h_recHits_EEP_time[1]->GetMaximum()*s);
+  h_recHits_EEP_time[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_recHits_EEP_time[0]->SetLineColor(4);
   h_recHits_EEP_time[0]->Draw(); 
-  h_recHits_EEP_time[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEP_time[1]->Scale(s);
   h_recHits_EEP_time[1]->SetLineColor(2);
   h_recHits_EEP_time[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEP_time.%s",dirName,fileType); 
@@ -389,9 +396,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[14]->cd();
   h_recHits_EEM_time[0]->SetTitle("Rec Hits Time (EE-)");
   h_recHits_EEM_time[0]->GetXaxis()->SetTitle("time (ns)");
+  maxY = max(h_recHits_EEM_time[0]->GetMaximum(), h_recHits_EEM_time[1]->GetMaximum()*s);
+  h_recHits_EEM_time[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_recHits_EEM_time[0]->SetLineColor(4);
   h_recHits_EEM_time[0]->Draw(); 
-  h_recHits_EEM_time[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EEM_time[1]->Scale(s);
   h_recHits_EEM_time[1]->SetLineColor(2);
   h_recHits_EEM_time[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EEM_time.%s",dirName,fileType); 
@@ -400,9 +409,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   cRecHits[15]->cd();
   h_recHits_ES_time[0]->SetTitle("Rec Hits Time (ES)");
   h_recHits_ES_time[0]->GetXaxis()->SetTitle("time (ns)");
+  maxY = max(h_recHits_ES_time[0]->GetMaximum(), h_recHits_ES_time[1]->GetMaximum()*s);
+  h_recHits_ES_time[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_recHits_ES_time[0]->SetLineColor(4);
   h_recHits_ES_time[0]->Draw(); 
-  h_recHits_ES_time[1]->Scale(nEvents1/nEvents2);
+  h_recHits_ES_time[1]->Scale(s);
   h_recHits_ES_time[1]->SetLineColor(2);
   h_recHits_ES_time[1]->Draw("same"); 
   sprintf(name,"%s/recHits_ES_time.%s",dirName,fileType); 
@@ -415,8 +426,9 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_eta[0]->SetTitle("Rec Hits Eta (EE+EB)");
   h_recHits_eta[0]->GetXaxis()->SetTitle("#eta");
   h_recHits_eta[0]->SetLineColor(4);
+  h_recHits_eta[0]->SetLineColor(4);
   h_recHits_eta[0]->Draw(); 
-  h_recHits_eta[1]->Scale(nEvents1/nEvents2);
+  h_recHits_eta[1]->Scale(s);
   h_recHits_eta[1]->SetLineColor(2);
   h_recHits_eta[1]->Draw("same"); 
   sprintf(name,"%s/recHits_eta.%s",dirName,fileType); 
@@ -428,7 +440,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_EB_phi[0]->GetXaxis()->SetTitle("#phi");
   h_recHits_EB_phi[0]->SetLineColor(4);
   h_recHits_EB_phi[0]->Draw(); 
-  h_recHits_EB_phi[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EB_phi[1]->Scale(s);
   h_recHits_EB_phi[1]->SetLineColor(2);
   h_recHits_EB_phi[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EB_phi.%s",dirName,fileType); 
@@ -440,7 +452,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_recHits_EE_phi[0]->GetXaxis()->SetTitle("#phi");
   h_recHits_EE_phi[0]->SetLineColor(4);
   h_recHits_EE_phi[0]->Draw(); 
-  h_recHits_EE_phi[1]->Scale(nEvents1/nEvents2);
+  h_recHits_EE_phi[1]->Scale(s);
   h_recHits_EE_phi[1]->SetLineColor(2);
   h_recHits_EE_phi[1]->Draw("same"); 
   sprintf(name,"%s/recHits_EE_phi.%s",dirName,fileType); 
@@ -453,9 +465,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EB_size[0]->SetTitle("Number of SuperClusters (EB)");
   h_superClusters_EB_size[0]->GetXaxis()->SetTitle("number of superclusters");
   h_superClusters_EB_size[0]->GetXaxis()->SetRangeUser(0,nSCMax);
+  maxY = max(h_superClusters_EB_size[0]->GetMaximum(), h_superClusters_EB_size[1]->GetMaximum()*s);
+  h_superClusters_EB_size[0]->GetYaxis()->SetRangeUser(0.01,maxY*10);
   h_superClusters_EB_size[0]->SetLineColor(4);
   h_superClusters_EB_size[0]->Draw(); 
-  h_superClusters_EB_size[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EB_size[1]->Scale(s);
   h_superClusters_EB_size[1]->SetLineColor(2);
   h_superClusters_EB_size[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EB_size.%s",dirName,fileType); 
@@ -466,9 +480,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEP_size[0]->SetTitle("Number of SuperClusters (EE+)");
   h_superClusters_EEP_size[0]->GetXaxis()->SetTitle("number of superclusters");
   h_superClusters_EEP_size[0]->GetXaxis()->SetRangeUser(0,nSCMax);
+  maxY = max(h_superClusters_EEP_size[0]->GetMaximum(), h_superClusters_EEP_size[1]->GetMaximum()*s);
+  h_superClusters_EEP_size[0]->GetYaxis()->SetRangeUser(0.01,maxY*10);
   h_superClusters_EEP_size[0]->SetLineColor(4);
   h_superClusters_EEP_size[0]->Draw(); 
-  h_superClusters_EEP_size[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEP_size[1]->Scale(s);
   h_superClusters_EEP_size[1]->SetLineColor(2);
   h_superClusters_EEP_size[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEP_size.%s",dirName,fileType); 
@@ -479,9 +495,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEM_size[0]->SetTitle("Number of SuperClusters (EE-)");
   h_superClusters_EEM_size[0]->GetXaxis()->SetTitle("number of superclusters");
   h_superClusters_EEM_size[0]->GetXaxis()->SetRangeUser(0,nSCMax);
+  maxY = max(h_superClusters_EEM_size[0]->GetMaximum(), h_superClusters_EEM_size[1]->GetMaximum()*s);
+  h_superClusters_EEM_size[0]->GetYaxis()->SetRangeUser(0.01,maxY*10);
   h_superClusters_EEM_size[0]->SetLineColor(4);
   h_superClusters_EEM_size[0]->Draw(); 
-  h_superClusters_EEM_size[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEM_size[1]->Scale(s);
   h_superClusters_EEM_size[1]->SetLineColor(2);
   h_superClusters_EEM_size[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEM_size.%s",dirName,fileType); 
@@ -494,9 +512,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EB_nXtals[0]->SetTitle("Number of crystals in SC (EB)");
   h_superClusters_EB_nXtals[0]->GetXaxis()->SetTitle("number of crystals");
   h_superClusters_EB_nXtals[0]->GetXaxis()->SetRangeUser(0,nXtalsMax);
+  maxY = max(h_superClusters_EB_nXtals[0]->GetMaximum(), h_superClusters_EB_nXtals[1]->GetMaximum()*s);
+  h_superClusters_EB_nXtals[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EB_nXtals[0]->SetLineColor(4);
   h_superClusters_EB_nXtals[0]->Draw(); 
-  h_superClusters_EB_nXtals[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EB_nXtals[1]->Scale(s);
   h_superClusters_EB_nXtals[1]->SetLineColor(2);
   h_superClusters_EB_nXtals[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EB_nXtals.%s",dirName,fileType); 
@@ -506,9 +526,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEP_nXtals[0]->SetTitle("Number of crystals in SC (EE+)");
   h_superClusters_EEP_nXtals[0]->GetXaxis()->SetTitle("number of crystals");
   h_superClusters_EEP_nXtals[0]->GetXaxis()->SetRangeUser(0,nXtalsMax);
+  maxY = max(h_superClusters_EEP_nXtals[0]->GetMaximum(), h_superClusters_EEP_nXtals[1]->GetMaximum()*s);
+  h_superClusters_EEP_nXtals[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EEP_nXtals[0]->SetLineColor(4);
   h_superClusters_EEP_nXtals[0]->Draw(); 
-  h_superClusters_EEP_nXtals[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEP_nXtals[1]->Scale(s);
   h_superClusters_EEP_nXtals[1]->SetLineColor(2);
   h_superClusters_EEP_nXtals[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEP_nXtals.%s",dirName,fileType); 
@@ -518,9 +540,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEM_nXtals[0]->SetTitle("Number of crystals in SC (EE-)");
   h_superClusters_EEM_nXtals[0]->GetXaxis()->SetTitle("number of crystals");
   h_superClusters_EEM_nXtals[0]->GetXaxis()->SetRangeUser(0,nXtalsMax);
+  maxY = max(h_superClusters_EEM_nXtals[0]->GetMaximum(), h_superClusters_EEM_nXtals[1]->GetMaximum()*s);
+  h_superClusters_EEM_nXtals[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EEM_nXtals[0]->SetLineColor(4);
   h_superClusters_EEM_nXtals[0]->Draw(); 
-  h_superClusters_EEM_nXtals[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEM_nXtals[1]->Scale(s);
   h_superClusters_EEM_nXtals[1]->SetLineColor(2);
   h_superClusters_EEM_nXtals[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEM_nXtals.%s",dirName,fileType); 
@@ -531,9 +555,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EB_nBC[0]->SetTitle("Number of Basic Clusters in SC (EB)");
   h_superClusters_EB_nBC[0]->GetXaxis()->SetTitle("number of BC");
   h_superClusters_EB_nBC[0]->GetXaxis()->SetRangeUser(0,nBCMax);
+  maxY = max(h_superClusters_EB_nBC[0]->GetMaximum(), h_superClusters_EB_nBC[1]->GetMaximum()*s);
+  h_superClusters_EB_nBC[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EB_nBC[0]->SetLineColor(4);
   h_superClusters_EB_nBC[0]->Draw(); 
-  h_superClusters_EB_nBC[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EB_nBC[1]->Scale(s);
   h_superClusters_EB_nBC[1]->SetLineColor(2);
   h_superClusters_EB_nBC[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EB_nBC.%s",dirName,fileType); 
@@ -543,9 +569,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEP_nBC[0]->SetTitle("Number of Basic Clusters in SC (EE+)");
   h_superClusters_EEP_nBC[0]->GetXaxis()->SetTitle("number of BC");
   h_superClusters_EEP_nBC[0]->GetXaxis()->SetRangeUser(0,nBCMax);
+  maxY = max(h_superClusters_EEP_nBC[0]->GetMaximum(), h_superClusters_EEP_nBC[1]->GetMaximum()*s);
+  h_superClusters_EEP_nBC[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EEP_nBC[0]->SetLineColor(4);
   h_superClusters_EEP_nBC[0]->Draw(); 
-  h_superClusters_EEP_nBC[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEP_nBC[1]->Scale(s);
   h_superClusters_EEP_nBC[1]->SetLineColor(2);
   h_superClusters_EEP_nBC[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEP_nBC.%s",dirName,fileType); 
@@ -555,9 +583,11 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EEM_nBC[0]->SetTitle("Number of Basic Clusters in SC (EE-)");
   h_superClusters_EEM_nBC[0]->GetXaxis()->SetTitle("number of BC");
   h_superClusters_EEM_nBC[0]->GetXaxis()->SetRangeUser(0,nBCMax);
+  maxY = max(h_superClusters_EEM_nBC[0]->GetMaximum(), h_superClusters_EEM_nBC[1]->GetMaximum()*s);
+  h_superClusters_EEM_nBC[0]->GetYaxis()->SetRangeUser(0,maxY*1.1);
   h_superClusters_EEM_nBC[0]->SetLineColor(4);
   h_superClusters_EEM_nBC[0]->Draw(); 
-  h_superClusters_EEM_nBC[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EEM_nBC[1]->Scale(s);
   h_superClusters_EEM_nBC[1]->SetLineColor(2);
   h_superClusters_EEM_nBC[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EEM_nBC.%s",dirName,fileType); 
@@ -569,7 +599,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_eta[0]->GetXaxis()->SetTitle("#eta");
   h_superClusters_eta[0]->SetLineColor(4);
   h_superClusters_eta[0]->Draw(); 
-  h_superClusters_eta[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_eta[1]->Scale(s);
   h_superClusters_eta[1]->SetLineColor(2);
   h_superClusters_eta[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_eta.%s",dirName,fileType); 
@@ -580,7 +610,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EB_phi[0]->GetXaxis()->SetTitle("#phi");
   h_superClusters_EB_phi[0]->SetLineColor(4);
   h_superClusters_EB_phi[0]->Draw(); 
-  h_superClusters_EB_phi[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EB_phi[1]->Scale(s);
   h_superClusters_EB_phi[1]->SetLineColor(2);
   h_superClusters_EB_phi[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EB_phi.%s",dirName,fileType); 
@@ -591,7 +621,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_superClusters_EE_phi[0]->GetXaxis()->SetTitle("#phi");
   h_superClusters_EE_phi[0]->SetLineColor(4);
   h_superClusters_EE_phi[0]->Draw(); 
-  h_superClusters_EE_phi[1]->Scale(nEvents1/nEvents2);
+  h_superClusters_EE_phi[1]->Scale(s);
   h_superClusters_EE_phi[1]->SetLineColor(2);
   h_superClusters_EE_phi[1]->Draw("same"); 
   sprintf(name,"%s/superClusters_EE_phi.%s",dirName,fileType); 
@@ -605,7 +635,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_esClusters_energy_plane1[0] -> GetXaxis() -> SetTitle("energy (GeV)");
   h_esClusters_energy_plane1[0] -> SetLineColor(4);
   h_esClusters_energy_plane1[0] -> Draw();
-  h_esClusters_energy_plane1[1] -> Scale(nEvents1/nEvents2);
+  h_esClusters_energy_plane1[1] -> Scale(s);
   h_esClusters_energy_plane1[1] -> SetLineColor(2);
   h_esClusters_energy_plane1[1] -> Draw("same");
   sprintf(name,"%s/clusters_ES_plane1_energy.%s",dirName,fileType);
@@ -617,7 +647,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_esClusters_energy_plane2[0] -> GetXaxis() -> SetTitle("energy (GeV)");
   h_esClusters_energy_plane2[0] -> SetLineColor(4);
   h_esClusters_energy_plane2[0] -> Draw();
-  h_esClusters_energy_plane2[1] -> Scale(nEvents1/nEvents2);
+  h_esClusters_energy_plane2[1] -> Scale(s);
   h_esClusters_energy_plane2[1] -> SetLineColor(2);
   h_esClusters_energy_plane2[1] -> Draw("same");
   sprintf(name,"%s/clusters_ES_plane2_energy.%s",dirName,fileType);
@@ -629,7 +659,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
   h_esClusters_energy_ratio[0] -> GetXaxis() -> SetTitle("ratio");
   h_esClusters_energy_ratio[0] -> SetLineColor(4);
   h_esClusters_energy_ratio[0] -> Draw();
-  h_esClusters_energy_ratio[1] -> Scale(nEvents1/nEvents2);
+  h_esClusters_energy_ratio[1] -> Scale(s);
   h_esClusters_energy_ratio[1] -> SetLineColor(2);
   h_esClusters_energy_ratio[1] -> Draw("same");
   sprintf(name,"%s/clusters_ES_ratio_energy.%s",dirName,fileType);
