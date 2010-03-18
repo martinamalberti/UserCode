@@ -72,7 +72,6 @@ mkdir ${plots_dir}
 
 cp ${work_dir}/test/crab/${file1}/EcalValidation_${file1}.root ${plots_dir}
 cp ${work_dir}/test/crab/${file2}/EcalValidation_${file2}.root ${plots_dir}
-
 cd ${my_cmssw_base}/Validation/EcalValidation/data/macro
 
 
@@ -146,6 +145,7 @@ cat > ${plots_dir}/index.html <<EOF
  <li><A href="#NumberOfSuperClusters"> Number of SuperClusters </A><BR>
  <li><A href="#NumberOfCrystalsInSC"> Number of Crystals per SuperCluster </A><BR>
  <li><A href="#NumberOfBCInSC"> Number of Basic Clusters per SuperCluster </A><BR>
+ <li><A href="#EnergySC"> Super Clusters Energy </A><BR> 
  <li><A href="#SuperClustersEtaPhi"> Super Clusters Eta/Phi </A><BR>
  <li><A href="#ESclusters"> ES clusters  </A><BR>
  <li><A href="#Pi0peak"> Pi0 peak  </A><BR>
@@ -247,6 +247,18 @@ cat > ${plots_dir}/index.html <<EOF
 <A HREF=${httpdir}/${out_dir}/superClusters_EEM_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_nBC.png"> </A>
 
 <hr>
+
+
+<h3><A name="EnergySC">  Super Clusters Energy </h3>
+
+<A HREF=${httpdir}/${out_dir}/superClusters_EB_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_energy.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/superClusters_EEP_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_energy.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/superClusters_EEM_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_energy.png"> </A>
+
+<hr>
+
 
 <h3><A name="SuperClustersEtaPhi">  Super Clusters Eta/Phi </h3>
 
