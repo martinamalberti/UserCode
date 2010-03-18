@@ -240,14 +240,30 @@ EcalValidation::EcalValidation(const edm::ParameterSet& ps)
   h_superClusters_EE_phi     = fs->make<TH1D>("h_superClusters_EE_phi","h_superClusters_EE_phi",160,-3.2,3.2);
 
   // preshower
-  h_recHits_ES_size          = fs->make<TH1D>("h_recHits_ES_size","h_recHits_ES_size",1000,0.,10000);
-  h_recHits_ES_energy        = fs->make<TH1D>("h_recHits_ES_energy","h_recHits_ES_energy",1000,0.,0.01);
-  h_recHits_ES_energyMax     = fs->make<TH1D>("h_recHits_ES_energyMax","h_recHits_ES_energyMax",1000,0.,0.01);
-  h_recHits_ES_time          = fs->make<TH1D>("h_recHits_ES_time","h_recHits_ES_time",400,-100.,100.);
-  h_recHits_ES_energy_F[0]   = fs->make<TH1D>("h_recHits_ES_energy_F+","h_recHits_ES_energy_F+",1000,0.,0.01);
-  h_recHits_ES_energy_F[1]   = fs->make<TH1D>("h_recHits_ES_energy_F-","h_recHits_ES_energy_F-",1000,0.,0.01);
-  h_recHits_ES_energy_R[0]   = fs->make<TH1D>("h_recHits_ES_energy_R+","h_recHits_ES_energy_R+",1000,0.,0.01);
-  h_recHits_ES_energy_R[1]   = fs->make<TH1D>("h_recHits_ES_energy_R-","h_recHits_ES_energy_R-",1000,0.,0.01);
+  h_recHits_ES_size           = fs->make<TH1D>("h_recHits_ES_size","h_recHits_ES_size",1000,0.,10000);
+  h_recHits_ES_size_F[0]      = fs->make<TH1D>("h_recHits_ES_size_F+","h_recHits_ES_size_F+",1000,0.,10000);
+  h_recHits_ES_size_F[1]      = fs->make<TH1D>("h_recHits_ES_size_F-","h_recHits_ES_size_F-",1000,0.,10000);
+  h_recHits_ES_size_R[0]      = fs->make<TH1D>("h_recHits_ES_size_R+","h_recHits_ES_size_R+",1000,0.,10000);
+  h_recHits_ES_size_R[1]      = fs->make<TH1D>("h_recHits_ES_size_R-","h_recHits_ES_size_R-",1000,0.,10000);
+
+  h_recHits_ES_energy         = fs->make<TH1D>("h_recHits_ES_energy","h_recHits_ES_energy",1000,0.,0.01);
+  h_recHits_ES_energy_F[0]    = fs->make<TH1D>("h_recHits_ES_energy_F+","h_recHits_ES_energy_F+",1000,0.,0.01);
+  h_recHits_ES_energy_F[1]    = fs->make<TH1D>("h_recHits_ES_energy_F-","h_recHits_ES_energy_F-",1000,0.,0.01);
+  h_recHits_ES_energy_R[0]    = fs->make<TH1D>("h_recHits_ES_energy_R+","h_recHits_ES_energy_R+",1000,0.,0.01);
+  h_recHits_ES_energy_R[1]    = fs->make<TH1D>("h_recHits_ES_energy_R-","h_recHits_ES_energy_R-",1000,0.,0.01);
+
+  h_recHits_ES_energyMax      = fs->make<TH1D>("h_recHits_ES_energyMax","h_recHits_ES_energyMax",1000,0.,0.01);
+  h_recHits_ES_energyMax_F[0] = fs->make<TH1D>("h_recHits_ES_energyMax_F+","h_recHits_ES_energyMax_F+",1000,0.,0.01);
+  h_recHits_ES_energyMax_F[1] = fs->make<TH1D>("h_recHits_ES_energyMax_F-","h_recHits_ES_energyMax_F-",1000,0.,0.01);
+  h_recHits_ES_energyMax_R[0] = fs->make<TH1D>("h_recHits_ES_energyMax_R+","h_recHits_ES_energyMax_R+",1000,0.,0.01);
+  h_recHits_ES_energyMax_R[1] = fs->make<TH1D>("h_recHits_ES_energyMax_R-","h_recHits_ES_energyMax_R-",1000,0.,0.01);
+
+  h_recHits_ES_time           = fs->make<TH1D>("h_recHits_ES_time","h_recHits_ES_time",400,-100.,100.);
+  h_recHits_ES_time_F[0]      = fs->make<TH1D>("h_recHits_ES_time_F+","h_recHits_ES_time_F+",400,-100.,100.);
+  h_recHits_ES_time_F[1]      = fs->make<TH1D>("h_recHits_ES_time_F-","h_recHits_ES_time_F-",400,-100.,100.);
+  h_recHits_ES_time_R[0]      = fs->make<TH1D>("h_recHits_ES_time_R+","h_recHits_ES_time_R+",400,-100.,100.);
+  h_recHits_ES_time_R[1]      = fs->make<TH1D>("h_recHits_ES_time_R-","h_recHits_ES_time_R-",400,-100.,100.);
+
   h_esClusters_energy_plane1 = fs->make<TH1D>("h_esClusters_energy_plane1","h_esClusters_energy_plane1",1000,0.,0.01);
   h_esClusters_energy_plane2 = fs->make<TH1D>("h_esClusters_energy_plane2","h_esClusters_energy_plane2",1000,0.,0.01);
   h_esClusters_energy_ratio  = fs->make<TH1D>("h_esClusters_energy_ratio","h_esClusters_energy_ratio",100,0.,10.);
@@ -521,6 +537,9 @@ void EcalValidation::analyze(const edm::Event& ev, const edm::EventSetup& iSetup
 
   float maxRecHitEnergyES = -999.;
 
+  int nF[2]={0,0};
+  int nR[2]={0,0};
+
   for (ESRecHitCollection::const_iterator esItr = thePreShowerRecHits->begin(); esItr != thePreShowerRecHits->end(); ++esItr) 
     {
       
@@ -530,23 +549,36 @@ void EcalValidation::analyze(const edm::Event& ev, const edm::EventSetup& iSetup
 
       ESDetId id = ESDetId(esItr->id());
       // front plane : id.plane()==1
-      if ( id.plane()==1 && id.zside() > 0 )
-	h_recHits_ES_energy_F[0]->Fill( esItr->energy() );
-
-      if ( id.plane()==1 && id.zside() < 0 )
-	h_recHits_ES_energy_F[1]->Fill( esItr->energy() );
-      
+      if ( id.plane()==1 && id.zside() > 0 ){
+	h_recHits_ES_energy_F[0]-> Fill( esItr->energy() );
+	h_recHits_ES_time_F[0]  -> Fill( esItr->time() ); 
+	nF[0]++;
+      }
+      if ( id.plane()==1 && id.zside() < 0 ){
+	h_recHits_ES_energy_F[1]-> Fill( esItr->energy() );
+	h_recHits_ES_time_F[1]  -> Fill( esItr->time() );
+	nF[1]++;      
+      }
       // rear plane : id.plane()==2
-      if ( id.plane()==2 && id.zside() > 0 )
-	h_recHits_ES_energy_R[0]->Fill( esItr->energy() );
-
-      if ( id.plane()==2 && id.zside() < 0 )
+      if ( id.plane()==2 && id.zside() > 0 ){
+	h_recHits_ES_energy_R[0]-> Fill( esItr->energy() );
+	h_recHits_ES_time_R[0]  -> Fill( esItr->time() );
+	nR[0]++;
+      }
+      if ( id.plane()==2 && id.zside() < 0 ){
 	h_recHits_ES_energy_R[1]->Fill( esItr->energy() );
-      
+	h_recHits_ES_time_R[1]  -> Fill( esItr->time() );
+	nR[1]++;
+      }      
     } // end loop over ES rec Hits
 
   h_recHits_ES_energyMax -> Fill(maxRecHitEnergyES ); 
-  
+  h_recHits_ES_size_F[0] -> Fill( nF[0] );
+  h_recHits_ES_size_F[1] -> Fill( nF[1] );
+  h_recHits_ES_size_R[0] -> Fill( nR[0] );
+  h_recHits_ES_size_R[1] -> Fill( nR[1] );
+
+
   // ES clusters in X plane
   Handle<PreshowerClusterCollection> esClustersX;
   ev.getByLabel( esClusterCollectionX_, esClustersX);

@@ -230,11 +230,22 @@ class EcalValidation : public edm::EDAnalyzer {
 	 // PRESHOWER ----------------------------------------------
 	 
 	 TH1D *h_recHits_ES_size;
+	 TH1D *h_recHits_ES_size_F[2];
+	 TH1D *h_recHits_ES_size_R[2];
+
+
 	 TH1D *h_recHits_ES_energy;
-	 TH1D *h_recHits_ES_energyMax;
-	 TH1D *h_recHits_ES_time;
 	 TH1D *h_recHits_ES_energy_F[2];
 	 TH1D *h_recHits_ES_energy_R[2];
+
+	 TH1D *h_recHits_ES_energyMax;
+	 TH1D *h_recHits_ES_energyMax_F[2];
+	 TH1D *h_recHits_ES_energyMax_R[2];
+	
+	 TH1D *h_recHits_ES_time;
+	 TH1D *h_recHits_ES_time_F[2];
+	 TH1D *h_recHits_ES_time_R[2];
+
 	 TH1D *h_esClusters_energy_plane1;
 	 TH1D *h_esClusters_energy_plane2;
 	 TH1D *h_esClusters_energy_ratio;
