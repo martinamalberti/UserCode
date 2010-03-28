@@ -28,31 +28,40 @@ process.maxEvents = cms.untracked.PSet(
 
 # filter on PhysDeclared bit
 process.skimming = cms.EDFilter("PhysDecl",
-    applyfilter = cms.untracked.bool(True)
+   applyfilter = cms.untracked.bool(True)
 )
 
 # filter on bit 40 || 41 nad !(bit36 || bit37 || bit38 || bit39)
 process.load('L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskTechTrigConfig_cff')
 process.load('HLTrigger/HLTfilters/hltLevel1GTSeed_cfi')
 process.hltLevel1GTSeed.L1TechTriggerSeeding = cms.bool(True)
-process.hltLevel1GTSeed.L1SeedsLogicalExpression = cms.string('(40 OR 41) AND NOT (36 OR 37 OR 38 OR 39)')
+process.hltLevel1GTSeed.L1SeedsLogicalExpression = cms.string('0 AND (40 OR 41) AND NOT (36 OR 37 OR 38 OR 39) AND NOT ((42 AND NOT 43) OR (43 AND NOT 42))')
+
+# Good Vertex Filter (Malgeri)
+#process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
+#   vertexCollection = cms.InputTag('offlinePrimaryVertices'),
+#   minimumNDOF = cms.uint32(4) ,
+#   maxAbsZ = cms.double(15),	
+#   maxd0 = cms.double(2)	
+#)
+
+process.primaryVertexFilter = cms.EDFilter("VertexSelector",
+   src = cms.InputTag("offlinePrimaryVertices"),
+   cut = cms.string("!isFake && ndof > 4 && abs(z) <= 15 && position.Rho <= 2"), 
+   filter = cms.bool(True)   
+)
 
 # FilterOutScraping
 process.noscraping = cms.EDFilter("FilterOutScraping",
-                                  applyfilter = cms.untracked.bool(True),
-                                  debugOn = cms.untracked.bool(False),
-                                  numtrack = cms.untracked.uint32(10),
-                                  thresh = cms.untracked.double(0.25)
-                                  )
+   applyfilter = cms.untracked.bool(True),
+   debugOn = cms.untracked.bool(False),
+   numtrack = cms.untracked.uint32(10),
+   thresh = cms.untracked.double(0.25)
+)
 
-# Good Vertex Filter
-process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
-                                           vertexCollection = cms.InputTag('offlinePrimaryVertices'),
-                                           minimumNumberOfTracks = cms.uint32(3) ,
-                                           maxAbsZ = cms.double(15),	
-                                           maxd0 = cms.double(2)	
-                                           )
 
+process.goodvertex=cms.Sequence(process.primaryVertexFilter*process.noscraping)
+process.goodcollisions=cms.Sequence(process.hltLevel1GTSeed+process.goodvertex)
 
 process.load("Validation.EcalValidation.ecalvalidation_cfi")
 
@@ -61,10 +70,8 @@ process.TFileService = cms.Service("TFileService",
 )
 
 process.p = cms.Path(
-    process.skimming
-    *process.hltLevel1GTSeed
-    *process.noscraping
-    *process.primaryVertexFilter
-    *process.ecalvalidation
-    )
+   #    process.skimming*
+   process.goodcollisions*
+   process.ecalvalidation
+   )
 
