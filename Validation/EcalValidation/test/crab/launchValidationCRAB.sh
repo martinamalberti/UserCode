@@ -44,7 +44,7 @@ datasetpath=${data_set}
 pset = ecalvalidation_${name}_cfg.py
 
 ### Run selection
-runselection=123596,124022,124120
+#runselection=123596,124022,124120
 
 ### Splitting parameters
 #total_number_of_events=-1
