@@ -52,13 +52,13 @@ fi
 echo 'Preparing Validation Webpages' 
 
 # specify directories here
-#my_cmssw_base='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/PFG_devel_350/src'
-#work_dir='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/PFG_devel_350/src/Validation/EcalValidation';
-#echo $work_dir
-
-my_cmssw_base='/afs/cern.ch/user/m/malberti/scratch1/CMSSW_3_5_0/src'
-work_dir='/afs/cern.ch/user/m/malberti/scratch1/CMSSW_3_5_0/src/Validation/EcalValidation';
-#echo $work_dir
+cd ../../../
+my_cmssw_base=`\pwd`
+work_dir=${my_cmssw_base}/Validation/EcalValidation
+#my_cmssw_base='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/malberti/CMSSW_3_5_5/src'
+#work_dir='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/malberti/CMSSW_3_5_5/src/Validation/EcalValidation';
+echo $work_dir
+cd -
 
 out_dir=${file1}_vs_${file2};
 echo ${out_dir}
@@ -66,9 +66,6 @@ echo ${out_dir}
 plots_dir=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/ValidationPlots/${out_dir};
 
 mkdir ${plots_dir}
-
-#cp ${work_dir}/test/CrabWork/crab_${file1}/res/EcalValidation_${file1}.root ${plots_dir}
-#cp ${work_dir}/test/CrabWork/crab_${file2}/res/EcalValidation_${file2}.root ${plots_dir}
 
 cp ${work_dir}/test/crab/${file1}/EcalValidation_${file1}.root ${plots_dir}
 cp ${work_dir}/test/crab/${file2}/EcalValidation_${file2}.root ${plots_dir}
@@ -127,12 +124,12 @@ cat > ${plots_dir}/index.html <<EOF
 
 <FONT color="Black">
 
+
 <h4> Datasets </h4>
 <ul>
- <li> <FONT color="Blue"> ${data_set_1} </FONT> <BR>
- <li> <FONT color="Red"> ${data_set_2}  </FONT> <BR>
+ <li> <a  href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_1}"> <FONT color="Blue"> ${data_set_1} </a>  </FONT> <BR>
+ <li> <a href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_2}">  <FONT color="Red"> ${data_set_2} </a>    </FONT> <BR>
 </ul> 
-
 
 
 <h4> Validation Plots </h4>
