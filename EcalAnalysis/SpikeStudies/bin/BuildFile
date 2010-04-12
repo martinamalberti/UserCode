@@ -1,0 +1,6 @@
+<use name=root>
+<use name=boost>
+<bin name=SpikeAnalysis file="SpikeAnalysis.cpp">
+  <use name=EcalAnalysis/SpikeStudies>
+  <flags LCGDICT_ARGS="--deep">
+</bin>
