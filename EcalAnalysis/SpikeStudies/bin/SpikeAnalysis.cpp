@@ -21,7 +21,8 @@ int main (int argc, char** argv)
   TChain *chain = new TChain ("myanalysis/EcalAnalysisTree") ;
  
   // input files
-  chain->Add("/tmp/malberti/SpikesCommissioning2010_GOODCOLLV8.root");
+  chain->Add("/tmp/malberti/SpikesCommissioning10_GOODCOLLV8.root");
+  chain->Add("/tmp/malberti/SpikesCommissioning10_Apr1Skim_GOODCOLL-v1.root");
   int nEntries = chain->GetEntries () ;
   std::cout << "FOUND " << nEntries << " ENTRIES\n" ;    
 
@@ -88,18 +89,42 @@ int main (int argc, char** argv)
   chain -> SetBranchAddress("algoL1Bit",     algoL1Bit);
  
   // output file
+  // std::string outputRootName = "spikeAnalysis_EcalPhase-7ns.root" ;
   std::string outputRootName = "spikeAnalysis.root" ;
   
   // output histos
 
   TH1F *hRun = new TH1F("hRun","hRun",300,132400,132700);
 
-  TH1F *hS1oS9  = new TH1F("hS1oS9","hS1oS9",120,0,1.2); 
+  TH1F *hS1oS9  = new TH1F("hS1oS9","S1oS9 all Rec Hits",120,0,1.2); 
   hS1oS9 -> GetXaxis()-> SetTitle("S1/S9");
+
+  TH1F *hS1oS9_InTime  = new TH1F("hS1oS9_InTime","S1oS9 (!kOutOfTime)",120,0,1.2); 
+  hS1oS9_InTime -> SetMarkerColor(2);
+  hS1oS9_InTime -> SetMarkerStyle(23);
+  hS1oS9_InTime -> SetMarkerSize(0.5);
+  hS1oS9_InTime -> GetXaxis()-> SetTitle("S1/S9");
+  
+  TH1F *hS1oS9_GoodChi2  = new TH1F("hS1oS9_GoodChi2","S1oS9 (chi2 < 30)",120,0,1.2); 
+  hS1oS9_GoodChi2 -> SetMarkerColor(3);
+  hS1oS9_GoodChi2 -> SetMarkerStyle(24);
+  hS1oS9_GoodChi2 -> SetMarkerSize(0.5);
+  hS1oS9_GoodChi2 -> GetXaxis()-> SetTitle("S1/S9");
+
+  TH1F *hS1oS9_InTimeORGoodChi2  = new TH1F("hS1oS9_InTimeORGoodChi2","S1oS9 (!kOutOfTime OR chi2 < 30)",120,0,1.2); 
+  hS1oS9_InTimeORGoodChi2 -> SetMarkerColor(4);
+  hS1oS9_InTimeORGoodChi2 -> SetMarkerStyle(25);
+  hS1oS9_InTimeORGoodChi2 -> SetMarkerSize(0.5);
+  hS1oS9_InTimeORGoodChi2 -> GetXaxis()-> SetTitle("S1/S9");
 
   TH1F *hS4oS1 = new TH1F("hS4oS1","hS4oS1",210,-0.1,2); 
   hS4oS1 -> GetXaxis()-> SetTitle("S4/S1");
+
+  TH2F *hS1oS9_vs_S4oS1 = new TH2F("hS1oS9_vs_S4oS1","hS1oS9_vs_S4oS1",150,0,1.5,210,-0.1,2); 
+  hS1oS9_vs_S4oS1 -> GetXaxis()-> SetTitle("S4/S1");
+  hS1oS9_vs_S4oS1 -> GetYaxis()-> SetTitle("S1/S9");
   
+
   TH1F *hTime[2];
   hTime[0] = new TH1F("hTimeSpike","hTimeSpike",800,-100,100);
   hTime[0]->SetLineColor(2);
@@ -125,12 +150,12 @@ int main (int argc, char** argv)
   hOutOfTimeChi2[1] -> GetXaxis()-> SetTitle("chi^{2}/ndf");
 
   TH1F *hRatioEnergy[2];
-  hRatioEnergy[0] = new TH1F("hRatioEnergySpike","hRatioEnergySpike",800,-100,100);
+  hRatioEnergy[0] = new TH1F("hRatioEnergySpike","hRatioEnergySpike",200,0,2);
   hRatioEnergy[0]->SetLineColor(2);
-  hRatioEnergy[0]-> GetXaxis()-> SetTitle("t(ns)");
-  hRatioEnergy[1] = new TH1F("hRatioEnergyNormal","hRatioEnergyNormal",800,-100,100);
+  hRatioEnergy[0]-> GetXaxis()-> SetTitle("energy/energyOutOfTime");
+  hRatioEnergy[1] = new TH1F("hRatioEnergyNormal","hRatioEnergyNormal",200,0,2);
   hRatioEnergy[1]->SetLineColor(3);
-  hRatioEnergy[1]-> GetXaxis()-> SetTitle("t(ns)");
+  hRatioEnergy[1]-> GetXaxis()-> SetTitle("energy/energyOutOfTime");
 
 
   TH2F *hTime_vs_S1oS9 = new TH2F("hTime_vs_S1oS9","hTime_vs_S1oS9",150, 0.0,1.5,800,-100,100);
@@ -157,11 +182,11 @@ int main (int argc, char** argv)
   hOutOfTimeChi2_vs_S4oS1->GetXaxis()->SetTitle("S4/S1");
   hOutOfTimeChi2_vs_S4oS1->GetYaxis()->SetTitle("out-of-time chi^{2}");
 
-  TH2F *hRatioEnergy_vs_S1oS9 = new TH2F("hRatioEnergy_vs_S1oS9","hRatioEnergy_vs_S1oS9",150, 0.0,1.5,100,0,100);
+  TH2F *hRatioEnergy_vs_S1oS9 = new TH2F("hRatioEnergy_vs_S1oS9","hRatioEnergy_vs_S1oS9",150, 0.0,1.5,200,0,2);
   hRatioEnergy_vs_S1oS9->GetXaxis()->SetTitle("S1/S9");
   hRatioEnergy_vs_S1oS9->GetYaxis()->SetTitle("energy/energyOutOfTime");
 
-  TH2F *hRatioEnergy_vs_S4oS1 = new TH2F("hRatioEnergy_vs_S4oS1","hRatioEnergy_vs_S4oS1",210,-0.1,2.0,100,0,100);
+  TH2F *hRatioEnergy_vs_S4oS1 = new TH2F("hRatioEnergy_vs_S4oS1","hRatioEnergy_vs_S4oS1",210,-0.1,2.0,200,0,2);
   hRatioEnergy_vs_S4oS1->GetXaxis()->SetTitle("S4/S1");
   hRatioEnergy_vs_S4oS1->GetYaxis()->SetTitle("energy/energyOutOfTime");
 
@@ -186,30 +211,39 @@ int main (int argc, char** argv)
   hTime_vs_OutOfTimeChi2[1] ->SetMarkerColor(3);
 
   TH2F *hTime_vs_RatioEnergy[2];
-  hTime_vs_RatioEnergy[0] = new TH2F("hTime_vs_RatioEnergy_Spike","hTime_vs_RatioEnergy_Spike",100, 0,100,800,-100,100);
+  hTime_vs_RatioEnergy[0] = new TH2F("hTime_vs_RatioEnergy_Spike","hTime_vs_RatioEnergy_Spike",200, 0,2,800,-100,100);
   hTime_vs_RatioEnergy[0] ->GetXaxis()->SetTitle("energy/energyOutOfTime");
   hTime_vs_RatioEnergy[0] ->GetYaxis()->SetTitle("time(ns)");
   hTime_vs_RatioEnergy[0] ->SetMarkerColor(2);
-  hTime_vs_RatioEnergy[1] = new TH2F("hTime_vs_RatioEnergy_Normal","hTime_vs_RatioEnergy_Normal",100, 0,100,800,-100,100);
+  hTime_vs_RatioEnergy[1] = new TH2F("hTime_vs_RatioEnergy_Normal","hTime_vs_RatioEnergy_Normal",200, 0,2,800,-100,100);
   hTime_vs_RatioEnergy[1] ->GetXaxis()->SetTitle("energy/energyOutOfTime");
   hTime_vs_RatioEnergy[1] ->GetYaxis()->SetTitle("time(ns)");
   hTime_vs_RatioEnergy[1] ->SetMarkerColor(3);
 
+  TH2F *hChi2_vs_RatioEnergy[2];
+  hChi2_vs_RatioEnergy[0] = new TH2F("hChi2_vs_RatioEnergy_Spike","hChi2_vs_RatioEnergy_Spike",200, 0,2,100,0,100);
+  hChi2_vs_RatioEnergy[0] ->GetXaxis()->SetTitle("energy/energyOutOfTime");
+  hChi2_vs_RatioEnergy[0] ->GetYaxis()->SetTitle("chi^{2}");
+  hChi2_vs_RatioEnergy[0] ->SetMarkerColor(2);
+  hChi2_vs_RatioEnergy[1] = new TH2F("hChi2_vs_RatioEnergy_Normal","hChi2_vs_RatioEnergy_Normal",200, 0,2,100,0,100);
+  hChi2_vs_RatioEnergy[1] ->GetXaxis()->SetTitle("energy/energyOutOfTime");
+  hChi2_vs_RatioEnergy[1] ->GetYaxis()->SetTitle("chi^{2}");
+  hChi2_vs_RatioEnergy[1] ->SetMarkerColor(3);
 
 
   // loop over entries
   for (int entry = 0; entry < nEntries; ++entry)
     {
       chain->GetEntry (entry) ;
-      if(entry%100000 == 0) std::cout << "event n. " << entry << std::endl;
+      if(entry%500000 == 0) std::cout << "event n. " << entry << std::endl;
       
 
       if ((techL1Bit[40]+techL1Bit[41])==0) continue; // c'e' gia'
              
-
+      
       // select the good collisions runs + good lumi sections (no ecal time scans, etc...)
       bool goodrun = false;
-
+      
       if (runId==132440 && lumiId >=86  && lumiId <= 138) goodrun = true;
       if (runId==132440 && lumiId >=141 && lumiId <= 401) goodrun = true;
    
@@ -250,6 +284,16 @@ int main (int argc, char** argv)
       if (runId==132605 && lumiId >=831 && lumiId <= 968) goodrun = true;
 
       if (runId==132606 && lumiId >=1   && lumiId <= 37 ) goodrun = true;
+      
+
+    
+
+      // if (runId == 132478) goodrun = true; // + 6ns 
+
+      //if (runId == 132647) goodrun = true; // + 7ns
+
+      //if (runId == 132598 && lumiId >=1 && lumiId <= 79) goodrun = true; // -7ns
+ 
 
       if (!goodrun) continue;      
 
@@ -271,7 +315,18 @@ int main (int argc, char** argv)
 
       float ratioEnergy = ecalRecHitEnergy[ihit]/ecalRecHitOutOfTimeEnergy[ihit];
 
+      //if (  ecalRecHitRecoFlag[ihit] == 2 ) continue; 
+      //if ( fabs(ecalRecHitTime[ihit]) > 4) continue; 
+      //if ( ecalRecHitChi2[ihit] > 30) continue; 
+      //if ( ratioEnergy < 0.9) continue; 
+
       hRun->Fill(runId);
+
+      if ( ecalRecHitRecoFlag[ihit] != 2 ) hS1oS9_InTime   -> Fill(ecalRecHitR9[ihit] );
+      if ( ecalRecHitChi2[ihit] < 30     ) hS1oS9_GoodChi2 -> Fill(ecalRecHitR9[ihit] );
+      if ( ecalRecHitRecoFlag[ihit] != 2 || ecalRecHitChi2[ihit]< 30) 
+	hS1oS9_InTimeORGoodChi2 -> Fill(ecalRecHitR9[ihit] );
+
       hS1oS9                 -> Fill(ecalRecHitR9[ihit] );
       hTime_vs_S1oS9         -> Fill(ecalRecHitR9[ihit],ecalRecHitTime[ihit] );
       hChi2_vs_S1oS9         -> Fill(ecalRecHitR9[ihit],ecalRecHitChi2[ihit] );
@@ -284,24 +339,28 @@ int main (int argc, char** argv)
       hOutOfTimeChi2_vs_S4oS1-> Fill(ecalRecHitS4oS1[ihit],ecalRecHitOutOfTimeChi2[ihit] );
       hRatioEnergy_vs_S4oS1  -> Fill(ecalRecHitS4oS1[ihit],ratioEnergy );
 
+      hS1oS9_vs_S4oS1 -> Fill( ecalRecHitS4oS1[ihit], ecalRecHitR9[ihit]);
+
       if (ecalRecHitR9[ihit] > 0.9 ) {
         hTime[0]                  -> Fill( ecalRecHitTime[ihit] );
-	if (fabs(ecalRecHitTime[ihit]) >4 ) hChi2[0]                  -> Fill( ecalRecHitChi2[ihit]);
+	hChi2[0]                  -> Fill( ecalRecHitChi2[ihit]);
         hOutOfTimeChi2[0]         -> Fill( ecalRecHitOutOfTimeChi2[ihit]);
         hRatioEnergy[0]           -> Fill( ratioEnergy );
 	hTime_vs_Chi2[0]          -> Fill( ecalRecHitChi2[ihit], ecalRecHitTime[ihit] );
 	hTime_vs_OutOfTimeChi2[0] -> Fill( ecalRecHitOutOfTimeChi2[ihit], ecalRecHitTime[ihit] );
 	hTime_vs_RatioEnergy[0]   -> Fill( ratioEnergy, ecalRecHitTime[ihit] );
+	hChi2_vs_RatioEnergy[0]   -> Fill( ratioEnergy, ecalRecHitChi2[ihit] );
       }
 
       if (ecalRecHitR9[ihit] < 0.9 ) {
 	hTime[1]                  -> Fill( ecalRecHitTime[ihit] );
-        if (fabs(ecalRecHitTime[ihit]) >4 ) hChi2[1]                  -> Fill( ecalRecHitChi2[ihit]);
+        hChi2[1]                  -> Fill( ecalRecHitChi2[ihit]);
         hOutOfTimeChi2[1]         -> Fill( ecalRecHitOutOfTimeChi2[ihit]);
         hRatioEnergy[1]           -> Fill( ratioEnergy );
 	hTime_vs_Chi2[1]          -> Fill( ecalRecHitChi2[ihit], ecalRecHitTime[ihit] );
 	hTime_vs_OutOfTimeChi2[1] -> Fill( ecalRecHitOutOfTimeChi2[ihit], ecalRecHitTime[ihit] );
 	hTime_vs_RatioEnergy[1]   -> Fill( ratioEnergy, ecalRecHitTime[ihit] );
+	hChi2_vs_RatioEnergy[1]   -> Fill( ratioEnergy, ecalRecHitChi2[ihit] );
       }
 
 
@@ -319,7 +378,13 @@ int main (int argc, char** argv)
   
   // saving distributions
   hRun->Write();
+
+
   hS1oS9                  -> Write();
+  hS1oS9_InTime           -> Write();
+  hS1oS9_GoodChi2         -> Write();
+  hS1oS9_InTimeORGoodChi2 -> Write();
+
   hTime_vs_S1oS9          -> Write();    
   hChi2_vs_S1oS9          -> Write();   
   hOutOfTimeChi2_vs_S1oS9 -> Write();
@@ -331,6 +396,7 @@ int main (int argc, char** argv)
   hOutOfTimeChi2_vs_S4oS1 -> Write();
   hRatioEnergy_vs_S4oS1   -> Write();
 
+  hS1oS9_vs_S4oS1 ->Write();
 
   for (int i = 0; i < 2 ; i++){
     hTime[i]                  -> Write();
@@ -340,6 +406,7 @@ int main (int argc, char** argv)
     hTime_vs_Chi2[i]          -> Write();
     hTime_vs_OutOfTimeChi2[i] -> Write();
     hTime_vs_RatioEnergy[i]   -> Write();
+    hChi2_vs_RatioEnergy[i]   -> Write();
   }
 
   saving.Close () ;

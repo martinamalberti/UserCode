@@ -4,3 +4,11 @@
   <use name=EcalAnalysis/SpikeStudies>
   <flags LCGDICT_ARGS="--deep">
 </bin>
+<bin name=SpikeEfficiency file="SpikeEfficiency.cpp">
+  <use name=EcalAnalysis/SpikeStudies>
+  <flags LCGDICT_ARGS="--deep">
+</bin>
+<bin name=Chi2Analysis file="Chi2Analysis.cpp">
+  <use name=EcalAnalysis/SpikeStudies>
+  <flags LCGDICT_ARGS="--deep">
+</bin>
