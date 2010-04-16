@@ -118,7 +118,7 @@ cat > ${plots_dir}/index.html <<EOF
 <hr>
 
 <Center>
-<h3>  <FONT color="Blue"> ${file1}  <FONT color="Black"> vs <FONT color="Red"> ${file2}  </h3>
+<h3>  <FONT color="Red"> ${file1}  <FONT color="Black"> vs <FONT color="Grey"> ${file2}  </h3>
 </center>
 
 
@@ -127,8 +127,8 @@ cat > ${plots_dir}/index.html <<EOF
 
 <h4> Datasets </h4>
 <ul>
- <li> <a  href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_1}"> <FONT color="Blue"> ${data_set_1} </a>  </FONT> <BR>
- <li> <a href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_2}">  <FONT color="Red"> ${data_set_2} </a>    </FONT> <BR>
+ <li> <a  href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_1}"> <FONT color="Red"> ${data_set_1} </a>  </FONT> <BR>
+ <li> <a href="https://cmsweb.cern.ch/dbs_discovery/getData?dbsInst=cms_dbs_prod_global&proc=${data_set_2}">  <FONT color="Grey"> ${data_set_2} </a>    </FONT> <BR>
 </ul> 
 
 
@@ -159,128 +159,128 @@ cat > ${plots_dir}/index.html <<EOF
 <h3><A name="RecHitsMultiplicity"> Rec Hits Multiplicity  </h3>
 
 
-<A HREF=${httpdir}/${out_dir}/recHits_EB_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_size.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEP_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEP_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEP_size.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEM_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEM_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEM_size.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_ES_size.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_ES_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_size.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEnergy"> Rec Hits Energy </h3>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EB_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_energy.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_energy.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEP_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEP_energy.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEP_energy.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEM_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEM_energy.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEM_energy.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_ES_energy.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_ES_energy.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_energy.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEnergyMax"> Rec Hits Max Energy </h3>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EB_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEP_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEP_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEP_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEM_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEM_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEM_energyMax.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_ES_energyMax.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_energyMax.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_ES_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_energyMax.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsTime"> Rec Hits Time </h3>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EB_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EB_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_time.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_time.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEP_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEP_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEP_time.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEP_time.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EEM_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_EEM_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEM_time.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEM_time.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_ES_time.png> <img height="300" src="${httpdir}/${out_dir}/recHits_ES_time.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_ES_time.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_time.png"> </A>
 
 <hr>
 
 <h3><A name="RecHitsEtaPhi"> Rec Hits Eta/Phi </h3>
 
-<A HREF=${httpdir}/${out_dir}/recHits_eta.png> <img height="200" src="${httpdir}/${out_dir}/recHits_eta.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_eta.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_eta.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EB_phi.png> <img height="200" src="${httpdir}/${out_dir}/recHits_EB_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EB_phi.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/recHits_EE_phi.png> <img height="200" src="${httpdir}/${out_dir}/recHits_EE_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EE_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EE_phi.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfSuperClusters"> Number of SuperClusters </h3>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EB_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_size.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_size.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEP_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_size.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_size.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEM_size.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_size.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_size.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_size.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfCrystalsInSC">  Number of Crystals per SuperCluster </h3>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EB_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEP_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEM_nXtals.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_nXtals.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png"> </A>
 
 <hr>
 
 <h3><A name="NumberOfBCInSC">  Number of Basic Clusters per SuperCluster </h3>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EB_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nBC.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEP_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEM_nBC.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_nBC.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png"> </A>
 
 <hr>
 
 
 <h3><A name="EnergySC">  Super Clusters Energy </h3>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EB_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_energy.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_energy.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEP_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEP_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_energy.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_energy.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EEM_energy.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EEM_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_energy.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_energy.png"> </A>
 
 <hr>
 
 
 <h3><A name="SuperClustersEtaPhi">  Super Clusters Eta/Phi </h3>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_eta.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_eta.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_eta.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_eta.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EB_phi.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EB_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_phi.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/superClusters_EE_phi.png> <img height="200" src="${httpdir}/${out_dir}/superClusters_EE_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EE_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EE_phi.png"> </A>
 
 <hr>
 
 <h3><A name="ESclusters"> ES clusters  </h3>
 
-<A HREF=${httpdir}/${out_dir}/clusters_ES_plane1_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_plane1_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_esClusters_energy_plane1.png> <img height="300" src="${httpdir}/${out_dir}/h_esClusters_energy_plane1.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/clusters_ES_plane2_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_plane2_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_esClusters_energy_plane2.png> <img height="300" src="${httpdir}/${out_dir}/h_esClusters_energy_plane2.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/clusters_ES_ratio_energy.png> <img height="200" src="${httpdir}/${out_dir}/clusters_ES_ratio_energy.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_esClusters_energy_ratio.png> <img height="300" src="${httpdir}/${out_dir}/h_esClusters_energy_ratio.png"> </A>
 
 <hr>
 
 <h3><A name="Pi0peak"> Pi0 peak  </h3>
 
-<A HREF=${httpdir}/${out_dir}/pi0_EB_mass.png> <img height="200" src="${httpdir}/${out_dir}/pi0_EB_mass.png"> </A>
-<A HREF=${httpdir}/${out_dir}/pi0_EE_mass.png> <img height="200" src="${httpdir}/${out_dir}/pi0_EE_mass.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_Pi0_EB_mass.png> <img height="300" src="${httpdir}/${out_dir}/h_Pi0_EB_mass.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_Pi0_EE_mass.png> <img height="300" src="${httpdir}/${out_dir}/h_Pi0_EE_mass.png"> </A>
 
 <hr>
 
