@@ -19,8 +19,6 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 {
   gROOT->Reset();
   gROOT->SetStyle("Plain");
-  //gROOT->ProcessLine(".L ./tdrStyle.c"); 
-  //setTDRStyle();
   gStyle->SetPalette(1); 
   gStyle->SetOptStat(1110);
   gStyle->SetPadTickX(1);
@@ -47,8 +45,8 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 
 
   // Define list of object names
-  int nObj=37;
-  char *objName[37]={"ecalvalidation/h_recHits_EB_size",
+  int nObj=40;
+  char *objName[40]={"ecalvalidation/h_recHits_EB_size",
 		     "ecalvalidation/h_recHits_EEP_size",
 		     "ecalvalidation/h_recHits_EEM_size",
 		     "ecalvalidation/h_recHits_ES_size",
@@ -67,6 +65,9 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "ecalvalidation/h_recHits_eta",
 		     "ecalvalidation/h_recHits_EB_phi",
 		     "ecalvalidation/h_recHits_EE_phi",
+		     "ecalvalidation/h_recHits_EB_Chi2",
+		     "ecalvalidation/h_recHits_EEP_Chi2",
+		     "ecalvalidation/h_recHits_EEM_Chi2",
 		     "ecalvalidation/h_superClusters_EB_size",
 		     "ecalvalidation/h_superClusters_EEP_size",
 		     "ecalvalidation/h_superClusters_EEM_size",
@@ -86,7 +87,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "ecalvalidation/h_esClusters_energy_plane2",
 		     "ecalvalidation/h_esClusters_energy_ratio"  };
 
- char *objTitle[37]={"Number of RecHits (EB)",
+ char *objTitle[40]={"Number of RecHits (EB)",
 		     "Number of RecHits (EE+)",
 		     "Number of RecHits (EE-)",
 		     "Number of RecHits (ES)",
@@ -105,6 +106,9 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "RecHits Eta",
 		     "RecHits Phi (EB)",
 		     "RecHits Phi (EE)", 
+		     "RecHits \ #chi^{2} (EB)",
+		     "RecHits \ #chi^{2} (EE+)",
+		     "RecHits \ #chi^{2} (EE-)",
 		     "Number of Superclusters (EB)",
 		     "Number of Superclusters (EE+)",
 		     "Number of Superclusters (EE-)",
@@ -124,7 +128,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "ES Clusters Energy - Plane 2",
 		     "ES Clusters Energy - Ratio"};
 
-  char *labelX[37]={"Number of RecHits/Event",
+  char *labelX[40]={"Number of RecHits/Event",
 		    "Number of RecHits/Event",
 		    "Number of RecHits/Event",
 		    "Number of RecHits/Event",
@@ -143,6 +147,9 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		    "eta",
 		    "phi",
 		    "phi",
+		    "#chi^{2}",
+		    "#chi^{2}",
+		    "#chi^{2}",
 		    "Superclusters/Event",
 		    "Superclusters/Event",
 		    "Superclusters/Event",
@@ -164,7 +171,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 
   char *labelY[1]={"Counts"};
 
-  double xMin[37]={0.,0.,0.,0., 
+  double xMin[40]={0.,0.,0.,0., 
 		   0.,0.,0.,0., 
 		   1.,1.,1.,1.,
 		   -50.,-50.,-50.,-50.,
@@ -173,14 +180,16 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		   0,0,0,
 		   0,0,0,
 		   0,0,0,
+		   0,0,0,
 		   -3.,-3.2,-3.2,
 		   0,0,0};
   
-  double xMax[37]={3000.,1700.,1700.,2200.,  
+  double xMax[40]={3000.,1700.,1700.,2200.,  
 		   20.,20.,20.,0.5, 
 		   40,40,40,1.,
 		   50.,50.,50.,50.,
 		   3.,3.2,3.2,
+		   65,65,65,
 		   20,20,20,
 		   50,50,50,
 		   10,10,10,
@@ -188,11 +197,12 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		   3.,3.2,3.2,
 		   0.01,0.01,10};
 
-  int reBin[37]  ={2,2,2,2, 
+  int reBin[40]  ={2,2,2,2, 
 		   8,8,8,8, 
 		   4,4,4,4, 
 		   1,1,1,1, 
 		   2,2,2, 
+		   5,5,5,
 		   1,1,1,
 		   1,1,1,
 		   1,1,1,
@@ -201,11 +211,12 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		   10,10,1};
 
 
-  int optLogY[37] = {1,1,1,1,
+  int optLogY[40] = {1,1,1,1,
 		     1,1,1,1,
 		     1,1,1,1,
 		     0,0,0,0,
 		     0,0,0,
+		     1,1,1,
 		     1,1,1,
 		     1,1,1,
 		     1,1,1,

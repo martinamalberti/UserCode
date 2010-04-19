@@ -112,7 +112,7 @@ cat > ${plots_dir}/index.html <<EOF
 <FONT color="Black">
 
 <Center>
-<h1> ECAL Validation </h1>
+<h1> ECAL RECO Validation </h1>
 </Center>
 
 <hr>
@@ -134,18 +134,25 @@ cat > ${plots_dir}/index.html <<EOF
 
 <h4> Validation Plots </h4>
 <ul>
+ <li> Rec Hits
+ <ul>
  <li><A href="#RecHitsMultiplicity"> Rec Hits Multiplicity </A><BR>
  <li><A href="#RecHitsEnergy"> Rec Hits Energy</A><BR>
  <li><A href="#RecHitsEnergyMax"> Rec Hits Max Energy </A><BR>
- <li><A href="#RecHitsTime"> Rec Hits Time </A><BR>
  <li><A href="#RecHitsEtaPhi"> Rec Hits Eta/Phi </A><BR>
+ <li><A href="#RecHitsTime"> Rec Hits Time </A><BR>
+ <li><A href="#RecHitsChi2"> Rec Hits Chi<sup>2</sup></A><BR>
+</ul>
+ <li> Clusters
+ <ul>
  <li><A href="#NumberOfSuperClusters"> Number of SuperClusters </A><BR>
- <li><A href="#NumberOfCrystalsInSC"> Number of Crystals per SuperCluster </A><BR>
- <li><A href="#NumberOfBCInSC"> Number of Basic Clusters per SuperCluster </A><BR>
  <li><A href="#EnergySC"> Super Clusters Energy </A><BR> 
  <li><A href="#SuperClustersEtaPhi"> Super Clusters Eta/Phi </A><BR>
+ <li><A href="#NumberOfCrystalsInSC"> Number of Crystals per SuperCluster </A><BR>
+ <li><A href="#NumberOfBCInSC"> Number of Basic Clusters per SuperCluster </A><BR>
  <li><A href="#ESclusters"> ES clusters  </A><BR>
- <li><A href="#Pi0peak"> Pi0 peak  </A><BR>
+</ul>
+<li><A href="#Pi0peak"> Pi0 peak  </A><BR>
 </ul>
 <h4> Root Files </h4> 
 <ul>
@@ -158,7 +165,6 @@ cat > ${plots_dir}/index.html <<EOF
 
 <h3><A name="RecHitsMultiplicity"> Rec Hits Multiplicity  </h3>
 
-
 <A HREF=${httpdir}/${out_dir}/h_recHits_EB_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_size.png"> </A>
 
 <A HREF=${httpdir}/${out_dir}/h_recHits_EEP_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EEP_size.png"> </A>
@@ -168,6 +174,8 @@ cat > ${plots_dir}/index.html <<EOF
 <A HREF=${httpdir}/${out_dir}/h_recHits_ES_size.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_size.png"> </A>
 
 <hr>
+
+
 
 <h3><A name="RecHitsEnergy"> Rec Hits Energy </h3>
 
@@ -181,6 +189,8 @@ cat > ${plots_dir}/index.html <<EOF
 
 <hr>
 
+
+
 <h3><A name="RecHitsEnergyMax"> Rec Hits Max Energy </h3>
 
 <A HREF=${httpdir}/${out_dir}/h_recHits_EB_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_EB_energyMax.png"> </A>
@@ -192,6 +202,19 @@ cat > ${plots_dir}/index.html <<EOF
 <A HREF=${httpdir}/${out_dir}/h_recHits_ES_energyMax.png> <img height="350" src="${httpdir}/${out_dir}/h_recHits_ES_energyMax.png"> </A>
 
 <hr>
+
+
+<h3><A name="RecHitsEtaPhi"> Rec Hits Eta/Phi </h3>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_eta.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_eta.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EB_phi.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_EE_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EE_phi.png"> </A>
+
+<hr>
+
+
 
 <h3><A name="RecHitsTime"> Rec Hits Time </h3>
 
@@ -205,15 +228,19 @@ cat > ${plots_dir}/index.html <<EOF
 
 <hr>
 
-<h3><A name="RecHitsEtaPhi"> Rec Hits Eta/Phi </h3>
 
-<A HREF=${httpdir}/${out_dir}/h_recHits_eta.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_eta.png"> </A>
 
-<A HREF=${httpdir}/${out_dir}/h_recHits_EB_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EB_phi.png"> </A>
+<h3><A name="RecHitsChi2"> Rec Hits Chi<sup>2</sup> </h3>
 
-<A HREF=${httpdir}/${out_dir}/h_recHits_EE_phi.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EE_phi.png"> </A>
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_Chi2.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EB_Chi2.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEP_Chi2.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EEP_Chi2.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_EEM_Chi2.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EEM_Chi2.png"> </A>
 
 <hr>
+
+
 
 <h3><A name="NumberOfSuperClusters"> Number of SuperClusters </h3>
 
@@ -225,25 +252,6 @@ cat > ${plots_dir}/index.html <<EOF
 
 <hr>
 
-<h3><A name="NumberOfCrystalsInSC">  Number of Crystals per SuperCluster </h3>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png"> </A>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png"> </A>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png"> </A>
-
-<hr>
-
-<h3><A name="NumberOfBCInSC">  Number of Basic Clusters per SuperCluster </h3>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nBC.png"> </A>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png"> </A>
-
-<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png"> </A>
-
-<hr>
 
 
 <h3><A name="EnergySC">  Super Clusters Energy </h3>
@@ -267,6 +275,32 @@ cat > ${plots_dir}/index.html <<EOF
 
 <hr>
 
+
+
+<h3><A name="NumberOfCrystalsInSC">  Number of Crystals per SuperCluster </h3>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nXtals.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nXtals.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nXtals.png"> </A>
+
+<hr>
+
+
+
+<h3><A name="NumberOfBCInSC">  Number of Basic Clusters per SuperCluster </h3>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EB_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EB_nBC.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEP_nBC.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png> <img height="300" src="${httpdir}/${out_dir}/h_superClusters_EEM_nBC.png"> </A>
+
+<hr>
+
+
+
 <h3><A name="ESclusters"> ES clusters  </h3>
 
 <A HREF=${httpdir}/${out_dir}/h_esClusters_energy_plane1.png> <img height="300" src="${httpdir}/${out_dir}/h_esClusters_energy_plane1.png"> </A>
@@ -276,6 +310,8 @@ cat > ${plots_dir}/index.html <<EOF
 <A HREF=${httpdir}/${out_dir}/h_esClusters_energy_ratio.png> <img height="300" src="${httpdir}/${out_dir}/h_esClusters_energy_ratio.png"> </A>
 
 <hr>
+
+
 
 <h3><A name="Pi0peak"> Pi0 peak  </h3>
 
