@@ -157,8 +157,18 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EB_Chi2;
 	 TH1D *h_recHits_EB_OutOfTimeChi2;
 	 TH2D *h_recHits_EB_occupancy;
-	 
+
+	 TH2D *h_recHits_EB_size_vsBX;
+	 TH2D *h_recHits_EB_size_vsLS;
+
+/* 	 TH1D *h_recHits_EB_R9; */
+/* 	 TH1D *h_recHits_EB_R4; */
+ 
+
 	 // ... endcap
+
+	 TH1D *h_recHits_EE_size;
+	 
 	 TH1D *h_recHits_EEP_size;
 	 TH1D *h_recHits_EEP_energy;
 	 TH1D *h_recHits_EEP_energyMax;
@@ -166,7 +176,9 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EEP_Chi2;
 	 TH1D *h_recHits_EEP_OutOfTimeChi2;
 	 TH2D *h_recHits_EEP_occupancy;
-	 
+	 TH2D *h_recHits_EEP_size_vsBX;
+	 TH2D *h_recHits_EEP_size_vsLS;
+
 	 TH1D *h_recHits_EEM_size;
 	 TH1D *h_recHits_EEM_energy;
 	 TH1D *h_recHits_EEM_energyMax;
@@ -174,7 +186,10 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EEM_Chi2;
 	 TH1D *h_recHits_EEM_OutOfTimeChi2;
 	 TH2D *h_recHits_EEM_occupancy;
-	 
+	 TH2D *h_recHits_EEM_size_vsBX;
+	 TH2D *h_recHits_EEM_size_vsLS;
+
+
 	 TH1D *h_recHits_EB_phi;
 	 TH1D *h_recHits_EE_phi;
 	 TH1D *h_recHits_eta;
@@ -208,6 +223,7 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_superClusters_EB_nBC;
 	 TH1D *h_superClusters_EB_energy;
 	 TH1D *h_superClusters_EB_E1oE9;
+	 TH1D *h_superClusters_EB_E1oE4;
 	 
 	 // ... endcap
 	 TH1D *h_superClusters_EEP_size;
@@ -215,12 +231,14 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_superClusters_EEP_nBC;
 	 TH1D *h_superClusters_EEP_energy;
 	 TH1D *h_superClusters_EEP_E1oE9;
+	 TH1D *h_superClusters_EEP_E1oE4; 
 	 
 	 TH1D *h_superClusters_EEM_size;
 	 TH1D *h_superClusters_EEM_nXtals;
 	 TH1D *h_superClusters_EEM_nBC;
 	 TH1D *h_superClusters_EEM_energy;
 	 TH1D *h_superClusters_EEM_E1oE9;
+	 TH1D *h_superClusters_EEM_E1oE4; 
 	 
 	 TH1D *h_superClusters_eta;
 	 TH1D *h_superClusters_EB_phi;
