@@ -45,8 +45,8 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 
 
   // Define list of object names
-  int nObj=40;
-  char *objName[40]={"ecalvalidation/h_recHits_EB_size",
+  int nObj=43;
+  char *objName[43]={"ecalvalidation/h_recHits_EB_size",
 		     "ecalvalidation/h_recHits_EEP_size",
 		     "ecalvalidation/h_recHits_EEM_size",
 		     "ecalvalidation/h_recHits_ES_size",
@@ -83,11 +83,14 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "ecalvalidation/h_superClusters_eta",
 		     "ecalvalidation/h_superClusters_EB_phi",
 		     "ecalvalidation/h_superClusters_EE_phi",
+		     "ecalvalidation/h_superClusters_EB_E1oE4",
+		     "ecalvalidation/h_superClusters_EEP_E1oE4",
+		     "ecalvalidation/h_superClusters_EEM_E1oE4",
 		     "ecalvalidation/h_esClusters_energy_plane1",
 		     "ecalvalidation/h_esClusters_energy_plane2",
 		     "ecalvalidation/h_esClusters_energy_ratio"  };
 
- char *objTitle[40]={"Number of RecHits (EB)",
+ char *objTitle[43]={"Number of RecHits (EB)",
 		     "Number of RecHits (EE+)",
 		     "Number of RecHits (EE-)",
 		     "Number of RecHits (ES)",
@@ -124,11 +127,14 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     "Superclusters Eta",
 		     "Superclusters Phi (EB)",
 		     "Superclusters Phi (EE)",
+		     "1-E4/E1",
+		     "1-E4/E1",
+		     "1-E4/E1",
 		     "ES Clusters Energy - Plane 1",
 		     "ES Clusters Energy - Plane 2",
 		     "ES Clusters Energy - Ratio"};
 
-  char *labelX[40]={"Number of RecHits/Event",
+  char *labelX[43]={"Number of RecHits/Event",
 		    "Number of RecHits/Event",
 		    "Number of RecHits/Event",
 		    "Number of RecHits/Event",
@@ -165,13 +171,16 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		    "eta",
 		    "phi",
 		    "phi",
+		    "1-E4/E1",
+		    "1-E4/E1",
+		    "1-E4/E1",
 		    "Energy (GeV)",
 		    "Energy (GeV)",
 		    "EnergyPlane1/EnergyPlane1"};
 
   char *labelY[1]={"Counts"};
 
-  double xMin[40]={0.,0.,0.,0., 
+  double xMin[43]={0.,0.,0.,0., 
 		   0.,0.,0.,0., 
 		   1.,1.,1.,1.,
 		   -50.,-50.,-50.,-50.,
@@ -182,9 +191,10 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		   0,0,0,
 		   0,0,0,
 		   -3.,-3.2,-3.2,
+		   0,0,0,
 		   0,0,0};
   
-  double xMax[40]={3000.,1700.,1700.,2200.,  
+  double xMax[43]={3000.,1700.,1700.,2200.,  
 		   20.,20.,20.,0.5, 
 		   40,40,40,1.,
 		   50.,50.,50.,50.,
@@ -195,23 +205,25 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		   10,10,10,
 		   100,100,100,
 		   3.,3.2,3.2,
+		   1.2,1.2,1.2,
 		   0.01,0.01,10};
 
-  int reBin[40]  ={2,2,2,2, 
+  int reBin[43]  ={2,2,2,2, 
 		   8,8,8,8, 
 		   4,4,4,4, 
 		   1,1,1,1, 
-		   2,2,2, 
+		   5,5,5, 
 		   5,5,5,
 		   1,1,1,
 		   1,1,1,
 		   1,1,1,
 		   10,10,10,
-		   2,2,2,
+		   5,5,5,
+		   1,1,1,
 		   10,10,1};
 
 
-  int optLogY[40] = {1,1,1,1,
+  int optLogY[43] = {1,1,1,1,
 		     1,1,1,1,
 		     1,1,1,1,
 		     0,0,0,0,
@@ -222,6 +234,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
 		     1,1,1,
 		     1,1,1,
 		     0,0,0,
+		     0,0,0,
 		     1,1,1};
 
 
@@ -231,8 +244,7 @@ void DrawValidationPlots(Char_t* infile1 = 0,
  
   int iHisto = 0;
   while(iHisto<nObj){
-    //while(iHisto<9){
-  for (int ifile=0;ifile<2;ifile++){ 
+    for (int ifile=0;ifile<2;ifile++){ 
     h[ifile][iHisto] = (TH1D*)_f[ifile]->Get(objName[iHisto]);
     h[ifile][iHisto]->Rebin(reBin[iHisto]);
     if (ifile == 0) {
