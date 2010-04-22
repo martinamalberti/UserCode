@@ -156,13 +156,12 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EB_time;
 	 TH1D *h_recHits_EB_Chi2;
 	 TH1D *h_recHits_EB_OutOfTimeChi2;
-	 TH2D *h_recHits_EB_occupancy;
+	 TH1D *h_recHits_EB_E1oE9; 
+	 TH1D *h_recHits_EB_E1oE4; 
 
+	 TH2D *h_recHits_EB_occupancy;
 	 TH2D *h_recHits_EB_size_vsBX;
 	 TH2D *h_recHits_EB_size_vsLS;
-
-/* 	 TH1D *h_recHits_EB_R9; */
-/* 	 TH1D *h_recHits_EB_R4; */
  
 
 	 // ... endcap
@@ -175,6 +174,9 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EEP_time;
 	 TH1D *h_recHits_EEP_Chi2;
 	 TH1D *h_recHits_EEP_OutOfTimeChi2;
+ 	 TH1D *h_recHits_EEP_E1oE9; 
+	 TH1D *h_recHits_EEP_E1oE4; 
+	 
 	 TH2D *h_recHits_EEP_occupancy;
 	 TH2D *h_recHits_EEP_size_vsBX;
 	 TH2D *h_recHits_EEP_size_vsLS;
@@ -185,6 +187,9 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EEM_time;
 	 TH1D *h_recHits_EEM_Chi2;
 	 TH1D *h_recHits_EEM_OutOfTimeChi2;
+	 TH1D *h_recHits_EEM_E1oE9; 
+	 TH1D *h_recHits_EEM_E1oE4; 
+
 	 TH2D *h_recHits_EEM_occupancy;
 	 TH2D *h_recHits_EEM_size_vsBX;
 	 TH2D *h_recHits_EEM_size_vsLS;
