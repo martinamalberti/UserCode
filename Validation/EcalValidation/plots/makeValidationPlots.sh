@@ -55,8 +55,6 @@ echo 'Preparing Validation Webpages'
 cd ../../../
 my_cmssw_base=`\pwd`
 work_dir=${my_cmssw_base}/Validation/EcalValidation
-#my_cmssw_base='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/malberti/CMSSW_3_5_5/src'
-#work_dir='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/malberti/CMSSW_3_5_5/src/Validation/EcalValidation';
 echo $work_dir
 cd -
 
@@ -142,15 +140,17 @@ cat > ${plots_dir}/index.html <<EOF
  <li><A href="#RecHitsEtaPhi"> Rec Hits Eta/Phi </A><BR>
  <li><A href="#RecHitsTime"> Rec Hits Time </A><BR>
  <li><A href="#RecHitsChi2"> Rec Hits Chi<sup>2</sup></A><BR>
+ <li><A href="#RecHitsE4"> Rec Hits 1-E4/E1</A><BR>
 </ul>
  <li> Clusters
  <ul>
+ <li><A href="#NumberOfBasicClusters"> Number of BasicClusters </A><BR>
  <li><A href="#NumberOfSuperClusters"> Number of SuperClusters </A><BR>
  <li><A href="#EnergySC"> Super Clusters Energy </A><BR> 
  <li><A href="#SuperClustersEtaPhi"> Super Clusters Eta/Phi </A><BR>
  <li><A href="#NumberOfCrystalsInSC"> Number of Crystals per SuperCluster </A><BR>
  <li><A href="#NumberOfBCInSC"> Number of Basic Clusters per SuperCluster </A><BR>
- <li><A href="#1-E4/E1"> 1-E4/E1 </A><BR>
+ <li><A href="#1-E4/E1"> Supercluster Seed 1-E4/E1 </A><BR>
  <li><A href="#ESclusters"> ES clusters  </A><BR>
 </ul>
 <li><A href="#Pi0peak"> Pi0 peak  </A><BR>
@@ -238,6 +238,26 @@ cat > ${plots_dir}/index.html <<EOF
 <A HREF=${httpdir}/${out_dir}/h_recHits_EEP_Chi2.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EEP_Chi2.png"> </A>
 
 <A HREF=${httpdir}/${out_dir}/h_recHits_EEM_Chi2.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EEM_Chi2.png"> </A>
+
+<hr>
+
+
+
+<h3><A name="RecHitsE4"> Rec Hits 1-E4/E1 </h3>
+
+<A HREF=${httpdir}/${out_dir}/h_recHits_EB_E1oE4.png> <img height="300" src="${httpdir}/${out_dir}/h_recHits_EB_E1oE4.png"> </A>
+
+<hr>
+
+
+
+<h3><A name="NumberOfBasicClusters"> Number of BasicClusters </h3>
+
+<A HREF=${httpdir}/${out_dir}/h_basicClusters_EB_size.png> <img height="300" src="${httpdir}/${out_dir}/h_basicClusters_EB_size.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_basicClusters_EEP_size.png> <img height="300" src="${httpdir}/${out_dir}/h_basicClusters_EEP_size.png"> </A>
+
+<A HREF=${httpdir}/${out_dir}/h_basicClusters_EEM_size.png> <img height="300" src="${httpdir}/${out_dir}/h_basicClusters_EEM_size.png"> </A>
 
 <hr>
 
