@@ -151,7 +151,9 @@ class EcalValidation : public edm::EDAnalyzer {
 	 // RecHits ----------------------------------------------
 	 // ... barrel 
 	 TH1D *h_recHits_EB_size; 
+	 TH1D *h_recHits_EB_size_cleaned; 
 	 TH1D *h_recHits_EB_energy;
+	 TH1D *h_recHits_EB_energy_cleaned;
 	 TH1D *h_recHits_EB_energyMax;
 	 TH1D *h_recHits_EB_time;
 	 TH1D *h_recHits_EB_Chi2;
@@ -162,7 +164,6 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH2D *h_recHits_EB_occupancy;
 	 TH2D *h_recHits_EB_size_vsBX;
 	 TH2D *h_recHits_EB_size_vsLS;
- 
 
 	 // ... endcap
 
@@ -191,13 +192,15 @@ class EcalValidation : public edm::EDAnalyzer {
 	 TH1D *h_recHits_EEM_E1oE4; 
 
 	 TH2D *h_recHits_EEM_occupancy;
-	 TH2D *h_recHits_EEM_size_vsBX;
+	 TH2D *h_recHits_EEM_size_vsBX;	
 	 TH2D *h_recHits_EEM_size_vsLS;
-
 
 	 TH1D *h_recHits_EB_phi;
 	 TH1D *h_recHits_EE_phi;
 	 TH1D *h_recHits_eta;
+	 
+	 TH1D *h_recHits_EE_phi_NoNoisyChannels;
+	 TH1D *h_recHits_eta_NoNoisyChannels;
 	 
 	 
 	 // Basic Clusters ----------------------------------------------
