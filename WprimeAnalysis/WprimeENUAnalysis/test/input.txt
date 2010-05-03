@@ -1,5 +1,7 @@
-FileIn      /tmp/malberti/treeWenu31X.root
-FileOut     outputHistos_Wenu_31X.root
-Xsec        8737.91
-Lumi        50.
-JetVetoFlag 1
+FileIn         /tmp/malberti/treeWenu_7TeV.root
+FileOut        outputHistos_Wenu_7TeV.root
+Xsec           10312.
+Lumi           100.
+GenFilterEff   0.779
+NeventsDataset 2078361
+MaxJetPt       100
