@@ -6,7 +6,7 @@
 <use name=DataFormats/Math>
 <use name=DataFormats/EgammaCandidates>
 <use name=Geometry/CaloGeometry>
-<use name=PhysicsTools/UtilAlgos>
+<use name=CommonTools/UtilAlgos>
 <use name=RecoEgamma/EgammaIsolationAlgos>
 <use name=PhysicsTools/RecoAlgos>
 <use name=PhysicsTools/PatUtils>
@@ -16,9 +16,10 @@
 <use name=DataFormats/L1GlobalCaloTrigger>
 <use name=CondFormats/L1TObjects>
 <use name=CondFormats/DataRecord>
-<flags EDM_PLUGIN=1>
+<use name=DataFormats/HepMCCandidate>
+#<flags EDM_PLUGIN=1>
 <export>
-#   <lib name=WprimeAnalysisWprimeENUAnalysis>
+   <lib name=WprimeAnalysisWprimeENUAnalysis>
    <use name=root>
    <use name=FWCore/Framework>
    <use name=FWCore/PluginManager>
@@ -36,4 +37,5 @@
    <use name=DataFormats/L1GlobalCaloTrigger>
    <use name=CondFormats/L1TObjects>
    <use name=CondFormats/DataRecord>
+   <use name=DataFormats/HepMCCandidate>	
 </export>
