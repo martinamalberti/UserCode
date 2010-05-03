@@ -1,10 +1,18 @@
 <use name=root>
 <use name=boost>
-
-
 <bin name=WprimeTreeAnalysis file="WprimeTreeAnalysis.cpp">
   <use name=WprimeAnalysis/WprimeENUAnalysis>
   <flags LCGDICT_ARGS="--deep">
 </bin>
+<bin name=WprimeTreeAnalysisFiltered file="WprimeTreeAnalysisFiltered.cpp">
+  <use name=WprimeAnalysis/WprimeENUAnalysis>
+  <flags LCGDICT_ARGS="--deep">
+</bin>
+<bin name=WprimeTreeAnalysisData file="WprimeTreeAnalysisData.cpp">
+  <use name=WprimeAnalysis/WprimeENUAnalysis>
+  <flags LCGDICT_ARGS="--deep">
+</bin>
+
+
 
 
