@@ -1,5 +1,0 @@
-FileIn      /tmp/malberti/treeWenu31X.root
-FileOut     outputHistos_Wenu_31X.root
-Xsec        8737.91
-Lumi        50.
-JetVetoFlag 1
