@@ -1,6 +1,8 @@
 #!/bin/bash
 
-usage='Usage: -d <file1> -r <file2> -l <html dir> -o <http dir>'
+usage='Usage: -d <file1> -r <file2> -l <html dir> -o <http dir> -w <which dir>'
+
+
 
 args=`getopt rd: -- "$@"`
 if test $? != 0
@@ -19,6 +21,7 @@ for i
       -r) shift; file2=$2;shift;;
       -l) shift; htmldir=$2;shift;;
       -o) shift; httpdir=$2;shift;;
+      -w) shift; whichdir=$2;shift;;
   esac
 done
 
@@ -49,7 +52,23 @@ if [ "X"${httpdir} == "X" ]
     echo "using default httpdir:" ${httpdir}
 fi
 
+if [ "X"${whichdir} == "X" ]
+    then
+    whichdir=Data
+    echo "using default httpdir:" ${httpdir}
+fi
+
+
+httpdir=${httpdir}/${whichdir}
+htmldir=${htmldir}/${whichdir}
+
+
+
 echo 'Preparing Validation Webpages' 
+
+echo 'httpdir ' ${httpdir}
+echo 'htmldir ' ${htmldir}
+
 
 # specify directories here
 cd ../../../
@@ -61,7 +80,7 @@ cd -
 out_dir=${file1}_vs_${file2};
 echo ${out_dir}
 
-plots_dir=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/ValidationPlots/${out_dir};
+plots_dir=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/ccecal/ValidationPlots/${whichdir}/${out_dir};
 
 mkdir ${plots_dir}
 
