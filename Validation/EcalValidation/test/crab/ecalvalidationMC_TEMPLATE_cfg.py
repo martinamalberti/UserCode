@@ -14,17 +14,38 @@ process.load("Geometry.CaloEventSetup.CaloGeometry_cff")
 process.source = cms.Source("PoolSource",
     skipEvents = cms.untracked.uint32(0),                       
     fileNames = cms.untracked.vstring(
-    '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0013/F6E3FFAC-6113-DF11-AF06-001BFCDBD15E.root',
-    '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0012/BA183BD4-3813-DF11-B015-00304867902C.root',
-    '/store/relval/CMSSW_3_5_0/RelValMinBias/GEN-SIM-RECO/MC_3XY_V21-v1/0012/A6D53A27-3813-DF11-B460-0026189437FA.root'
-    
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_1.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_2.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_3.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_4.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_5.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_6.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_7.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_8.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_9.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_10.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_11.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_12.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_13.root",
+    "rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03_newMask/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_newMask_14.root",
+        
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_1.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_2.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_4.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_5.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_6.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_7.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_9.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_10.root",
+    #"rfio:/castor/cern.ch/user/d/deguio/REDIGI_minBias7TeV_Spring10-START3X_V25B-v1_newNoise_360_v03/test_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_360_v03_11.root",
+            
     )
 )
 
 
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(1000)
+    input = cms.untracked.int32(-1)
 )
 
 
