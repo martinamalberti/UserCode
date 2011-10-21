@@ -30,10 +30,11 @@ int main(int argc, char ** argv)
     return 0;
   }
     
+  bool saveAllChannels = false ;
 
   int * wl = NULL, nwl = 0;
   TChain * tx = new TChain("x");
-  tx->Add("Data/ntuples_2011_173559_178888/ntu_data_001*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
   
   init_ttree(tx, &x);
   tx->SetBranchStatus("*",0); //disable all branches
@@ -43,6 +44,8 @@ int main(int argc, char ** argv)
   tx->SetBranchStatus("seq",1);
   tx->SetBranchStatus("detId",1);
   tx->SetBranchStatus("apdpnAB",1);
+  tx->SetBranchStatus("apdpnA",1);
+  tx->SetBranchStatus("apdpnB",1);
   tx->SetBranchStatus("time",1);
   tx->SetBranchStatus("eta",1);
   tx->SetBranchStatus("lumi",1);
@@ -50,7 +53,12 @@ int main(int argc, char ** argv)
   tx->SetBranchStatus("wl",1);
   tx->SetBranchStatus("harness",1);
   tx->SetBranchStatus("elecId",1);
-  
+  tx->SetBranchStatus("tmax",1);
+  tx->SetBranchStatus("l_ampli",1);
+  tx->SetBranchStatus("l_rise_time",1);
+  tx->SetBranchStatus("l_fwhm",1);
+  tx->SetBranchStatus("l_prepulse",1);
+
   cout << " Number of entries " << tx->GetEntries() << endl;
   
   // 18 --> number of feds in EE
@@ -92,41 +100,110 @@ int main(int argc, char ** argv)
   }
   
   // Plot results:
-  TTimeStamp dateMin(2011, 8,  01, 0, kTRUE, 0); 
+  TTimeStamp dateMin(2011, 1,  01, 0, kTRUE, 0); 
   TTimeStamp dateMax(2011, 10, 31, 0, kTRUE, 0); 
   
   TTimeStamp tfake(2011, 9, 28, 0, kTRUE, 0);
 
   // profile averaging on one harness
-  TProfile *p_vptpnlas[18][20];
-  TProfile *p_vptpnled[18][20];
+  TProfile *p_vptpn_las[18][20];
+  TProfile *p_vptpn_led[18][20];
   TProfile *p_ratio[18][20];
+
+  // other quantities per harness 
+  TProfile *p_ratiopn_las[18][20];
+  TProfile *p_ratiopn_led[18][20];
+  TProfile *p_tmax_las[18][20];
+  TProfile *p_tmax_led[18][20];
+  
+  TProfile *p_matacqampli_las[18][20];
+  TProfile *p_matacqrisetime_las[18][20];
+  TProfile *p_matacqfwhm_las[18][20];
+  TProfile *p_matacqprepulse_las[18][20];
+  TProfile *p_matacqtmax_las[18][20];
   
   for (int ism = 0; ism < 18; ism++){
     if (ism < 9 ) fed = 600 + ism+1;
     if (ism >= 9) fed = 636 + ism+1 ; // fix
     for (int ih = 0; ih < 20; ih++){
       
-      sprintf(gname,"p_vptpnlas_fed%d_harness%d", fed, ih+1);
-      p_vptpnlas[ism][ih] = new TProfile(gname,gname,2000,dateMin, dateMax, 0,100);
-      p_vptpnlas[ism][ih] ->SetLineColor(kBlue);
-      p_vptpnlas[ism][ih] ->SetMarkerColor(kBlue);
-      p_vptpnlas[ism][ih] ->SetMarkerStyle(20);
-      p_vptpnlas[ism][ih] ->SetMarkerSize(0.5);
+      sprintf(gname,"p_vptpn_las_fed%d_harness%d", fed, ih+1);
+      p_vptpn_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_vptpn_las[ism][ih] ->SetLineColor(kBlue);
+      p_vptpn_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_vptpn_las[ism][ih] ->SetMarkerStyle(20);
+      p_vptpn_las[ism][ih] ->SetMarkerSize(0.5);
 
-      sprintf(gname,"p_vptpnled_fed%d_harness%d", fed, ih+1);
-      p_vptpnled[ism][ih] = new TProfile(gname,gname,2000,dateMin, dateMax, 0,100);
-      p_vptpnled[ism][ih] ->SetLineColor(kCyan+2);
-      p_vptpnled[ism][ih] ->SetMarkerColor(kCyan+2);
-      p_vptpnled[ism][ih] ->SetMarkerStyle(20);
-      p_vptpnled[ism][ih] ->SetMarkerSize(0.5);
+      sprintf(gname,"p_vptpn_led_fed%d_harness%d", fed, ih+1);
+      p_vptpn_led[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_vptpn_led[ism][ih] ->SetLineColor(kCyan+2);
+      p_vptpn_led[ism][ih] ->SetMarkerColor(kCyan+2);
+      p_vptpn_led[ism][ih] ->SetMarkerStyle(20);
+      p_vptpn_led[ism][ih] ->SetMarkerSize(0.5);
 
       sprintf(gname,"p_ratio_fed%d_harness%d", fed, ih+1);
-      p_ratio[ism][ih] = new TProfile(gname,gname,2000,dateMin, dateMax, 0,100);
+      p_ratio[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
       p_ratio[ism][ih] ->SetLineColor(kBlack);
       p_ratio[ism][ih] ->SetMarkerColor(kBlack);
       p_ratio[ism][ih] ->SetMarkerStyle(20);
       p_ratio[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_ratiopn_las_fed%d_harness%d", fed, ih+1);
+      p_ratiopn_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_ratiopn_las[ism][ih] ->SetLineColor(kBlue);
+      p_ratiopn_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_ratiopn_las[ism][ih] ->SetMarkerStyle(20);
+      p_ratiopn_las[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_ratiopn_led_fed%d_harness%d", fed, ih+1);
+      p_ratiopn_led[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_ratiopn_led[ism][ih] ->SetLineColor(kCyan+2);
+      p_ratiopn_led[ism][ih] ->SetMarkerColor(kCyan+2);
+      p_ratiopn_led[ism][ih] ->SetMarkerStyle(20);
+      p_ratiopn_led[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_tmax_las_fed%d_harness%d", fed, ih+1);
+      p_tmax_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_tmax_las[ism][ih] ->SetLineColor(kBlue);
+      p_tmax_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_tmax_las[ism][ih] ->SetMarkerStyle(20);
+      p_tmax_las[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_tmax_led_fed%d_harness%d", fed, ih+1);
+      p_tmax_led[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_tmax_led[ism][ih] ->SetLineColor(kCyan+2);
+      p_tmax_led[ism][ih] ->SetMarkerColor(kCyan+2);
+      p_tmax_led[ism][ih] ->SetMarkerStyle(20);
+      p_tmax_led[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_matacqampli_las_fed%d_harness%d", fed, ih+1);
+      p_matacqampli_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_matacqampli_las[ism][ih] ->SetLineColor(kBlue);
+      p_matacqampli_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_matacqampli_las[ism][ih] ->SetMarkerStyle(20);
+      p_matacqampli_las[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_matacqrisetime_las_fed%d_harness%d", fed, ih+1);
+      p_matacqrisetime_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_matacqrisetime_las[ism][ih] ->SetLineColor(kBlue);
+      p_matacqrisetime_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_matacqrisetime_las[ism][ih] ->SetMarkerStyle(20);
+      p_matacqrisetime_las[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_matacqfwhm_las_fed%d_harness%d", fed, ih+1);
+      p_matacqfwhm_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_matacqfwhm_las[ism][ih] ->SetLineColor(kBlue);
+      p_matacqfwhm_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_matacqfwhm_las[ism][ih] ->SetMarkerStyle(20);
+      p_matacqfwhm_las[ism][ih] ->SetMarkerSize(0.5);   
+
+      sprintf(gname,"p_matacqprepulse_las_fed%d_harness%d", fed, ih+1);
+      p_matacqprepulse_las[ism][ih] = new TProfile(gname,gname,8000,dateMin, dateMax, 0,100);
+      p_matacqprepulse_las[ism][ih] ->SetLineColor(kBlue);
+      p_matacqprepulse_las[ism][ih] ->SetMarkerColor(kBlue);
+      p_matacqprepulse_las[ism][ih] ->SetMarkerStyle(20);
+      p_matacqprepulse_las[ism][ih] ->SetMarkerSize(0.5);  
+
     }
   }
     
@@ -134,8 +211,9 @@ int main(int argc, char ** argv)
   int evtled[18][850] = {0};
   int tAve;
 
-  float apdpnlas0[18][850], apdpnled0[18][850];
-  
+  float apdpnlas0[18][850], apdpnled0[18][850], tmaxlas0[18][850], tmaxled0[18][850] ;
+  float las_ampli0[18][850], las_risetime0[18][850], las_fwhm0[18][850] , las_prepulse0[18][850];
+
   float apdpntemp[18][850] = {-999.};
   int tledtemp[18][850] = {0};
   float apdpnlednew;
@@ -157,47 +235,73 @@ int main(int argc, char ** argv)
     int tled       = x.time[1];
     int xtal       = x.elecId;      
 
-
+       
     // check only one fed
     if ( fed != selected_fed ) continue;
     
     // check only one harness
-    //if (harn !=4) continue;
+    if (harn !=6) continue;
  
     if (apdpnlas<=0) continue;
     if (apdpnled<=0) continue;
    
     // normalize to first point 
-    if (evtlas[ism][xtal] == 0) apdpnlas0[ism][xtal] = apdpnlas;
-    if (evtled[ism][xtal] == 0) apdpnled0[ism][xtal] = apdpnled;
-    
-    if (evtlas[ism][xtal] > 0) apdpnlas/=apdpnlas0[ism][xtal] ;
-    if (evtled[ism][xtal] > 0) apdpnled/=apdpnled0[ism][xtal] ;
+    if (evtlas[ism][xtal] == 0) {
+      apdpnlas0[ism][xtal]     = apdpnlas;
+      tmaxlas0[ism][xtal]      = x.tmax[0];
+      las_ampli0[ism][xtal]    = x.l_ampli[0];
+      las_risetime0[ism][xtal] = x.l_rise_time[0];
+      las_fwhm0[ism][xtal]     = x.l_fwhm[0];
+      las_prepulse0[ism][xtal] = x.l_prepulse[0];
+    }
+
+    if (evtled[ism][xtal] == 0) {
+      apdpnled0[ism][xtal]     = apdpnled;
+      tmaxled0[ism][xtal]      = x.tmax[1];
+    }
 
     // average time between two measurements
     tAve = tlas + (tled - tlas)/ 2;
     if ( tlas > tled ) tAve = tled + (tlas - tled)/ 2;
     
     // extrapolate led measurement to laser time
-//     if ( apdpntemp[ism][xtal] > 0 && tledtemp[ism][xtal] > 0) 
-//       apdpnlednew = (apdpnled - apdpntemp[ism][xtal] )/(tled - tledtemp[ism][xtal]) * (tlas-tled) + apdpnled;
-//     else apdpnlednew = apdpnled;
-   
+    //     if ( apdpntemp[ism][xtal] > 0 && tledtemp[ism][xtal] > 0) 
+    //       apdpnlednew = (apdpnled - apdpntemp[ism][xtal] )/(tled - tledtemp[ism][xtal]) * (tlas-tled) + apdpnled;
+    //     else apdpnlednew = apdpnled;
     
-    if ( tlas > int(tfake.GetSec())) apdpnlas+=0.005;
+    
+    //apply a fake step
+    //if ( tlas > int(tfake.GetSec())) apdpnlas+=0.005;
 
 
- 
-    p_vptpnlas[ism][harn-1]->Fill(tlas, apdpnlas);
-    p_vptpnled[ism][harn-1]->Fill(tled, apdpnled);
-    p_ratio[ism][harn-1]   ->Fill(tAve, apdpnlas/apdpnled);
+    // --- profile plots  (average on one harness)
+    p_vptpn_las[ism][harn-1]->Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
+    p_vptpn_led[ism][harn-1]->Fill(tled, apdpnled/apdpnled0[ism][xtal]);
+    p_ratio[ism][harn-1]   ->Fill(tAve, (apdpnlas/apdpnlas0[ism][xtal])/(apdpnled/apdpnled0[ism][xtal]));
     //p_ratio[ism][harn-1]   ->Fill(tlas, apdpnlas/apdpnlednew);
+      
+    p_ratiopn_las[ism][harn-1]->Fill(tlas, x.apdpnA[0]/x.apdpnB[0]);
+    p_ratiopn_led[ism][harn-1]->Fill(tled, x.apdpnA[1]/x.apdpnB[1]);
+
+    p_tmax_las[ism][harn-1]->Fill(tlas, x.tmax[0]/tmaxlas0[ism][xtal]);
+    p_tmax_led[ism][harn-1]->Fill(tled, x.tmax[1]/tmaxled0[ism][xtal]);
+
+    p_matacqampli_las[ism][harn-1]->Fill(tlas, x.l_ampli[0]/las_ampli0[ism][xtal]);
+
+    p_matacqrisetime_las[ism][harn-1]->Fill(tlas, x.l_rise_time[0]/las_risetime0[ism][xtal]);
+
+    p_matacqfwhm_las[ism][harn-1]->Fill(tlas, x.l_fwhm[0]/las_fwhm0[ism][xtal]);
+
+    p_matacqprepulse_las[ism][harn-1]->Fill(tlas, x.l_prepulse[0]/las_prepulse0[ism][xtal]);
+
+    // plot by channel
+    if (saveAllChannels){
+      gvptpnlas[ism][xtal]->SetPoint(evtlas[ism][xtal], tlas , apdpnlas);
+      gvptpnled[ism][xtal]->SetPoint(evtled[ism][xtal], tled , apdpnled);
+      gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tAve , apdpnlas/apdpnled);
+      //gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tlas , apdpnlas/apdpnlednew);
+    }
     
-    gvptpnlas[ism][xtal]->SetPoint(evtlas[ism][xtal], tlas , apdpnlas);
-    gvptpnled[ism][xtal]->SetPoint(evtled[ism][xtal], tled , apdpnled);
-    gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tAve , apdpnlas/apdpnled);
-    //gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tlas , apdpnlas/apdpnlednew);
- 
     evtlas[ism][xtal]++;
     evtled[ism][xtal]++;
 
@@ -208,7 +312,7 @@ int main(int argc, char ** argv)
   }// end loop over entries
 
 
-//   // ratios
+//   // ratios : boh , da capire 
 //   float y1, y2;
 //   int t1, t2;
 
@@ -247,23 +351,37 @@ int main(int argc, char ** argv)
   sprintf(fname,"EElaserAnalysis_fed%d.root",selected_fed);
 
   TFile *fout = new TFile(fname,"recreate");
-    
-  TDirectory *mydir      =   fout -> mkdir("by_channel","by_channel");
-  mydir->cd();
-  for (int ism = 0; ism < 18; ism++){
-    for (int ixtal = 0; ixtal < 850; ixtal++){
-      if ( gvptpnlas[ism][ixtal]-> GetN() > 0) gvptpnlas[ism][ixtal]-> Write();
-      if ( gvptpnled[ism][ixtal]-> GetN() > 0) gvptpnled[ism][ixtal]-> Write();
-      if ( gratio[ism][ixtal]-> GetN()    > 0) gratio[ism][ixtal]-> Write();
+   
+  if (saveAllChannels){
+    TDirectory *mydir      =   fout -> mkdir("by_channel","by_channel");
+    mydir->cd();
+    for (int ism = 0; ism < 18; ism++){
+      for (int ixtal = 0; ixtal < 850; ixtal++){
+	if ( gvptpnlas[ism][ixtal]-> GetN() > 0) gvptpnlas[ism][ixtal]-> Write();
+	if ( gvptpnled[ism][ixtal]-> GetN() > 0) gvptpnled[ism][ixtal]-> Write();
+	if ( gratio[ism][ixtal]-> GetN()    > 0) gratio[ism][ixtal]-> Write();
+      }
     }
   }
-
+ 
   fout->cd();
   for (int ism = 0; ism < 18; ism++){
     for (int ih = 0; ih < 20; ih++){
-      if ( p_vptpnlas[ism][ih]-> GetEntries() > 0)  	p_vptpnlas[ism][ih]->Write();
-      if ( p_vptpnled[ism][ih]-> GetEntries() > 0)  	p_vptpnled[ism][ih]->Write();
+      if ( p_vptpn_las[ism][ih]-> GetEntries() > 0)  	p_vptpn_las[ism][ih]->Write();
+      if ( p_vptpn_led[ism][ih]-> GetEntries() > 0)  	p_vptpn_led[ism][ih]->Write();
       if ( p_ratio[ism][ih]-> GetEntries()    > 0)  	p_ratio[ism][ih]->Write();
+      
+      if ( p_ratiopn_las[ism][ih]-> GetEntries() > 0) p_ratiopn_las[ism][ih]->Write();
+      if ( p_ratiopn_led[ism][ih]-> GetEntries() > 0) p_ratiopn_led[ism][ih]->Write();
+
+      if ( p_tmax_las[ism][ih]-> GetEntries() > 0) p_tmax_las[ism][ih]->Write();
+      if ( p_tmax_led[ism][ih]-> GetEntries() > 0) p_tmax_led[ism][ih]->Write();
+      
+      if ( p_matacqampli_las[ism][ih]-> GetEntries() > 0) p_matacqampli_las[ism][ih]->Write();
+      if ( p_matacqrisetime_las[ism][ih]-> GetEntries() > 0) p_matacqrisetime_las[ism][ih]->Write();
+      if ( p_matacqfwhm_las[ism][ih]-> GetEntries() > 0) p_matacqfwhm_las[ism][ih]->Write();
+      if ( p_matacqprepulse_las[ism][ih]-> GetEntries() > 0) p_matacqprepulse_las[ism][ih]->Write();
+      
     }  
   }
 
