@@ -362,11 +362,12 @@ void TMVARegressionApplication( TString myMethodList = "" )
    TGraph *gLas[1700];  
    for (int iApd = 0;iApd<1700;iApd++){
      gLas[iApd] = new TGraph(); 
-     gLas[iApd]->SetMarkerColor(kRed); 
      char gName[80];
      sprintf(gName,"ApdPN_%04d",iApd);
      gLas[iApd]->SetName(gName);
      gLas[iApd]->SetTitle(gName);
+     gLas[iApd]->SetMarkerColor(kRed); 
+
    }
    
  
@@ -382,6 +383,7 @@ void TMVARegressionApplication( TString myMethodList = "" )
    theTree->SetBranchStatus("apdpnAB",1);
    theTree->SetBranchStatus("time",1);
    theTree->SetBranchStatus("harness",1);
+   theTree->SetBranchStatus("elecId",1);
    theTree->SetBranchStatus("qmax",1);
    theTree->SetBranchStatus("tmax",1);
    theTree->SetBranchStatus("l_fwhm",1);

@@ -6,8 +6,8 @@
   TFile *f = TFile::Open("EElaserAnalysis_fed605.root");
 
   // time interval
-  TTimeStamp dateMin(2011, 10, 1, 0, kTRUE, 0); 
-  TTimeStamp dateMax(2011, 10, 20, 0, kTRUE, 0);   
+  TTimeStamp dateMin(2011, 2, 22, 0, kTRUE, 0); 
+  TTimeStamp dateMax(2011, 10,20, 0, kTRUE, 0);   
 
   // plots
   TProfile *laser1 = f->Get("p_vptpn_las_fed605_harness6");

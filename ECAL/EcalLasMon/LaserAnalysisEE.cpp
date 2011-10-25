@@ -34,7 +34,8 @@ int main(int argc, char ** argv)
 
   int * wl = NULL, nwl = 0;
   TChain * tx = new TChain("x");
-  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
+  //tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
+  tx->Add("/tmp/malberti/ntu_data_fed605.root");
   
   init_ttree(tx, &x);
   tx->SetBranchStatus("*",0); //disable all branches
@@ -348,7 +349,7 @@ int main(int argc, char ** argv)
 
 
   char fname[100];
-  sprintf(fname,"EElaserAnalysis_fed%d.root",selected_fed);
+  sprintf(fname,"testEElaserAnalysis_fed%d.root",selected_fed);
 
   TFile *fout = new TFile(fname,"recreate");
    
