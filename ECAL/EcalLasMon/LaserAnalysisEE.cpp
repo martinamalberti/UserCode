@@ -39,12 +39,15 @@ int main(int argc, char ** argv)
     return 0;
   }
     
-  bool saveAllChannels = false;
+  bool saveAllChannels = true;
   bool useRegression   = false;
 
   int * wl = NULL, nwl = 0;
   TChain * tx = new TChain("x");
-  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
+  //tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001758*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001759*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_00176*.root");
   //tx->Add("/tmp/malberti/ntu_data_fed605.root"); // reduced ntuple
   
   init_ttree(tx, &x);
@@ -54,6 +57,9 @@ int main(int argc, char ** argv)
   tx->SetBranchStatus("fed",1);
   tx->SetBranchStatus("seq",1);
   tx->SetBranchStatus("detId",1);
+  tx->SetBranchStatus("ix",1);
+  tx->SetBranchStatus("iy",1);
+  tx->SetBranchStatus("iz",1);
   tx->SetBranchStatus("apdpnAB",1);
   tx->SetBranchStatus("apdpnA",1);
   tx->SetBranchStatus("apdpnB",1);
@@ -73,43 +79,100 @@ int main(int argc, char ** argv)
   cout << " Number of entries " << tx->GetEntries() << endl;
   
   // 18 --> number of feds in EE
-  // 850 : max number of channels in the fed
-  TGraph* gvptpnlas[18][850];
-  TGraph* gvptpnled[18][850];
-  TGraph* gratio[18][850];
-  char gname[100];
+  //850 : max number of channels in the fed
+//   TGraph* g_vptpn_las[18][20][850];
+//   TGraph* g_vptpn_led[18][20][850];
+//   TGraph* g_ratio[18][20][850];
+//   TH1F*   h_ratio[18][20][850];
+  
+//   char gname[100];
+//   int fed = 0;
+//   for (int ism = 0; ism < 18; ism++){
+//     if (ism < 9 ) fed = 600 + ism+1;
+//     if (ism >= 9) fed = 636 + ism+1 ; // fix
+//     cout << (ism+1) << "  "  << fed << endl;
+//     for (int ih = 0; ih < 20; ih++){
+//       for (int ixtal = 0; ixtal < 850; ixtal++){
+
+// 	if (saveAllChannels){
+// 	  sprintf(gname,"g_vptpn_las_fed%d_harness%d_xtal%d", fed, ih+1, ixtal);
+// 	  g_vptpn_las[ism][ih][ixtal] = new TGraph();
+// 	  g_vptpn_las[ism][ih][ixtal] -> SetTitle(gname);
+// 	  g_vptpn_las[ism][ih][ixtal] -> SetName(gname);
+// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerColor(kBlue);
+// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerStyle(20);
+// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerSize(0.5);
+	  
+// 	  sprintf(gname,"g_vptpn_led_fed%d_harness%d_xtal%d", fed, ih+1, ixtal);
+// 	  g_vptpn_led[ism][ih][ixtal] = new TGraph();
+// 	  g_vptpn_led[ism][ih][ixtal] -> SetTitle(gname);
+// 	  g_vptpn_led[ism][ih][ixtal] -> SetName(gname);
+// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerColor(kCyan+2);
+// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerStyle(20);
+// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerSize(0.5);
+	  
+// 	  sprintf(gname,"g_ratio_fed%d_harness%d_xtal%d", fed, ih+1,ixtal);
+// 	  g_ratio[ism][ih][ixtal] = new TGraph();
+// 	  g_ratio[ism][ih][ixtal] -> SetTitle(gname);
+// 	  g_ratio[ism][ih][ixtal] -> SetName(gname);
+// 	  g_ratio[ism][ih][ixtal] -> SetMarkerColor(kBlack);
+// 	  g_ratio[ism][ih][ixtal] -> SetMarkerStyle(20);
+// 	  g_ratio[ism][ih][ixtal] -> SetMarkerSize(0.5);
+// 	}
+// 	sprintf(gname,"h_ratio_fed%d_harness%d_xtal%d", fed, ih+1,ixtal);
+// 	h_ratio[ism][ih][ixtal] = new TH1F(gname,gname,5000,0.9,1.1);
+//       }
+//     }
+//   }
+  
+
+  TGraph* g_vptpn_las[101][101][2];
+  TGraph* g_vptpn_led[101][101][2];
+  TGraph* g_ratio[101][101][2];
+  TH1F*   h_ratio[101][101][2];
+  
+  char gname[101];
   int fed = 0;
-  for (int ism = 0; ism < 18; ism++){
-    if (ism < 9 ) fed = 600 + ism+1;
-    if (ism >= 9) fed = 636 + ism+1 ; // fix
-    cout << (ism+1) << "  "  << fed << endl;
-    for (int ixtal = 0; ixtal < 850; ixtal++){
-      sprintf(gname,"g_vptpnlas_fed%d_xtal%d", fed, ixtal);
-      gvptpnlas[ism][ixtal] = new TGraph();
-      gvptpnlas[ism][ixtal] -> SetTitle(gname);
-      gvptpnlas[ism][ixtal] -> SetName(gname);
-      gvptpnlas[ism][ixtal] -> SetMarkerColor(kBlue);
-      gvptpnlas[ism][ixtal] -> SetMarkerStyle(20);
-      gvptpnlas[ism][ixtal] -> SetMarkerSize(0.5);
-      
-      sprintf(gname,"g_vptpnled_fed%d_xtal%d", fed, ixtal);
-      gvptpnled[ism][ixtal] = new TGraph();
-      gvptpnled[ism][ixtal] -> SetTitle(gname);
-      gvptpnled[ism][ixtal] -> SetName(gname);
-      gvptpnled[ism][ixtal] -> SetMarkerColor(kCyan+2);
-      gvptpnled[ism][ixtal] -> SetMarkerStyle(20);
-      gvptpnled[ism][ixtal] -> SetMarkerSize(0.5);
-      
-      sprintf(gname,"g_ratio_fed%d_xtal%d", fed, ixtal);
-      gratio[ism][ixtal] = new TGraph();
-      gratio[ism][ixtal] -> SetTitle(gname);
-      gratio[ism][ixtal] -> SetName(gname);
-      gratio[ism][ixtal] -> SetMarkerColor(kBlack);
-      gratio[ism][ixtal] -> SetMarkerStyle(20);
-      gratio[ism][ixtal] -> SetMarkerSize(0.5);
+
+  for (int k = 0; k < 2; k++){
+    for (int i = 0; i < 101; i++){
+      for (int j = 0; j < 101; j++){
+      	if (saveAllChannels){
+
+	  if (k==0) sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEM", i+1, j+1);
+	  else sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEP", i+1, j+1);
+	  g_vptpn_las[i][j][k] = new TGraph();
+	  g_vptpn_las[i][j][k] -> SetTitle(gname);
+	  g_vptpn_las[i][j][k] -> SetName(gname);
+	  g_vptpn_las[i][j][k] -> SetMarkerColor(kBlue);
+	  g_vptpn_las[i][j][k] -> SetMarkerStyle(20);
+	  g_vptpn_las[i][j][k] -> SetMarkerSize(0.5);
+
+	  if (k==0) sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEM", i+1, j+1);
+	  else sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEP", i+1, j+1);
+	  g_vptpn_led[i][j][k] = new TGraph();
+	  g_vptpn_led[i][j][k] -> SetTitle(gname);
+	  g_vptpn_led[i][j][k] -> SetName(gname);
+	  g_vptpn_led[i][j][k] -> SetMarkerColor(kCyan+2);
+	  g_vptpn_led[i][j][k] -> SetMarkerStyle(20);
+	  g_vptpn_led[i][j][k] -> SetMarkerSize(0.5);
+
+	  if (k==0) sprintf(gname,"g_ratio_ix%d_iy%d_EEM", i+1, j+1);
+	  else sprintf(gname,"g_ratio_ix%d_iy%d_EEP", i+1, j+1);
+	  g_ratio[i][j][k] = new TGraph();
+	  g_ratio[i][j][k] -> SetTitle(gname);
+	  g_ratio[i][j][k] -> SetName(gname);
+	  g_ratio[i][j][k] -> SetMarkerColor(kBlack);
+	  g_ratio[i][j][k] -> SetMarkerStyle(20);
+	  g_ratio[i][j][k] -> SetMarkerSize(0.5);
+	}
+	if (k==0) sprintf(gname,"h_ratio_ix%d_iy%d_EEM", i+1, j+1);
+	else sprintf(gname,"h_ratio_ix%d_iy%d_EEP", i+1, j+1);
+	h_ratio[i][j][k] = new TH1F(gname,gname,1000,0.9,1.1);
+      }
     }
   }
-  
+
   // Plot results:
   TTimeStamp dateMin(2011, 2,  01, 0, kTRUE, 0); 
   TTimeStamp dateMax(2011, 10, 31, 0, kTRUE, 0); 
@@ -272,27 +335,21 @@ int main(int argc, char ** argv)
       g2[ism][ih]->SetName(gname);
       //g2[ism][ih]= new TH3F(gname,gname,500,0.,50., 5000,0.,5000.,200,0.,2.);
 
-      sprintf(gname,"p_regressionOutput_fed%d_harness%d", fed, ih+1);
-      p_regressionOutput[ism][ih] = new TProfile(gname,gname,10000,dateMin, dateMax, 0,10);
-      p_regressionOutput[ism][ih] ->SetLineColor(kRed);
-      p_regressionOutput[ism][ih] ->SetMarkerColor(kRed);
-      p_regressionOutput[ism][ih] ->SetMarkerStyle(20);
-      p_regressionOutput[ism][ih] ->SetMarkerSize(0.5);   
-
+      if (useRegression){
+	sprintf(gname,"p_regressionOutput_fed%d_harness%d", fed, ih+1);
+	p_regressionOutput[ism][ih] = new TProfile(gname,gname,10000,dateMin, dateMax, 0,10);
+	p_regressionOutput[ism][ih] ->SetLineColor(kRed);
+	p_regressionOutput[ism][ih] ->SetMarkerColor(kRed);
+	p_regressionOutput[ism][ih] ->SetMarkerStyle(20);
+	p_regressionOutput[ism][ih] ->SetMarkerSize(0.5);   
+      }
     }
   }
-
-
-
-
   
   // create the Reader object
-  //
   TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
   float var1, var2, var3, var4, var5, var6;
-   
   if (useRegression) {
-    
     // create a set of variables and declare them to the reader
     // - the variable names must corresponds in name and type to 
     // those given in the weight file(s) that you use
@@ -302,18 +359,14 @@ int main(int argc, char ** argv)
     //reader->AddVariable( "l_prepulse[0]", &var4 );
     //reader->AddVariable( "l_width90[0]", &var5 );
     reader->AddVariable( "l_ampli[0]", &var6 );
-    
     // book MVA
     reader->BookMVA( "BDTGmethod","weights/TMVARegression_BDTG.weights.xml" ); 
   }
 
 
-  TTimeStamp tmin1(2011, 1, 1, 0, kTRUE, 0);
-  TTimeStamp tmax1(2011, 3, 20, 0, kTRUE, 0);
-
-  TTimeStamp tmin2(2011, 6, 1, 0, kTRUE, 0);
-  TTimeStamp tmax2(2011, 6, 6, 0, kTRUE, 0);
-    
+  TTimeStamp tmin1(2011, 9, 1, 0, kTRUE, 0);
+  TTimeStamp tmax1(2011, 9, 30, 0, kTRUE, 0);
+  
   int evtlas[18][850] = {0};
   int evtled[18][850] = {0};
   int evt[18][850] = {0};
@@ -328,6 +381,9 @@ int main(int argc, char ** argv)
 
   float mva0[18][850]={0};
 
+  float temp[18][850];
+
+
   for (int ientry = 0; ientry < tx->GetEntries(); ientry++){
     tx->GetEntry(ientry);
     
@@ -336,23 +392,32 @@ int main(int argc, char ** argv)
     // select only EE
     if ( isEB(x.fed)) continue;
     
-    int harn    = x.harness;
-    int fed     = x.fed;
-    int ism     = iSM(fed);
+    int harn       = x.harness;
+    int fed        = x.fed;
+    int ism        = iSM(fed);
     float apdpnlas = x.apdpnAB[0];
     float apdpnled = x.apdpnAB[1];
     int tlas       = x.time[0];
     int tled       = x.time[1];
     int xtal       = x.elecId;      
+         
+    int iX         = (x.ix) + 50 ;
+    if (x.ix < 0) iX = iX + 1;
+    int iY         = (x.iy) * (x.iz) - 1;
+    int iZ         = x.iz;
+    if (iZ<0)   iZ = 0;
 
-    //if (x.run > 161200) continue;
-       
+
+    //    cout << x.ix << "  " << x.iy << "  " << x.iz << endl;
+    //    cout << iX << "  " << iY << "  " << iZ << endl;
+    //  cout << endl;
+
     // check only one fed
     if ( selected_fed!=-1 && fed != selected_fed ) continue;
     
-    // check only one harness
-    //if (harn !=6) continue;
-   
+    //     // check only one harness
+    // if (harn !=6  ) continue;
+    // if (fed  !=605) continue;
     
     if (apdpnlas<=0) continue;
     if (apdpnled<=0) continue;
@@ -380,36 +445,53 @@ int main(int argc, char ** argv)
     if ( evtled[ism][xtal] > 0 && apdpntemp[ism][xtal] > 0 && tledtemp[ism][xtal] > 0) 
       apdpnlednew = ( apdpnled - apdpntemp[ism][xtal] )/(tled - tledtemp[ism][xtal]) * (tlas-tled) + apdpnled;
     else apdpnlednew = apdpnled;
-    
-    // --- profile plots  (average on one harness)
+   
     float ratio = (apdpnlas/apdpnlas0[ism][xtal])/(apdpnled/apdpnled0[ism][xtal]);
-       
-    p_vptpn_las[ism][harn-1]->Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
-    p_vptpn_led[ism][harn-1]->Fill(tled, apdpnled/apdpnled0[ism][xtal]);
-    p_ratio[ism][harn-1]    ->Fill(tAve, ratio);
-    //p_ratio[ism][harn-1]   ->Fill(tlas, apdpnlas/apdpnlednew);
 
     // --- profile plots  (average on one FED)
     p_fed_vptpn_las[ism] -> Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
     p_fed_vptpn_led[ism] -> Fill(tled, apdpnled/apdpnled0[ism][xtal]);
     p_fed_ratio[ism]     -> Fill(tAve, ratio);
-
     
-    p_dT[ism][harn-1]       ->Fill(tlas, tled-tlas);
-            
+    // --- profile plots  (average on one harness)
+    p_vptpn_las[ism][harn-1] -> Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
+    p_vptpn_led[ism][harn-1] -> Fill(tled, apdpnled/apdpnled0[ism][xtal]);
+    p_ratio[ism][harn-1]     -> Fill(tAve, ratio);
+    //p_ratio[ism][harn-1]   -> Fill(tlas, apdpnlas/apdpnlednew);
+    
+    // single channel graphs
+    
+    
+    
+    
+    if (saveAllChannels){
+//       g_vptpn_las[ism][harn-1][xtal] -> SetPoint(evtlas[ism][xtal], tlas , apdpnlas/apdpnlas0[ism][xtal]);
+//       g_vptpn_led[ism][harn-1][xtal] -> SetPoint(evtled[ism][xtal], tled , apdpnled/apdpnled0[ism][xtal]);
+//       g_ratio[ism][harn-1][xtal]     -> SetPoint(evtled[ism][xtal], tAve , ratio);
+      g_vptpn_las[iX][iY][iZ] -> SetPoint(evtlas[ism][xtal], tlas , apdpnlas/apdpnlas0[ism][xtal]);
+      g_vptpn_led[iX][iY][iZ] -> SetPoint(evtled[ism][xtal], tled , apdpnled/apdpnled0[ism][xtal]);
+      g_ratio[iX][iY][iZ]     -> SetPoint(evtled[ism][xtal], tAve , ratio);
+      //g_ratio[iX][iY][iZ]     -> SetPoint(evtled[ism][xtal], tAve , (apdpnlas/apdpnlas0[ism][xtal])/(apdpnlednew/apdpnled0[ism][xtal]));
+    }
+
+
+
+    //if ( tAve > tmin1.GetSec() && tAve < tmax1.GetSec() && goodHarness(fed,harn)){
+    if ( tAve > tmin1.GetSec() && tAve < tmax1.GetSec() ){
+      //h_ratio[ism][harn-1][xtal] -> Fill(ratio);
+      //h_ratio[iX][iY][iZ] -> Fill((apdpnlas/apdpnlas0[ism][xtal])/(apdpnlednew/apdpnled0[ism][xtal]));
+      h_ratio[iX][iY][iZ] -> Fill(ratio);
+    }
+    
+    // --- other variables per harness 
     if (x.apdpnB[0]>0 ) p_ratiopn_las[ism][harn-1]->Fill(tlas, x.apdpnA[0]/x.apdpnB[0]);
     if (x.apdpnB[1]>0 ) p_ratiopn_led[ism][harn-1]->Fill(tled, x.apdpnA[1]/x.apdpnB[1]);
     
     p_tmax_las[ism][harn-1]->Fill(tlas, x.tmax[0]/tmaxlas0[ism][xtal]);
     p_tmax_led[ism][harn-1]->Fill(tled, x.tmax[1]/tmaxled0[ism][xtal]);
-
-    
-    p_matacqampli_las[ism][harn-1]->Fill(tlas, x.l_ampli[0]/las_ampli0[ism][xtal]);
-
-    p_matacqrisetime_las[ism][harn-1]->Fill(tlas, x.l_rise_time[0]/las_risetime0[ism][xtal]);
-
-    p_matacqfwhm_las[ism][harn-1]->Fill(tlas, x.l_fwhm[0]/las_fwhm0[ism][xtal]);
-
+    p_matacqampli_las[ism][harn-1]    -> Fill(tlas, x.l_ampli[0]/las_ampli0[ism][xtal]);
+    p_matacqrisetime_las[ism][harn-1] -> Fill(tlas, x.l_rise_time[0]/las_risetime0[ism][xtal]);
+    p_matacqfwhm_las[ism][harn-1]     -> Fill(tlas, x.l_fwhm[0]/las_fwhm0[ism][xtal]);
     //p_matacqprepulse_las[ism][harn-1]->Fill(tlas, x.l_prepulse[0]/las_prepulse0[ism][xtal]);
    
     
@@ -423,17 +505,9 @@ int main(int argc, char ** argv)
 
 //       }
 //     }
-    
-    // plot by channel
-    if (saveAllChannels){
-      gvptpnlas[ism][xtal]->SetPoint(evtlas[ism][xtal], tlas , apdpnlas/apdpnlas0[ism][xtal]);
-      gvptpnled[ism][xtal]->SetPoint(evtled[ism][xtal], tled , apdpnled/apdpnled0[ism][xtal]);
-      gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tAve , (apdpnlas/apdpnlas0[ism][xtal])/(apdpnled/apdpnled0[ism][xtal]));
-      //gratio[ism][xtal]->SetPoint(evtled[ism][xtal], tlas , apdpnlas/apdpnlednew);
-    }
-    
+        
 
-    // MVA regression plots
+    // ---  MVA regression plots
     if (useRegression){
       //var1 = x.qmax[0];
       //var2 = x.tmax[0];
@@ -443,11 +517,10 @@ int main(int argc, char ** argv)
       var6 = x.l_ampli[0]; 
       
       double mva = (reader->EvaluateRegression( "BDTGmethod" ))[0];
-      
       if (evtlas[ism][xtal] == 0){
 	mva0[ism][xtal] = mva;
-      }
-      p_regressionOutput[ism][harn-1]->Fill(tlas, mva/mva0[ism][xtal] );
+     }
+      p_regressionOutput[ism][harn-1]->Fill(tlas, mva/mva0[ism][xtal])    ;
     }
     
     evtlas[ism][xtal]++;
@@ -455,32 +528,89 @@ int main(int argc, char ** argv)
     
     apdpntemp[ism][xtal]= apdpnled;
     tledtemp[ism][xtal] = tled;
-      
-        
+    
   }// end loop over entries
 
-  
-  char fname[100];
-  if ( selected_fed!=-1) sprintf(fname,"EElaserAnalysis_fed%d.root",selected_fed);
-  else sprintf(fname,"EElaserAnalysis_all.root");
 
+
+  cout << "pippone " << endl;
+  
+  TH1F *hmean = new TH1F("hmean","hmean",1000,0.5,1.5); 
+  TH1F *hrms  = new TH1F("hrms","hrms",4000,0.,0.2); 
+
+  TH2F *hmapMean[2];
+  hmapMean[0] = new TH2F("hmapMeanEEM","hmapMeanEEM",101,0,101,101,0,101);
+  hmapMean[1] = new TH2F("hmapMeanEEP","hmapMeanEEP",101,0,101,101,0,101);
+
+  TH2F *hmapRMS[2];
+  hmapRMS[0] = new TH2F("hmapRmsEEM","hmapRmsEEM",101,0,101,101,0,101);
+  hmapRMS[1] = new TH2F("hmapRmsEEP","hmapRmsEEP",101,0,101,101,0,101);
+
+  float mean = 0;
+  float rms = 0;
+//   for (int ism = 0; ism < 18; ism++){
+//     for (int ih = 0; ih < 20; ih++){    
+//       for (int ixtal = 0; ixtal < 850; ixtal++){
+// 	if (h_ratio[ism][ih][ixtal] -> GetEntries() == 0) continue;
+// 	mean = h_ratio[ism][ih][ixtal] -> GetMean();
+// 	rms  = h_ratio[ism][ih][ixtal] -> GetRMS();
+// 	hmean->Fill(mean);
+// 	hrms ->Fill(rms);
+//       }
+//     }
+//   }
+
+
+  for (int k = 0; k < 2; k++){
+    for (int i = 0; i < 101; i++){    
+      for (int j = 0; j < 101; j++){
+	if (h_ratio[i][j][k] -> GetEntries() == 0) continue;
+	mean = h_ratio[i][j][k] -> GetMean();
+	rms  = h_ratio[i][j][k] -> GetRMS();
+	hmean->Fill(mean);
+	hrms ->Fill(rms);
+	hmapMean[k]->Fill(i+0.5,j+0.5,mean);
+	hmapRMS[k]->Fill(i+0.5,j+0.5,rms);
+      }
+    }
+  }
+
+  // ****** SAVE GRAPHS ******
+  cout << "Saving ..." << endl;
+
+  char fname[100];
+  if ( selected_fed!=-1) sprintf(fname,"EElaserAnalysis_fed%d_test.root",selected_fed);
+  else sprintf(fname,"EElaserAnalysis_all_test.root");
+  
   TFile *fout = new TFile(fname,"recreate");
    
   if (saveAllChannels){
     TDirectory *mydir      =   fout -> mkdir("by_channel","by_channel");
     mydir->cd();
-    for (int ism = 0; ism < 18; ism++){
-      for (int ixtal = 0; ixtal < 850; ixtal++){
-	if ( gvptpnlas[ism][ixtal]-> GetN() > 0) gvptpnlas[ism][ixtal]-> Write();
-	if ( gvptpnled[ism][ixtal]-> GetN() > 0) gvptpnled[ism][ixtal]-> Write();
-	if ( gratio[ism][ixtal]-> GetN()    > 0) gratio[ism][ixtal]-> Write();
+//     for (int ism = 0; ism < 18; ism++){
+//       for (int ih = 0; ih < 20; ih++){    
+// 	for (int ixtal = 0; ixtal < 850; ixtal++){
+// 	  if ( g_vptpn_las[ism][ih][ixtal]-> GetN() > 0) g_vptpn_las[ism][ih][ixtal]-> Write();
+// 	  if ( g_vptpn_led[ism][ih][ixtal]-> GetN() > 0) g_vptpn_led[ism][ih][ixtal]-> Write();
+// 	  if ( g_ratio[ism][ih][ixtal]    -> GetN() > 0) g_ratio[ism][ih][ixtal]-> Write();
+// 	  if ( h_ratio[ism][ih][ixtal]    -> GetEntries() > 0) h_ratio[ism][ih][ixtal]    -> Write();
+// 	}
+//       }
+//     }
+    for (int k = 0; k < 2; k++){
+      for (int i = 0; i < 101; i++){    
+	for (int j = 0; j < 101; j++){
+	  if ( g_vptpn_las[i][j][k]-> GetN() > 0) g_vptpn_las[i][j][k]-> Write();
+	  if ( g_vptpn_led[i][j][k]-> GetN() > 0) g_vptpn_led[i][j][k]-> Write();
+	  if ( g_ratio[i][j][k]    -> GetN() > 0) g_ratio[i][j][k]-> Write();
+	  if ( h_ratio[i][j][k]    -> GetEntries() > 0) h_ratio[i][j][k]    -> Write();
+	}
       }
     }
   }
- 
+  
   fout->cd();
-
-
+  
   for (int ism = 0; ism < 18; ism++){
     
     if ( p_fed_vptpn_las[ism]-> GetEntries() > 0)  	p_fed_vptpn_las[ism]->Write();
@@ -504,13 +634,23 @@ int main(int argc, char ** argv)
       if ( p_matacqfwhm_las[ism][ih]    -> GetEntries() > 0) p_matacqfwhm_las[ism][ih]->Write();
       if ( p_matacqprepulse_las[ism][ih]-> GetEntries() > 0) p_matacqprepulse_las[ism][ih]->Write();
 
-      if ( p_regressionOutput[ism][ih]-> GetEntries() > 0) p_regressionOutput[ism][ih]->Write();
-
       if ( h_ratio_vs_matacqfwhm[ism][ih] -> GetEntries() > 0 ) h_ratio_vs_matacqfwhm[ism][ih]->Write();
       if ( h_ratio_vs_matacqampli[ism][ih]-> GetEntries() > 0 ) h_ratio_vs_matacqampli[ism][ih]->Write();
       if ( g2[ism][ih]                    -> GetN() > 0       ) g2[ism][ih]->Write();
+      
+      if ( useRegression && p_regressionOutput[ism][ih]-> GetEntries() > 0) p_regressionOutput[ism][ih]->Write();
+	 
     }
   }
+
+  hmean->Write();
+  hrms->Write();
+
+  hmapMean[0]->Write();
+  hmapMean[1]->Write();
+
+  hmapRMS[0]->Write();
+  hmapRMS[1]->Write();
 
   
 }
