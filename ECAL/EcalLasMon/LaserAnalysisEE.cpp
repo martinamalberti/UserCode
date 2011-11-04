@@ -39,15 +39,15 @@ int main(int argc, char ** argv)
     return 0;
   }
     
-  bool saveAllChannels = true;
+  bool saveAllChannels = false;
   bool useRegression   = false;
 
   int * wl = NULL, nwl = 0;
   TChain * tx = new TChain("x");
   //tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001*.root");
-  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001758*.root");
-  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_001759*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_00175*.root");
   tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_00176*.root");
+  tx->Add("/data2/EcalLaserMonitoringData/ntuples_2011_158851_178888/ntu_data_00177*.root");
   //tx->Add("/tmp/malberti/ntu_data_fed605.root"); // reduced ntuple
   
   init_ttree(tx, &x);
@@ -77,54 +77,6 @@ int main(int argc, char ** argv)
   tx->SetBranchStatus("l_prepulse",1);
 
   cout << " Number of entries " << tx->GetEntries() << endl;
-  
-  // 18 --> number of feds in EE
-  //850 : max number of channels in the fed
-//   TGraph* g_vptpn_las[18][20][850];
-//   TGraph* g_vptpn_led[18][20][850];
-//   TGraph* g_ratio[18][20][850];
-//   TH1F*   h_ratio[18][20][850];
-  
-//   char gname[100];
-//   int fed = 0;
-//   for (int ism = 0; ism < 18; ism++){
-//     if (ism < 9 ) fed = 600 + ism+1;
-//     if (ism >= 9) fed = 636 + ism+1 ; // fix
-//     cout << (ism+1) << "  "  << fed << endl;
-//     for (int ih = 0; ih < 20; ih++){
-//       for (int ixtal = 0; ixtal < 850; ixtal++){
-
-// 	if (saveAllChannels){
-// 	  sprintf(gname,"g_vptpn_las_fed%d_harness%d_xtal%d", fed, ih+1, ixtal);
-// 	  g_vptpn_las[ism][ih][ixtal] = new TGraph();
-// 	  g_vptpn_las[ism][ih][ixtal] -> SetTitle(gname);
-// 	  g_vptpn_las[ism][ih][ixtal] -> SetName(gname);
-// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerColor(kBlue);
-// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerStyle(20);
-// 	  g_vptpn_las[ism][ih][ixtal] -> SetMarkerSize(0.5);
-	  
-// 	  sprintf(gname,"g_vptpn_led_fed%d_harness%d_xtal%d", fed, ih+1, ixtal);
-// 	  g_vptpn_led[ism][ih][ixtal] = new TGraph();
-// 	  g_vptpn_led[ism][ih][ixtal] -> SetTitle(gname);
-// 	  g_vptpn_led[ism][ih][ixtal] -> SetName(gname);
-// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerColor(kCyan+2);
-// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerStyle(20);
-// 	  g_vptpn_led[ism][ih][ixtal] -> SetMarkerSize(0.5);
-	  
-// 	  sprintf(gname,"g_ratio_fed%d_harness%d_xtal%d", fed, ih+1,ixtal);
-// 	  g_ratio[ism][ih][ixtal] = new TGraph();
-// 	  g_ratio[ism][ih][ixtal] -> SetTitle(gname);
-// 	  g_ratio[ism][ih][ixtal] -> SetName(gname);
-// 	  g_ratio[ism][ih][ixtal] -> SetMarkerColor(kBlack);
-// 	  g_ratio[ism][ih][ixtal] -> SetMarkerStyle(20);
-// 	  g_ratio[ism][ih][ixtal] -> SetMarkerSize(0.5);
-// 	}
-// 	sprintf(gname,"h_ratio_fed%d_harness%d_xtal%d", fed, ih+1,ixtal);
-// 	h_ratio[ism][ih][ixtal] = new TH1F(gname,gname,5000,0.9,1.1);
-//       }
-//     }
-//   }
-  
 
   TGraph* g_vptpn_las[101][101][2];
   TGraph* g_vptpn_led[101][101][2];
@@ -137,37 +89,36 @@ int main(int argc, char ** argv)
   for (int k = 0; k < 2; k++){
     for (int i = 0; i < 101; i++){
       for (int j = 0; j < 101; j++){
-      	if (saveAllChannels){
-
-	  if (k==0) sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEM", i+1, j+1);
-	  else sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEP", i+1, j+1);
-	  g_vptpn_las[i][j][k] = new TGraph();
-	  g_vptpn_las[i][j][k] -> SetTitle(gname);
-	  g_vptpn_las[i][j][k] -> SetName(gname);
-	  g_vptpn_las[i][j][k] -> SetMarkerColor(kBlue);
-	  g_vptpn_las[i][j][k] -> SetMarkerStyle(20);
-	  g_vptpn_las[i][j][k] -> SetMarkerSize(0.5);
-
-	  if (k==0) sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEM", i+1, j+1);
-	  else sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEP", i+1, j+1);
-	  g_vptpn_led[i][j][k] = new TGraph();
-	  g_vptpn_led[i][j][k] -> SetTitle(gname);
-	  g_vptpn_led[i][j][k] -> SetName(gname);
-	  g_vptpn_led[i][j][k] -> SetMarkerColor(kCyan+2);
-	  g_vptpn_led[i][j][k] -> SetMarkerStyle(20);
-	  g_vptpn_led[i][j][k] -> SetMarkerSize(0.5);
-
-	  if (k==0) sprintf(gname,"g_ratio_ix%d_iy%d_EEM", i+1, j+1);
-	  else sprintf(gname,"g_ratio_ix%d_iy%d_EEP", i+1, j+1);
-	  g_ratio[i][j][k] = new TGraph();
-	  g_ratio[i][j][k] -> SetTitle(gname);
-	  g_ratio[i][j][k] -> SetName(gname);
-	  g_ratio[i][j][k] -> SetMarkerColor(kBlack);
-	  g_ratio[i][j][k] -> SetMarkerStyle(20);
-	  g_ratio[i][j][k] -> SetMarkerSize(0.5);
+	if (saveAllChannels){
+	if (k==0) sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEM", i, j);
+	else sprintf(gname,"g_vptpn_las_ix%d_iy%d_EEP", i, j);
+	g_vptpn_las[i][j][k] = new TGraph();
+	g_vptpn_las[i][j][k] -> SetTitle(gname);
+	g_vptpn_las[i][j][k] -> SetName(gname);
+	g_vptpn_las[i][j][k] -> SetMarkerColor(kBlue);
+	g_vptpn_las[i][j][k] -> SetMarkerStyle(20);
+	g_vptpn_las[i][j][k] -> SetMarkerSize(0.5);
+	
+	if (k==0) sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEM", i, j);
+	else sprintf(gname,"g_vptpn_led_ix%d_iy%d_EEP", i, j);
+	g_vptpn_led[i][j][k] = new TGraph();
+	g_vptpn_led[i][j][k] -> SetTitle(gname);
+	g_vptpn_led[i][j][k] -> SetName(gname);
+	g_vptpn_led[i][j][k] -> SetMarkerColor(kCyan+2);
+	g_vptpn_led[i][j][k] -> SetMarkerStyle(20);
+	g_vptpn_led[i][j][k] -> SetMarkerSize(0.5);
+	
+	if (k==0) sprintf(gname,"g_ratio_ix%d_iy%d_EEM", i, j);
+	else sprintf(gname,"g_ratio_ix%d_iy%d_EEP", i, j);
+	g_ratio[i][j][k] = new TGraph();
+	g_ratio[i][j][k] -> SetTitle(gname);
+	g_ratio[i][j][k] -> SetName(gname);
+	g_ratio[i][j][k] -> SetMarkerColor(kBlack);
+	g_ratio[i][j][k] -> SetMarkerStyle(20);
+	g_ratio[i][j][k] -> SetMarkerSize(0.5);
 	}
-	if (k==0) sprintf(gname,"h_ratio_ix%d_iy%d_EEM", i+1, j+1);
-	else sprintf(gname,"h_ratio_ix%d_iy%d_EEP", i+1, j+1);
+	if (k==0) sprintf(gname,"h_ratio_ix%d_iy%d_EEM", i, j);
+	else sprintf(gname,"h_ratio_ix%d_iy%d_EEP", i, j);
 	h_ratio[i][j][k] = new TH1F(gname,gname,1000,0.9,1.1);
       }
     }
@@ -333,7 +284,6 @@ int main(int argc, char ** argv)
       g2[ism][ih]= new TGraph2D();
       g2[ism][ih]->SetTitle(gname);
       g2[ism][ih]->SetName(gname);
-      //g2[ism][ih]= new TH3F(gname,gname,500,0.,50., 5000,0.,5000.,200,0.,2.);
 
       if (useRegression){
 	sprintf(gname,"p_regressionOutput_fed%d_harness%d", fed, ih+1);
@@ -345,6 +295,14 @@ int main(int argc, char ** argv)
       }
     }
   }
+
+  TH2F  *harnessMap[2];
+  harnessMap[0]  = new TH2F("harnessMapEEM","harnessMapEEM",101,0,101,101,0,101);
+  harnessMap[1]  = new TH2F("harnessMapEEP","harnessMapEEP",101,0,101,101,0,101);
+
+  TH2F  *fedMap[2];
+  fedMap[0]  = new TH2F("fedMapEEM","fedMapEEM",101,0,101,101,0,101);
+  fedMap[1]  = new TH2F("fedMapEEP","fedMapEEP",101,0,101,101,0,101);
   
   // create the Reader object
   TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
@@ -381,9 +339,11 @@ int main(int argc, char ** argv)
 
   float mva0[18][850]={0};
 
-  float temp[18][850];
-
-
+  float ratioTemp[101][101][2];
+  double y1[101][101][2];
+  double y2[101][101][2];
+  double y3[101][101][2];
+  
   for (int ientry = 0; ientry < tx->GetEntries(); ientry++){
     tx->GetEntry(ientry);
     
@@ -402,20 +362,20 @@ int main(int argc, char ** argv)
     int xtal       = x.elecId;      
          
     int iX         = (x.ix) + 50 ;
-    if (x.ix < 0) iX = iX + 1;
+    if (x.ix < 0) iX = iX + 1 ;
     int iY         = (x.iy) * (x.iz) - 1;
     int iZ         = x.iz;
     if (iZ<0)   iZ = 0;
 
 
-    //    cout << x.ix << "  " << x.iy << "  " << x.iz << endl;
-    //    cout << iX << "  " << iY << "  " << iZ << endl;
-    //  cout << endl;
+    // september 2011
+    if ( tlas < tmin1.GetSec() || tlas > tmax1.GetSec() ) continue;
+    if ( tled < tmin1.GetSec() || tled > tmax1.GetSec() ) continue;
 
     // check only one fed
     if ( selected_fed!=-1 && fed != selected_fed ) continue;
     
-    //     // check only one harness
+    // check only one harness
     // if (harn !=6  ) continue;
     // if (fed  !=605) continue;
     
@@ -430,6 +390,8 @@ int main(int argc, char ** argv)
       las_risetime0[ism][xtal] = x.l_rise_time[0];
       las_fwhm0[ism][xtal]     = x.l_fwhm[0];
       las_prepulse0[ism][xtal] = x.l_prepulse[0];
+      harnessMap[iZ]->Fill(iX-1,iY, harn);
+      fedMap[iZ]->Fill(iX-1,iY, fed);
     }
 
     if (evtled[ism][xtal] == 0) {
@@ -446,43 +408,43 @@ int main(int argc, char ** argv)
       apdpnlednew = ( apdpnled - apdpntemp[ism][xtal] )/(tled - tledtemp[ism][xtal]) * (tlas-tled) + apdpnled;
     else apdpnlednew = apdpnled;
    
-    float ratio = (apdpnlas/apdpnlas0[ism][xtal])/(apdpnled/apdpnled0[ism][xtal]);
+    apdpnlas/=apdpnlas0[ism][xtal];
+    apdpnled/=apdpnled0[ism][xtal];
+
+    float ratio = apdpnlas/apdpnled;
+
+    // check of led quality
+    y3[iX][iY][iZ] = apdpnled;
 
     // --- profile plots  (average on one FED)
-    p_fed_vptpn_las[ism] -> Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
-    p_fed_vptpn_led[ism] -> Fill(tled, apdpnled/apdpnled0[ism][xtal]);
-    p_fed_ratio[ism]     -> Fill(tAve, ratio);
+    p_fed_vptpn_las[ism] -> Fill(tlas, apdpnlas);
+    p_fed_vptpn_led[ism] -> Fill(tled, apdpnled);
+    p_fed_ratio[ism]     -> Fill(tAve, ratioTemp[iX][iY][iZ]);
     
     // --- profile plots  (average on one harness)
-    p_vptpn_las[ism][harn-1] -> Fill(tlas, apdpnlas/apdpnlas0[ism][xtal]);
-    p_vptpn_led[ism][harn-1] -> Fill(tled, apdpnled/apdpnled0[ism][xtal]);
-    p_ratio[ism][harn-1]     -> Fill(tAve, ratio);
+    p_vptpn_las[ism][harn-1] -> Fill(tlas, apdpnlas);
+    p_vptpn_led[ism][harn-1] -> Fill(tled, apdpnled);
+    p_ratio[ism][harn-1]     -> Fill(tAve, ratioTemp[iX][iY][iZ]);
     //p_ratio[ism][harn-1]   -> Fill(tlas, apdpnlas/apdpnlednew);
-    
+      
     // single channel graphs
-    
-    
-    
-    
     if (saveAllChannels){
-//       g_vptpn_las[ism][harn-1][xtal] -> SetPoint(evtlas[ism][xtal], tlas , apdpnlas/apdpnlas0[ism][xtal]);
-//       g_vptpn_led[ism][harn-1][xtal] -> SetPoint(evtled[ism][xtal], tled , apdpnled/apdpnled0[ism][xtal]);
-//       g_ratio[ism][harn-1][xtal]     -> SetPoint(evtled[ism][xtal], tAve , ratio);
-      g_vptpn_las[iX][iY][iZ] -> SetPoint(evtlas[ism][xtal], tlas , apdpnlas/apdpnlas0[ism][xtal]);
-      g_vptpn_led[iX][iY][iZ] -> SetPoint(evtled[ism][xtal], tled , apdpnled/apdpnled0[ism][xtal]);
-      g_ratio[iX][iY][iZ]     -> SetPoint(evtled[ism][xtal], tAve , ratio);
-      //g_ratio[iX][iY][iZ]     -> SetPoint(evtled[ism][xtal], tAve , (apdpnlas/apdpnlas0[ism][xtal])/(apdpnlednew/apdpnled0[ism][xtal]));
-    }
-
-
-
-    //if ( tAve > tmin1.GetSec() && tAve < tmax1.GetSec() && goodHarness(fed,harn)){
-    if ( tAve > tmin1.GetSec() && tAve < tmax1.GetSec() ){
-      //h_ratio[ism][harn-1][xtal] -> Fill(ratio);
-      //h_ratio[iX][iY][iZ] -> Fill((apdpnlas/apdpnlas0[ism][xtal])/(apdpnlednew/apdpnled0[ism][xtal]));
-      h_ratio[iX][iY][iZ] -> Fill(ratio);
+      g_vptpn_las[iX][iY][iZ] -> SetPoint(evtlas[ism][xtal], tlas , apdpnlas);
+      g_vptpn_led[iX][iY][iZ] -> SetPoint(evtled[ism][xtal], tled , apdpnled);
+      g_ratio[iX][iY][iZ]     -> SetPoint(evtled[ism][xtal], tAve , ratioTemp[iX][iY][iZ]);        
     }
     
+    if ( tAve > tmin1.GetSec() && tAve < tmax1.GetSec() ){
+      if ( fabs( 2*y2[iX][iY][iZ]-y1[iX][iY][iZ]-y3[iX][iY][iZ]) < 10 * fabs (y3[iX][iY][iZ]-y1[iX][iY][iZ]) ) {
+	h_ratio[iX][iY][iZ] -> Fill(ratioTemp[iX][iY][iZ]);
+      }
+    }
+
+    ratioTemp[iX][iY][iZ] = ratio; 
+    y1[iX][iY][iZ] = y2[iX][iY][iZ];
+    y2[iX][iY][iZ] = apdpnled;
+
+    //-------------------------------------------------------------------------------------
     // --- other variables per harness 
     if (x.apdpnB[0]>0 ) p_ratiopn_las[ism][harn-1]->Fill(tlas, x.apdpnA[0]/x.apdpnB[0]);
     if (x.apdpnB[1]>0 ) p_ratiopn_led[ism][harn-1]->Fill(tled, x.apdpnA[1]/x.apdpnB[1]);
@@ -492,19 +454,17 @@ int main(int argc, char ** argv)
     p_matacqampli_las[ism][harn-1]    -> Fill(tlas, x.l_ampli[0]/las_ampli0[ism][xtal]);
     p_matacqrisetime_las[ism][harn-1] -> Fill(tlas, x.l_rise_time[0]/las_risetime0[ism][xtal]);
     p_matacqfwhm_las[ism][harn-1]     -> Fill(tlas, x.l_fwhm[0]/las_fwhm0[ism][xtal]);
-    //p_matacqprepulse_las[ism][harn-1]->Fill(tlas, x.l_prepulse[0]/las_prepulse0[ism][xtal]);
-   
+        
+    //      if ( tlas > tmin1.GetSec() && tlas < tmax1.GetSec() ){
+    //       if ( fabs(ratio-1)<0.1 ){
+    // 	h_ratio_vs_matacqfwhm[ism][harn-1] ->Fill( x.l_fwhm[0],ratio );
+    //  	h_ratio_vs_matacqampli[ism][harn-1]->Fill( x.l_ampli[0],ratio );
+    //  	g2[ism][harn-1]->SetPoint(evt[ism][harn-1],x.l_fwhm[0],x.l_ampli[0], ratio);
+    //  	//g2[ism][harn-1]->Fill(x.l_fwhm[0],x.l_ampli[0],ratio);
+    // 	evt[ism][harn-1]++;
     
-//      if ( tlas > tmin1.GetSec() && tlas < tmax1.GetSec() ){
-//       if ( fabs(ratio-1)<0.1 ){
-// 	h_ratio_vs_matacqfwhm[ism][harn-1] ->Fill( x.l_fwhm[0],ratio );
-//  	h_ratio_vs_matacqampli[ism][harn-1]->Fill( x.l_ampli[0],ratio );
-//  	g2[ism][harn-1]->SetPoint(evt[ism][harn-1],x.l_fwhm[0],x.l_ampli[0], ratio);
-//  	//g2[ism][harn-1]->Fill(x.l_fwhm[0],x.l_ampli[0],ratio);
-// 	evt[ism][harn-1]++;
-
-//       }
-//     }
+    //       }
+    //     }
         
 
     // ---  MVA regression plots
@@ -519,7 +479,7 @@ int main(int argc, char ** argv)
       double mva = (reader->EvaluateRegression( "BDTGmethod" ))[0];
       if (evtlas[ism][xtal] == 0){
 	mva0[ism][xtal] = mva;
-     }
+      }
       p_regressionOutput[ism][harn-1]->Fill(tlas, mva/mva0[ism][xtal])    ;
     }
     
@@ -530,8 +490,6 @@ int main(int argc, char ** argv)
     tledtemp[ism][xtal] = tled;
     
   }// end loop over entries
-
-
 
   cout << "pippone " << endl;
   
@@ -548,18 +506,6 @@ int main(int argc, char ** argv)
 
   float mean = 0;
   float rms = 0;
-//   for (int ism = 0; ism < 18; ism++){
-//     for (int ih = 0; ih < 20; ih++){    
-//       for (int ixtal = 0; ixtal < 850; ixtal++){
-// 	if (h_ratio[ism][ih][ixtal] -> GetEntries() == 0) continue;
-// 	mean = h_ratio[ism][ih][ixtal] -> GetMean();
-// 	rms  = h_ratio[ism][ih][ixtal] -> GetRMS();
-// 	hmean->Fill(mean);
-// 	hrms ->Fill(rms);
-//       }
-//     }
-//   }
-
 
   for (int k = 0; k < 2; k++){
     for (int i = 0; i < 101; i++){    
@@ -569,8 +515,8 @@ int main(int argc, char ** argv)
 	rms  = h_ratio[i][j][k] -> GetRMS();
 	hmean->Fill(mean);
 	hrms ->Fill(rms);
-	hmapMean[k]->Fill(i+0.5,j+0.5,mean);
-	hmapRMS[k]->Fill(i+0.5,j+0.5,rms);
+	hmapMean[k]->Fill(i-1,j,mean);
+	hmapRMS[k]->Fill(i-1,j,rms);
       }
     }
   }
@@ -579,24 +525,14 @@ int main(int argc, char ** argv)
   cout << "Saving ..." << endl;
 
   char fname[100];
-  if ( selected_fed!=-1) sprintf(fname,"EElaserAnalysis_fed%d_test.root",selected_fed);
-  else sprintf(fname,"EElaserAnalysis_all_test.root");
+  if ( selected_fed!=-1) sprintf(fname,"EElaserAnalysis_fed%d_test2.root",selected_fed);
+  else sprintf(fname,"EElaserAnalysis_all.root");
   
   TFile *fout = new TFile(fname,"recreate");
    
   if (saveAllChannels){
     TDirectory *mydir      =   fout -> mkdir("by_channel","by_channel");
     mydir->cd();
-//     for (int ism = 0; ism < 18; ism++){
-//       for (int ih = 0; ih < 20; ih++){    
-// 	for (int ixtal = 0; ixtal < 850; ixtal++){
-// 	  if ( g_vptpn_las[ism][ih][ixtal]-> GetN() > 0) g_vptpn_las[ism][ih][ixtal]-> Write();
-// 	  if ( g_vptpn_led[ism][ih][ixtal]-> GetN() > 0) g_vptpn_led[ism][ih][ixtal]-> Write();
-// 	  if ( g_ratio[ism][ih][ixtal]    -> GetN() > 0) g_ratio[ism][ih][ixtal]-> Write();
-// 	  if ( h_ratio[ism][ih][ixtal]    -> GetEntries() > 0) h_ratio[ism][ih][ixtal]    -> Write();
-// 	}
-//       }
-//     }
     for (int k = 0; k < 2; k++){
       for (int i = 0; i < 101; i++){    
 	for (int j = 0; j < 101; j++){
@@ -651,6 +587,11 @@ int main(int argc, char ** argv)
 
   hmapRMS[0]->Write();
   hmapRMS[1]->Write();
+
+  harnessMap[0]->Write();
+  harnessMap[1]->Write();
+  fedMap[0]->Write();
+  fedMap[1]->Write();
 
   
 }
