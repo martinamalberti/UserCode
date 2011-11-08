@@ -8,34 +8,40 @@ bool goodHarness(int fed, int harness){
   if ( fed == 601 && harness == 13  ) is_good = false; // bad laser and led. PN?
   if ( fed == 602 && harness == 6   ) is_good = false; // bad led, laser ok 
   if ( fed == 603 && harness == 1   ) is_good = false; // bad led, laser ok 
-  if ( fed == 603 && harness == 4   ) is_good = false; // 
-  if ( fed == 608 && harness == 19  ) is_good = false;
-
-  if ( fed == 646 && harness == 11  ) is_good = false;
-  if ( fed == 646 && harness == 9   ) is_good = false;
-  if ( fed == 649 && harness == 4   ) is_good = false;
-  if ( fed == 650 && harness == 8   ) is_good = false;
-  if ( fed == 651 && harness == 10  ) is_good = false;
-  if ( fed == 651 && harness == 11  ) is_good = false;
-  if ( fed == 652 && harness == 16  ) is_good = false;
-  if ( fed == 653 && harness == 19  ) is_good = false;
-  if ( fed == 654                   ) is_good = false;
+  if ( fed == 608 && harness == 19  ) is_good = false; // bad laser and led. PN?  
+  if ( fed == 609 && harness == 17  ) is_good = false; // ??
+							 
+  //if ( fed == 646 && harness == 11  ) is_good = false; // jump in laser and LED 08/08/2011. Ma OK se guardo solo settembre.
+  //if ( fed == 646 && harness == 9   ) is_good = false; // jump in laser and LED 08/08/2011. Ma OK se guardo solo settembre.
+  if ( fed == 649 && harness == 4   ) is_good = false; // jump in LED 1-12/09/2011, ma laser OK: il problema e' nel LED 
+  if ( fed == 650 && harness == 8   ) is_good = false; // jump in LED 1-12/09/2011, ma laser OK: il problema e' nel LED 
+  if ( fed == 651 && harness == 10  ) is_good = false; // jump laser AND LED betweeen 08/08 and 12/09
+  //if ( fed == 651 && harness == 11  ) is_good = false; // jump in laser and LED 08/08/2011. Ma OK se guardo solo settembre.
+  if ( fed == 652 && harness == 16  ) is_good = false; // jump laser AND LED betweeen 08/08 and 12/09
+  if ( fed == 653 && harness == 19  ) is_good = false; // ok sia laser che led se guardo solo fino al 25/09. Poi jump del LED.
+  if ( fed == 654 && harness == 15  ) is_good = false; 
 
   return (is_good);
 
 }
 
-
-
 void Stability(){
  
 
-  //TFile *f = TFile::Open("EElaserAnalysis_all_September2011.root");
-  TFile *f = TFile::Open("EElaserAnalysis_all.root");
+  TFile *f = TFile::Open("EElaserAnalysis_all_September2011.root");
+  
+  TH1F *hstabilityEEP  = new TH1F("hstabilityEEP","hstabilityEEP",400,0.,0.1);
+  hstabilityEEP->SetLineColor(kBlue);
+  hstabilityEEP->SetFillStyle(3004);
+  hstabilityEEP->SetFillColor(kBlue);
+  hstabilityEEP->GetXaxis()->SetTitle("RMS(ratio)");
 
-  TH1F *hstabilityEEP  = new TH1F("hstabilityEEP","hstabilityEEP",1000,0.,0.1);
-  TH1F *hstabilityEEM  = new TH1F("hstabilityEEM","hstabilityEEM",1000,0.,0.1);
- 
+  TH1F *hstabilityEEM  = new TH1F("hstabilityEEM","hstabilityEEM",400,0.,0.1);
+  hstabilityEEM->SetLineColor(kBlue);
+  hstabilityEEM->SetFillStyle(3004);
+  hstabilityEEM->SetFillColor(kBlue);
+  hstabilityEEM->GetXaxis()->SetTitle("RMS(ratio)");
+
   float meanEEP, rmsEEP;
   float meanEEM, rmsEEM;
   int fed, harness;
@@ -47,7 +53,7 @@ void Stability(){
       fed     = fedMapEEP     -> GetCellContent(i,j);
       harness = harnessMapEEP -> GetCellContent(i,j);
       if (goodHarness(fed,harness) && rmsEEP> 0  )
-	hstabilityEEP ->Fill(rmsEEP);
+      	hstabilityEEP ->Fill(rmsEEP);
       else{
 // 	hmapMeanEEP   -> SetCellContent(i,j, 0);
 // 	hmapRmsEEP   -> SetCellContent(i,j, 0);
@@ -57,7 +63,7 @@ void Stability(){
       fed     = fedMapEEM     -> GetCellContent(i,j);
       harness = harnessMapEEM -> GetCellContent(i,j);
       if (goodHarness(fed,harness)&& rmsEEM> 0)
-      	hstabilityEEM ->Fill(rmsEEM);
+	hstabilityEEM ->Fill(rmsEEM);
       else{
 //  	hmapMeanEEM   -> SetCellContent(i,j, 0);
 //  	hmapRmsEEM   -> SetCellContent(i,j, 0);
@@ -65,30 +71,20 @@ void Stability(){
     }
   }
   
-  TCanvas *cstabEEP = new TCanvas("cstabEEP","cstabEEP");
+  TCanvas *cstabEEP = new TCanvas("cstabEEP","cstabEEP",600,550);
+  hstabilityEEP->GetXaxis()->SetRangeUser(0,0.02);
   hstabilityEEP->Draw();
 
-  TCanvas *cmeanEEP = new TCanvas("cmeanEEP","cmeanEEP");
-  hmapMeanEEP->GetZaxis()->SetRangeUser(0.96,1.01);
+  TCanvas *cmeanEEP = new TCanvas("cmeanEEP","cmeanEEP",600,550);
+  cmeanEEP->SetRightMargin(0.15);
+  hmapMeanEEP->GetZaxis()->SetRangeUser(0.92,1.01);
   hmapMeanEEP->Draw("colz");
   drawEELines();
 
-  TCanvas *crmsEEP = new TCanvas("crmsEEP","crmsEEP");
+  TCanvas *crmsEEP = new TCanvas("crmsEEP","crmsEEP",600,550);
+  crmsEEP->SetRightMargin(0.15);
   hmapRmsEEP->GetZaxis()->SetRangeUser(0.,0.01);
   hmapRmsEEP->Draw("colz");
-  drawEELines();
-
-  TCanvas *cstabEEM = new TCanvas("cstabEEM","cstabEEM");
-  hstabilityEEM->Draw();
-
-  TCanvas *cmeanEEM = new TCanvas("cmeanEEM","cmeanEEM");
-  hmapMeanEEM->GetZaxis()->SetRangeUser(0.96,1.01);
-  hmapMeanEEM->Draw("colz");
-  drawEELines();
- 
-  TCanvas *crmsEEM = new TCanvas("crmsEEM","crmsEEM");
-  hmapRmsEEM->GetZaxis()->SetRangeUser(0.,0.01);
-  hmapRmsEEM->Draw("colz");
   drawEELines();
 
   new TCanvas(); 
@@ -96,6 +92,24 @@ void Stability(){
   new TCanvas(); 
   fedMapEEP->GetZaxis()->SetRangeUser(646,654);
   fedMapEEP->Draw("colz");
+
+
+  TCanvas *cstabEEM = new TCanvas("cstabEEM","cstabEEM",600,550);
+  hstabilityEEM->GetXaxis()->SetRangeUser(0,0.02);
+  hstabilityEEM->Draw();
+
+  TCanvas *cmeanEEM = new TCanvas("cmeanEEM","cmeanEEM",600,550);
+  cmeanEEM->SetRightMargin(0.15);
+  hmapMeanEEM->GetZaxis()->SetRangeUser(0.92,1.01);
+  hmapMeanEEM->Draw("colz");
+  drawEELines();
+  
+  TCanvas *crmsEEM = new TCanvas("crmsEEM","crmsEEM",600,550);
+  crmsEEM->SetRightMargin(0.15);
+  hmapRmsEEM->GetZaxis()->SetRangeUser(0.,0.01);
+  hmapRmsEEM->Draw("colz");
+  drawEELines();
+ 
 
   new TCanvas(); 
   harnessMapEEM->Draw("colz");
