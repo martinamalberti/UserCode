@@ -47,15 +47,16 @@ void LocalCorrectionEta()
   float etaMax = 1.44;
   
   float r9min = 0. ;
-  float r9max = 9999 ;  
+  float r9max = 0.94 ;  
   
   bool useOddCry    = false;
   bool useEvenCry   = false;
   bool usePUweights = true;
+  bool useR9weights = false;
   
   //---- output file to save graphs
   char outfilename[100];
-  sprintf(outfilename,"GraphsLocalEta_puweights.root");
+  sprintf(outfilename,"GraphsLocalEta_lowR9.root");
 
   //--- weights for MC
   TFile weightsFile("weights/PUweights_2011_0100_73500_DYJetsToLL_Fall11_S6.root","READ"); // stessi pesi usati per analisi vertici Hgg  
@@ -67,6 +68,17 @@ void LocalCorrectionEta()
   weightsFile.Close();
     
 
+  //--- weights for MC
+  TFile r9weightsFile("weights/r9weights.root","READ"); 
+  TH1F* hr9weights = (TH1F*)r9weightsFile.Get("hr9ratioEB");
+//   float wr9[600];
+//   for (int ibin = 1; ibin < hr9weights->GetNbinsX()+1; ibin++){
+//     wr9[ibin-1] = hr9weights->GetBinContent(ibin);  
+//   }
+//   r9weightsFile.Close();
+
+
+  // --- NTUPLES
 
   TChain *ntu_MC = new TChain("ntu");
   TChain *ntu_Data = new TChain("ntu");
@@ -169,7 +181,7 @@ void LocalCorrectionEta()
   //******************************************************************************************
   //*************************************** MC  ********************************************** 
   std::cout << "Loop on MC events ... " << endl; 
-  float ww = 1 ;
+ 
 
   //---- loop on MC, make refernce and fit dist
   for(int entry = 0; entry < ntu_MC->GetEntries(); ++entry) {
@@ -178,9 +190,14 @@ void LocalCorrectionEta()
 
     ntu_MC->GetEntry(entry);
 
-    if (usePUweights) ww = w[npu];
 
     R9 = scE3x3/scEne;
+    int r9bin = hr9weights ->FindBin(R9);
+
+    float ww = 1 ;
+    if (usePUweights) ww = w[npu];
+    if (useR9weights) ww = ww * hr9weights -> GetBinContent(r9bin);
+
 
     //-- eta or R9 cuts
     if( fabs(scEta) > etaMax ) continue;
