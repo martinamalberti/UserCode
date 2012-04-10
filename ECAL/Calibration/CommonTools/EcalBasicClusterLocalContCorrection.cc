@@ -80,11 +80,11 @@ int EcalBasicClusterLocalContCorrection::getEcalModule( DetId id )
 
   //  int ieta = (EBDetId(id.first)).ieta();
   int ieta = (EBDetId(id)).ieta();
-  
+
   if (fabs(ieta) <=25 ) mod = 0;
-  if (fabs(ieta) <=45 ) mod = 1;
-  if (fabs(ieta) <=65 ) mod = 2;
-  if (fabs(ieta) <=85 ) mod = 3;
+  if (fabs(ieta) > 25 && fabs(ieta) <=45 ) mod = 1;
+  if (fabs(ieta) > 45 && fabs(ieta) <=65 ) mod = 2;
+  if (fabs(ieta) > 65 && fabs(ieta) <=85 ) mod = 3;
 
   return (mod);
  
