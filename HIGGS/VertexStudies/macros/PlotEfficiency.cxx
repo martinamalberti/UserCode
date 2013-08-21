@@ -7,38 +7,45 @@ TH1F* MakeRatio(TH1F* h1, TH1F*h2, string hname){
 
 
 
-void PlotEfficiency(string outdir, string lumi, bool plotVariables=false) 
+void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables=false) 
 {
 
   gROOT->LoadMacro("~/setTDRStyle.C");
   setTDRStyle();
   gStyle->SetErrorX(0.5);
-
+  gStyle->SetLegendFont(42);
+  gStyle->SetTextFont(42);
+  gStyle->SetTextSize(0.04);
+  
   int saveScaleFactors    = 0;
   bool useVariableBinning = false;
+  bool plotVarRatio = false;
 
   // 0 : data
   // 1 : mc
 
   TFile *f[2];
 
-  //2012ABCD
-  f[0] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DoubleMu_Run2012ABCD/testEfficiency.root");
-  f[1] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DYJetsToLL_Summer12_DR53X-PU_S10_minBiasXsec69400_corr_observed_Run2012ABCD_BSrw/testEfficiency.root");
+  //2012 rereco
+  f[0] = TFile::Open("../lxbatch_scripts/Efficiency_DoubleMu_22JanReReco_2012/testEfficiency.root");
+  f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2012/testEfficiency.root");
+  //2011 rereco
+  //f[0] = TFile::Open("../lxbatch_scripts/Efficiency_DoubleMu_2011/testEfficiency.root");
+  //f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2011/testEfficiency.root");
+
+  //2012ABCD (Moriond)
+  //f[0] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DoubleMu_Run2012ABCD/testEfficiency.root");
+  //f[1] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DYJetsToLL_Summer12_DR53X-PU_S10_minBiasXsec69400_corr_observed_Run2012ABCD_BSrw/testEfficiency.root");
   //f[0] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DoubleMu_Run2012D/testEfficiency.root");
   //f[1] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DYJetsToLL_Summer12_DR53X-PU_S10_minBiasXsec69400_corr_observed_Run2012D/testEfficiency.root");
-    
-  std::string text = "#splitline{CMS preliminary}{#sqrt{s} = 8 TeV L = "+lumi+" fb^{-1}}";
 
-  TLatex *latex = new TLatex(0.55,0.85,text.c_str());
+  std::string text = "CMS preliminary #sqrt{s} = "+sqrts+" TeV L = "+lumi+" fb^{-1}";
+
+  TLatex *latex = new TLatex(0.15,0.96,text.c_str());
   latex->SetNDC();
-  latex->SetTextFont(42);
-  latex->SetTextSize(0.04);
   
   TLatex *latex2 = new TLatex(0.15,0.85,"Z#rightarrow#mu#mu");
   latex2->SetNDC();
-  latex2->SetTextFont(42);
-  latex2->SetTextSize(0.06);
 
 
   // legend
@@ -97,39 +104,39 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   std::string evtType[2] = {"data","mc"};
   
   for (int i = 0; i < 2; i++){
+
     if (plotVariables){
       sumpt2_sig[i] = (TH1F*)f[i]->Get("sumpt2_sig");
       sumpt2_bkg[i] = (TH1F*)f[i]->Get("sumpt2_bkg");
-      ptbal_sig[i] = (TH1F*)f[i]->Get("ptbal_sig");
-      ptbal_bkg[i] = (TH1F*)f[i]->Get("ptbal_bkg");
+      ptbal_sig[i]  = (TH1F*)f[i]->Get("ptbal_sig");
+      ptbal_bkg[i]  = (TH1F*)f[i]->Get("ptbal_bkg");
       ptasym_sig[i] = (TH1F*)f[i]->Get("ptasym_sig");
       ptasym_bkg[i] = (TH1F*)f[i]->Get("ptasym_bkg");
       
       sumpt2_sig[i]->Sumw2();
       sumpt2_bkg[i]->Sumw2();
-      ptbal_sig[i]->Sumw2();
-      ptbal_bkg[i]->Sumw2();
+      ptbal_sig[i] ->Sumw2();
+      ptbal_bkg[i] ->Sumw2();
       ptasym_sig[i]->Sumw2();
       ptasym_bkg[i]->Sumw2();
 
     }
 
-
-    BDToutput_sig[i] = (TH1F*) f[i]->Get("BDToutput_sig");
-    BDToutput_bkg[i] = (TH1F*) f[i]->Get("BDToutput_bkg");
+    BDToutput_sig[i]    = (TH1F*) f[i]->Get("BDToutput_sig");
+    BDToutput_bkg[i]    = (TH1F*) f[i]->Get("BDToutput_bkg");
     evtBDToutput[i]     = (TH1F*) f[i]->Get("perEventBDToutput");
     evtBDToutput_sig[i] = (TH1F*) f[i]->Get("perEventBDToutput_sig");
     evtBDToutput_bkg[i] = (TH1F*) f[i]->Get("perEventBDToutput_bkg");
 
-    BDToutput_sig[i]->Sumw2();
-    BDToutput_bkg[i]->Sumw2();
-    evtBDToutput[i]->Sumw2();
+    BDToutput_sig[i]   ->Sumw2();
+    BDToutput_bkg[i]   ->Sumw2();
+    evtBDToutput[i]    ->Sumw2();
     evtBDToutput_sig[i]->Sumw2();
     evtBDToutput_bkg[i]->Sumw2();
     
-    BDToutput_sig[i]->Rebin(10);
-    BDToutput_bkg[i]->Rebin(10);
-    evtBDToutput[i]->Rebin(10);
+    BDToutput_sig[i]   ->Rebin(10);
+    BDToutput_bkg[i]   ->Rebin(10);
+    evtBDToutput[i]    ->Rebin(10);
     evtBDToutput_sig[i]->Rebin(10);
     evtBDToutput_bkg[i]->Rebin(10);
 
@@ -137,9 +144,9 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     NvtxBaseline[i] = (TH1F*) f[i]->Get("NvtGood_RANK");
     NvtxBDT[i]      = (TH1F*) f[i]->Get("NvtGood_BDT");
 
-    PtAll[i]      = (TH1F*) f[i]->Get("PtAll");
-    PtBaseline[i] = (TH1F*) f[i]->Get("PtGood_RANK");
-    PtBDT[i]      = (TH1F*) f[i]->Get("PtGood_BDT");
+    PtAll[i]        = (TH1F*) f[i]->Get("PtAll");
+    PtBaseline[i]   = (TH1F*) f[i]->Get("PtGood_RANK");
+    PtBDT[i]        = (TH1F*) f[i]->Get("PtGood_BDT");
 
     NvtxAll[i]     -> Sumw2();
     NvtxBaseline[i]-> Sumw2();
@@ -212,7 +219,7 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
 
   int nMBMax = 40;
   
-  TLegend legend1(0.68, 0.18, 0.92, 0.38);
+  TLegend legend1(0.65, 0.15, 0.92, 0.35);
   legend1.SetFillColor(kWhite);
   legend1.SetBorderSize(1);
   //legend1.AddEntry(effVsNvtx_Baseline[0],legtitle1.c_str(),"LP");
@@ -221,7 +228,7 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   legend1.AddEntry(effVsNvtx_BDT[1],legtitle2bdt.c_str(),"LP");
 
   //*** EFF vs NVTX
-  TCanvas c1;
+  TCanvas c1("c1","c1",500,500);
   c1.SetGridx();
   c1.SetGridy();
   TH2F cc("cc","",nMBMax+1,0,nMBMax+1,1000,0.,1.1);
@@ -237,12 +244,12 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   latex->Draw("same");
 
   //*** EFF vs BOSON PT  
-  TCanvas c2;
+  TCanvas c2("c2","c2",500,500);
   c2.SetGridx();
   c2.SetGridy();
-  TH2F dd("dd","",250,0,250,1000,0.0,1.1);
+  TH2F dd("dd","",250,0,250,500,0.0,1.1);
   dd.SetStats(0); 
-  dd.GetXaxis()->SetTitle("p_{T}(Z) (GeV/c)"); 
+  dd.GetXaxis()->SetTitle("p_{T}(Z) (GeV)"); 
   dd.GetYaxis()->SetTitle("fraction of events");
   dd.Draw();
   for (int i = 0; i< 2; i++){
@@ -250,8 +257,8 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     effVsPt_BDT[i]->Draw("e1,same");
   }
   legend1.Draw("same");
-  latex->DrawLatex(0.18,0.22,text.c_str());
-      
+  latex->Draw("same");
+	
   float ptlow = 0.;
   float pthigh = 250.;
 
@@ -292,9 +299,8 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   ratioEffVsPt_BDT->GetYaxis()->SetRangeUser(0.7,1.3);
   ratioEffVsPt_BDT->Draw("e1");
   //ratioEffVsPt_Baseline->Draw("e1same");
+  latex->Draw("same");
   latex2->Draw("same");
-  latex->SetTextSize(0.06);
-  latex->DrawLatex(0.67,0.82,text.c_str()); 
   //-- save also in TGraphErrors format
   TGraphErrors *gratioEffVsPt_BDT = new TGraphErrors();
   for (int ibin = 0; ibin < ratioEffVsPt_BDT->GetNbinsX();  ibin++){
@@ -337,9 +343,8 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   ratioEffVsNvtx_BDT->Draw("e1");
   //ratioEffVsNvtx_Baseline->Draw("e1");
   latex2->Draw("same");
-  latex->SetTextSize(0.06);
-  latex->DrawLatex(0.67,0.82,text.c_str());
-
+  latex->Draw("same");
+  
   TLegend legend5(0.15, 0.2, 0.45, 0.4);
   legend5.SetFillColor(kWhite);
   legend5.SetBorderSize(1);
@@ -361,7 +366,7 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   cout << "DATA < N_vtx > = " << NvtxAll[0]->GetMean() << endl;
   cout << "MC   < N_vtx > = " << NvtxAll[1]->GetMean() << endl;
   cout << "NVTX Kolmogorov : p = " << p << endl;
-  TLegend leg (0.6, 0.6,0.89,0.75);
+  TLegend leg (0.6, 0.6,0.89,0.89);
   leg.SetFillColor(0);
   leg.SetBorderSize(0);
   leg.AddEntry(NvtxAll[1],"MC Z#rightarrow#mu#mu","F");
@@ -386,7 +391,7 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   TH1F *ratioBDToutput_sig = MakeRatio(BDToutput_sig[0], BDToutput_sig[1], "ratioBDToutput_sig");
   TH1F *ratioBDToutput_bkg = MakeRatio(BDToutput_bkg[0], BDToutput_bkg[1], "ratioBDToutput_bkg");
   
-  TLegend legVtxMva (0.6, 0.6,0.89,0.75);
+  TLegend legVtxMva (0.6, 0.7,0.89,0.92);
   legVtxMva.SetFillColor(0);
   legVtxMva.SetBorderSize(0);
   legVtxMva.AddEntry(evtBDToutput_sig[1],"right vertex MC","F");
@@ -394,8 +399,9 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   legVtxMva.AddEntry(evtBDToutput_sig[0],"right vertex DATA","LP");
   legVtxMva.AddEntry(evtBDToutput_bkg[0],"wrong vertex DATA","LP");
 
-  TCanvas cVertexMva("cVertexMva","cVertexMva",500,600);
-  cVertexMva.Divide(1,2);
+  TCanvas cVertexMva("cVertexMva","cVertexMva",500,500);
+  if (plotVarRatio)
+    cVertexMva.Divide(1,2);
   cVertexMva.cd(1);
   BDToutput_bkg[1] -> GetXaxis() -> SetTitle("MVA_{vtx}");
   BDToutput_bkg[1] -> DrawNormalized("histo");
@@ -404,13 +410,14 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   BDToutput_sig[0] -> DrawNormalized("esame");
   legVtxMva.Draw("same");
   latex->Draw("same");
-  cVertexMva.cd(2);
-  cVertexMva.cd(2)->SetGridy();
-  ratioBDToutput_sig -> GetYaxis()->SetTitle("data/MC");
-  ratioBDToutput_sig -> GetYaxis()->SetRangeUser(0.,2.0);
-  ratioBDToutput_sig ->Draw();
-  ratioBDToutput_bkg ->Draw("same");
-
+  if (plotVarRatio){
+    cVertexMva.cd(2);
+    cVertexMva.cd(2)->SetGridy();
+    ratioBDToutput_sig -> GetYaxis()->SetTitle("data/MC");
+    ratioBDToutput_sig -> GetYaxis()->SetRangeUser(0.,2.0);
+    ratioBDToutput_sig ->Draw();
+    ratioBDToutput_bkg ->Draw("same");
+  }
  
   // per event mva
   evtBDToutput_sig[0] -> SetMarkerStyle(20);
@@ -427,30 +434,25 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   TH1F *ratioevtBDToutput_sig = MakeRatio(evtBDToutput_sig[0], evtBDToutput_sig[1], "ratioevtBDToutput_sig");
   TH1F *ratioevtBDToutput_bkg = MakeRatio(evtBDToutput_bkg[0], evtBDToutput_bkg[1], "ratioevtBDToutput_bkg");
 
-  TLegend legEvtMva (0.6, 0.6,0.89,0.75);
-  legEvtMva.SetFillColor(0);
-  legEvtMva.SetBorderSize(0);
-  legEvtMva.AddEntry(evtBDToutput_sig[1],"right vertex MC","F");
-  legEvtMva.AddEntry(evtBDToutput_bkg[1],"wrong vertex MC","F");
-  legEvtMva.AddEntry(evtBDToutput_sig[0],"right vertex DATA","LP");
-  legEvtMva.AddEntry(evtBDToutput_bkg[0],"wrong vertex DATA","LP");
-
-  TCanvas cEventMva("cEventMva","cEventMva",500,600);
-  cEventMva.Divide(1,2);
+  TCanvas cEventMva("cEventMva","cEventMva",500,500);
+  if (plotVarRatio)
+    cEventMva.Divide(1,2);
   cEventMva.cd(1);
   evtBDToutput_sig[1] -> GetXaxis() -> SetTitle("MVA_{event}");
   evtBDToutput_sig[1] -> DrawNormalized("histo");
   evtBDToutput_bkg[1] -> DrawNormalized("histo same");
   evtBDToutput_sig[0] -> DrawNormalized("esame");
   evtBDToutput_bkg[0] -> DrawNormalized("esame");
-  legEvtMva.Draw("same");
+  legVtxMva.Draw("same");
   latex->Draw("same");
-  cEventMva.cd(2);
-  cEventMva.cd(2)->SetGridy();
-  ratioevtBDToutput_sig -> GetYaxis()->SetTitle("data/MC");
-  ratioevtBDToutput_sig -> GetYaxis()->SetRangeUser(0.,2.0);
-  ratioevtBDToutput_sig ->Draw();
-  ratioevtBDToutput_bkg ->Draw("same");
+  if (plotVarRatio){
+    cEventMva.cd(2);
+    cEventMva.cd(2)->SetGridy();
+    ratioevtBDToutput_sig -> GetYaxis()->SetTitle("data/MC");
+    ratioevtBDToutput_sig -> GetYaxis()->SetRangeUser(0.,2.0);
+    ratioevtBDToutput_sig ->Draw();
+    ratioevtBDToutput_bkg ->Draw("same");
+  }
 
   // vertex probability
   TH1F *hVertexProbability[2];
@@ -491,6 +493,7 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
  
   //input vtx id variables
   if (plotVariables){ 
+
     sumpt2_sig[0] -> SetMarkerStyle(20);
     sumpt2_sig[0] -> SetMarkerSize(0.8);
     sumpt2_sig[0] -> SetMarkerColor(kGreen+2);
@@ -501,27 +504,30 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     sumpt2_sig[1] -> SetFillStyle(3002);
     sumpt2_bkg[1] -> SetFillColor(kRed+1);
     sumpt2_bkg[1] -> SetFillStyle(3005);
-
+      
     TH1F *ratiosumpt2_sig = MakeRatio(sumpt2_sig[0], sumpt2_sig[1], "ratiosumpt2_sig");
     TH1F *ratiosumpt2_bkg = MakeRatio(sumpt2_bkg[0], sumpt2_bkg[1], "ratiosumpt2_bkg");
- 
-    TCanvas cSumpt2("cSumpt2","cSumpt2",500,600);
-    cSumpt2.Divide(1,2);
+    
+    TCanvas cSumpt2("cSumpt2","cSumpt2",500,500);
+    if (plotVarRatio)
+      cSumpt2.Divide(1,2);
     cSumpt2.cd(1);
     sumpt2_bkg[1] -> GetXaxis() -> SetTitle("log(sumpt2)");
+    sumpt2_bkg[1] ->SetMaximum(sumpt2_bkg[1]->GetMaximum()*2 );
     sumpt2_bkg[1] -> DrawNormalized("histo");
     sumpt2_sig[1] -> DrawNormalized("histo same");
     sumpt2_bkg[0] -> DrawNormalized("esame");
     sumpt2_sig[0] -> DrawNormalized("esame");
     legVtxMva.Draw("same");
     latex->Draw("same");
-    cSumpt2.cd(2);
-    cSumpt2.cd(2)->SetGridy();
-    ratiosumpt2_sig -> GetYaxis()->SetTitle("data/MC");
-    ratiosumpt2_sig -> GetYaxis()->SetRangeUser(0.,2.0);
-    ratiosumpt2_sig ->Draw();
-    ratiosumpt2_bkg ->Draw("same");
-
+    if (plotVarRatio){
+      cSumpt2.cd(2);
+      cSumpt2.cd(2)->SetGridy();
+      ratiosumpt2_sig -> GetYaxis()->SetTitle("data/MC");
+      ratiosumpt2_sig -> GetYaxis()->SetRangeUser(0.,2.0);
+      ratiosumpt2_sig ->Draw();
+      ratiosumpt2_bkg ->Draw("same");
+    }
     
 
     ptbal_sig[0] -> SetMarkerStyle(20);
@@ -535,25 +541,30 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     ptbal_bkg[1] -> SetFillColor(kRed+1);
     ptbal_bkg[1] -> SetFillStyle(3005);
 
+
     TH1F *ratioptbal_sig = MakeRatio(ptbal_sig[0], ptbal_sig[1], "ratioptbal_sig");
     TH1F *ratioptbal_bkg = MakeRatio(ptbal_bkg[0], ptbal_bkg[1], "ratioptbal_bkg");
 
-    TCanvas cPtbal("cPtbal","cPtbal",500,600);
-    cPtbal.Divide(1,2);
+    TCanvas cPtbal("cPtbal","cPtbal",500,500);
+    if (plotVarRatio)
+      cPtbal.Divide(1,2);
     cPtbal.cd(1);
     ptbal_bkg[1] -> GetXaxis() -> SetTitle("ptbal");
+    ptbal_bkg[1] -> GetXaxis() -> SetRangeUser(-20,100);
     ptbal_bkg[1] -> DrawNormalized("histo");
     ptbal_sig[1] -> DrawNormalized("histo same");
     ptbal_bkg[0] -> DrawNormalized("esame");
     ptbal_sig[0] -> DrawNormalized("esame");
     legVtxMva.Draw("same");
     latex->Draw("same");
-    cPtbal.cd(2);
-    cPtbal.cd(2)->SetGridy();
-    ratioptbal_sig -> GetYaxis()->SetTitle("data/MC");
-    ratioptbal_sig -> GetYaxis()->SetRangeUser(0.,2.0);
-    ratioptbal_sig ->Draw();
-    ratioptbal_bkg ->Draw("same");
+    if (plotVarRatio){
+      cPtbal.cd(2);
+      cPtbal.cd(2)->SetGridy();
+      ratioptbal_sig -> GetYaxis()->SetTitle("data/MC");
+      ratioptbal_sig -> GetYaxis()->SetRangeUser(0.,2.0);
+      ratioptbal_sig ->Draw();
+      ratioptbal_bkg ->Draw("same");
+    }
 
     ptasym_sig[0] -> SetMarkerStyle(20);
     ptasym_sig[0] -> SetMarkerSize(0.8);
@@ -569,8 +580,9 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     TH1F *ratioptasym_sig = MakeRatio(ptasym_sig[0], ptasym_sig[1], "ratioptasym_sig");
     TH1F *ratioptasym_bkg = MakeRatio(ptasym_bkg[0], ptasym_bkg[1], "ratioptasym_bkg");
 
-    TCanvas cPtasym("cPtasym","cPtasym",500,600);
-    cPtasym.Divide(1,2);
+    TCanvas cPtasym("cPtasym","cPtasym",500,500);
+    if (plotVarRatio)
+      cPtasym.Divide(1,2);
     cPtasym.cd(1);
     ptasym_bkg[1] -> GetXaxis() -> SetTitle("ptasym");
     ptasym_bkg[1] -> DrawNormalized("histo");
@@ -579,26 +591,27 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
     ptasym_sig[0] -> DrawNormalized("esame");
     legVtxMva.Draw("same");
     latex->Draw("same");
-    cPtasym.cd(2);
-    cPtasym.cd(2)->SetGridy();
-    ratioptasym_sig -> GetYaxis()->SetTitle("data/MC");
-    ratioptasym_sig -> GetYaxis()->SetRangeUser(0.,2.0);
-    ratioptasym_sig ->Draw();
-    ratioptasym_bkg ->Draw("same");
+    if (plotVarRatio){
+      cPtasym.cd(2);
+      cPtasym.cd(2)->SetGridy();
+      ratioptasym_sig -> GetYaxis()->SetTitle("data/MC");
+      ratioptasym_sig -> GetYaxis()->SetRangeUser(0.,2.0);
+      ratioptasym_sig ->Draw();
+      ratioptasym_bkg ->Draw("same");
+    }
   }
 
 
   if (saveScaleFactors){
-    TFile *fileout = new TFile("vtxIdScaleFactorFromZmumu_PUweights_minBiasXsec69400_observed_Run2012ABCD_BSreweight.root","recreate");
-    ratioEffVsPt_BDT->SetTitle("hscaleFactor");
+    TFile *fileout = new TFile("vtxIdScaleFactorFromZmumu_2012_legacypaper_v0.root","recreate");
     ratioEffVsPt_BDT->Write("hscaleFactor");
     gratioEffVsPt_BDT->SetTitle("scaleFactor");
     gratioEffVsPt_BDT->Write("scaleFactor");
     fileout->Close();
     
-    TFile *fileout = new TFile("vtxProbRatioFromZmumu_Run2012ABCD.root","recreate");
-    hRatioVertexProbability->SetTitle("hRatioVertexProbability");
-    hRatioVertexProbability->Write();
+    //TFile *fileout = new TFile("vtxProbRatioFromZmumu_Run2012ABCD.root","recreate");
+    //hRatioVertexProbability->SetTitle("hRatioVertexProbability");
+    //hRatioVertexProbability->Write();
   }
 
 
@@ -614,6 +627,13 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   cVertexMva.SaveAs("vertex_mva_zmumu.png");
   cEventMva.SaveAs("event_mva_zmumu.png");
   cProbability.SaveAs("vertex_probability_zmumu.png");
+  if (plotVariables){ 
+    cSumpt2.SaveAs("sumpt2_zmumu.png");
+    cPtbal.SaveAs("ptbal_zmumu.png");
+    cPtasym.SaveAs("ptasym_zmumu.png");
+ }
+
+
 
   cNvtx.SaveAs("nvtx_zmumu.pdf");
   c1.SaveAs("efficiency_vs_nvtx_zmumu.pdf");
@@ -623,7 +643,11 @@ void PlotEfficiency(string outdir, string lumi, bool plotVariables=false)
   cVertexMva.SaveAs("vertex_mva_zmumu.pdf");
   cEventMva.SaveAs("event_mva_zmumu.pdf");
   cProbability.SaveAs("vertex_probability_zmumu.pdf");
-
+  if (plotVariables){ 
+    cSumpt2.SaveAs("sumpt2_zmumu.pdf");
+    cPtbal.SaveAs("ptbal_zmumu.pdf");
+    cPtasym.SaveAs("ptasym_zmumu.pdf");
+ }
   gApplication->Run();
 
 
