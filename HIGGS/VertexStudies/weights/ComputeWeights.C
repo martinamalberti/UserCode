@@ -3,33 +3,26 @@
 void ComputeWeights(){
   
   //*** mc pileup file
-  TFile *fmc = TFile::Open("./PU_DYJetsToLL_Summer12_DR53X-PU_S10.root"); 
+  //  TFile *fmc = TFile::Open("./PU_DYJetsToLL_Summer12_DR53X-PU_S10.root"); // 2012
+  //TFile *fmc = TFile::Open("./PU_DYJetsToLL_Summer12_DR53X-PU_RD1.root"); // 2012 RD ReReco
+  TFile *fmc = TFile::Open("./PU_DYJetsToLL_Summer11dr53X-PU_S13.root"); // 2011 53X ReReco
   TH1F *hmc  = (TH1F*)fmc->Get("hmc");
   TH1F *hmctrue  = (TH1F*)fmc->Get("hmctrue");
-  //cout << hmc->GetNbinsX()<< endl;
-
-  //*** mc ntuple 
-  //   TChain* chain = new TChain("MiBiCommonNTTwoPhotons/SimpleNtuple");
-  //   chain->Add("root://eoscms//eos/cms/store/cmst3/user/malberti/HIGGS/VERTEX/2012/MC/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM/MiBiCommonNT_*.root");
-
-//   TH1F *hmc = new TH1F("hmc","hmc",60,0,60);
-//   cout << hmc->GetNbinsX()<< endl;
-//   chain->Draw("mc_PUit_NumInteractions>>hmc");
-
-//   TH1F *hmctrue = new TH1F("hmctrue","hmctrue",60,0,60);
-//   cout << hmctrue->GetNbinsX()<< endl;
-//   chain->Draw("mc_PUit_TrueNumInteractions>>hmctrue");
+  cout << "Number of bins in MC histogram: " << hmc->GetNbinsX()<< endl;
 
   //*** data file -- observed PU
-  TFile *fda   = TFile::Open("../pileup/pileup_2012D_minBiasXsec69400_corr_observed.root");
+  //  TFile *fda   = TFile::Open("../pileup/pileup_2012D_minBiasXsec69400_corr_observed.root");
+  //TFile *fda   = TFile::Open("../pileup/pileup_2012ABCD_22Jan2013ReReco_corr_observed.root");
+  TFile *fda   = TFile::Open("../pileup/pileup_2011_minBiasXsec68000_pixelcorr_observed.root");
   TH1F  *hdata = (TH1F*)fda->Get("pileup");
-  cout << hdata->GetNbinsX()<< endl;
+  cout << "Number of bins in DATA histogram: " << hdata->GetNbinsX()<< endl;
   
   //*** compute weights
   TH1F *hweights = (TH1F*)hdata->Clone("hweights");
   hweights->Divide(hdata,hmc,1./hdata->GetSumOfWeights(),1./hmc->GetSumOfWeights());
 
-  TFile *fout = new TFile("./PUweights_DYJetsToLL_Summer12_DR53X-PU_S10_minBiasXsec69400_corr_observed_Run2012D.root","create");
+  //  TFile *fout = new TFile("./PUweights_DYJetsToLL_Summer12_DR53X-PU_RD1_minBiasXsec69400_corr_observed_2012ABCD.root","create");
+  TFile *fout = new TFile("./PUweights_DYJetsToLL_Summer11dr53X-PU_S13_minBiasXsec68000_pixelcorr_observed_2011.root","create");
   hweights->Write("hweights");
   hdata->Write("hdata");
   hmc->Write("hmc");
