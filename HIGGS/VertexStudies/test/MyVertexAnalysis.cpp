@@ -293,14 +293,14 @@ int main(int argc, char** argv)
 
 
   TH1F hz("hz"," primary vertex z",10000,-50,50);
-
+ 
   TH1F pt2h("pt2h","pt2 H",500,0,500);
   TH1F pt2bkg("pt2bkg","pt2 bkg",500,0,500);
 
 
   //TH2F * hAcceptedLumis = new TH2F("hAcceptedLumis","hAcceptedLumis",20000, 160000, 180000, 10000, 0, 10000);
 
-  VertexIdEfficiencyReweighting *myVtxIdEffRw = new VertexIdEfficiencyReweighting("/afs/cern.ch/user/m/malberti/public/scaleFactors/vtxIdScaleFactorFromZmumu_PUweights_minBiasXsec69400_observed_Run2012ABCD_BSreweight.root","hscaleFactor") ;
+  VertexIdEfficiencyReweighting *myVtxIdEffRw = new VertexIdEfficiencyReweighting("/afs/cern.ch/work/m/malberti/HGG/LegacyPaper/CMSSW_5_3_10/src/HIGGS/VertexStudies/macros/vtxIdScaleFactorFromZmumu_2012_legacypaper_v0.root","hscaleFactor") ;
 
   float ww = 1;
   float r9cut = 0.93;
@@ -612,7 +612,7 @@ int main(int argc, char** argv)
       std::vector<int> presel;
       for(int i=0; i<nvtx_; i++) {
 	presel.push_back(i); 
-	hz.Fill(PV_z->at(i));
+	hz.Fill(PV_z->at(i),ww);
       }
       vAna.preselection(presel);
       
@@ -682,10 +682,12 @@ int main(int argc, char** argv)
 	//cout << diff << "  "  << bsweight << endl;
 	ww*=bsweight;
       }
+  
 
       ChosenVertex_BDT.Fill(ranktmva[0],ww);
       ChosenVertexDz_BDT.Fill(TrueVertex_Z - PV_z->at(ranktmva[0]),ww);
       ChosenVertexDz_BDT_vs_pt.Fill(sum2pho.pt(),TrueVertex_Z - PV_z->at(ranktmva[0]),ww);
+
       float vtxmva, evtmva;
       // fill per vertex mva 
       for (int iv=0;iv<ranktmva.size();iv++) {
@@ -816,7 +818,7 @@ int main(int argc, char** argv)
   ChosenVertexDz_BDT.Write();
   ChosenVertexDz_BDT_vs_pt.Write();
   hz.Write();
-
+  
   sumpt2_sig.Write();
   ptbal_sig.Write();
   ptasym_sig.Write();
