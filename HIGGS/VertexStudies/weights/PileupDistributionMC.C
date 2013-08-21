@@ -2,7 +2,9 @@
 
   //*** mc ntuple 
   TChain* chain = new TChain("MiBiCommonNTTwoPhotons/SimpleNtuple");
-  chain->Add("root://eoscms//eos/cms/store/cmst3/user/malberti/HIGGS/VERTEX/2012/MC/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM/MiBiCommonNT_*.root");
+  //chain->Add("root://eoscms//eos/cms/store/cmst3/user/malberti/HIGGS/VERTEX/2012/MC/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM/MiBiCommonNT_*.root");
+  //chain->Add("root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/vertextrees_martina/MC/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_Summer12_DR53X-PU_RD1_START53_V7N-v1_AODSIM/MiBiCommonNT_*.root");
+  chain->Add("root://eoscms//eos/cms/store/group/phys_higgs/cmshgg/vertextrees_martina/MC/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11dr53X-PU_S13_START53_LV3-v1_AODSIM/MiBiCommonNT_*.root");
 
  
   cout << "Observed PU ... "<< endl;
@@ -16,7 +18,8 @@
   cout << hmctrue->GetNbinsX()<< endl;
   chain->Draw("mc_PUit_TrueNumInteractions>>hmctrue");
 
-  TFile *fout = new TFile("./PU_DYJetsToLL_Summer12_DR53X-PU_S10.root","create");
+  //TFile *fout = new TFile("./PU_DYJetsToLL_Summer12_DR53X-PU_RD1.root","create");
+  TFile *fout = new TFile("./PU_DYJetsToLL_Summer11dr53X-PU_S13.root","create");
   hmc->Write("hmc");
   hmctrue->Write("hmctrue");
   fout->Close();
