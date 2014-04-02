@@ -1,4 +1,3 @@
-
 ///==== include ====
 
 #include "treeReader.h"
@@ -9,6 +8,7 @@
 #include "ntpleUtils.h"
 #include "readJSONFile.h"
 
+#include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -193,6 +193,9 @@ int main(int argc, char** argv)
   HggVertexAnalyzer::bookPerEventVariables( *tmvaPerEvtReader_, 3, true );
   tmvaPerEvtReader_->BookMVA( tmvaEventMethod.c_str(), tmvaEventWeights.c_str() );
 
+  // vertex probability formula
+  TF1 *fprob = new TF1("fprob","1.-0.49*(x+1)",-2,2);
+
   
   //****** BOOK OUTPUT HISTOGRAMS ******
 
@@ -258,6 +261,10 @@ int main(int argc, char** argv)
   TH1F perEventBDToutput("perEventBDToutput","BDT output",500,-1,1);
   TH1F perEventBDToutput_sig("perEventBDToutput_sig","BDT output - signal vertices",500,-1,1);
   TH1F perEventBDToutput_bkg("perEventBDToutput_bkg","BDT output - background",500,-1,1);
+
+  TH1F vtxProbability("vtxProbability","vertex probability",250,0,1);
+  TH1F vtxProbability_sig("vtxProbability_sig","vertex probability- signal vertices",250,0,1);
+  TH1F vtxProbability_bkg("vtxProbability_bkg","vertex probability - background",250,0,1);
 
   TH1F *perVertexBDToutput_vtxbin[3];
   TH1F *perVertexBDToutput_sig_vtxbin[3];
@@ -688,7 +695,7 @@ int main(int argc, char** argv)
       ChosenVertexDz_BDT.Fill(TrueVertex_Z - PV_z->at(ranktmva[0]),ww);
       ChosenVertexDz_BDT_vs_pt.Fill(sum2pho.pt(),TrueVertex_Z - PV_z->at(ranktmva[0]),ww);
 
-      float vtxmva, evtmva;
+      float vtxmva, evtmva, vtxprob;
       // fill per vertex mva 
       for (int iv=0;iv<ranktmva.size();iv++) {
 	float vtxmva = vAna.mva(ranktmva[iv]);
@@ -709,17 +716,22 @@ int main(int argc, char** argv)
       }
       // fill per event mva
       evtmva = vAna.perEventMva(*tmvaPerEvtReader_, tmvaEventMethod.c_str(),ranktmva);
+      //      vtxprob = vAna.vertexProbability(evtmva);
+      vtxprob = fprob->Eval(evtmva);
       float wid = 1;
       if (applyVertexIdScaleFactor) wid = myVtxIdEffRw->GetWeight(sum2pho.pt());
       perEventBDToutput.Fill( evtmva, ww*wid );
+      vtxProbability.Fill( vtxprob, ww*wid );
       perEventBDToutput_vtxbin[vtxbin]->Fill( evtmva, ww*wid );
       if (fabs( TrueVertex_Z - PV_z->at(ranktmva[0]) ) < mindz) {
       	perEventBDToutput_sig.Fill( evtmva, ww*wid );
   	perEventBDToutput_sig_vtxbin[vtxbin]->Fill( evtmva, ww*wid );
+	vtxProbability_sig.Fill( vtxprob, ww*wid );
       }
       else{
 	perEventBDToutput_bkg.Fill( evtmva, ww*wid );
 	perEventBDToutput_bkg_vtxbin[vtxbin]->Fill( evtmva, ww*wid );
+	vtxProbability_bkg.Fill( vtxprob, ww*wid );
       }
 
 
@@ -805,6 +817,9 @@ int main(int argc, char** argv)
   perEventBDToutput.Write();
   perEventBDToutput_sig.Write();
   perEventBDToutput_bkg.Write();
+  vtxProbability.Write();
+  vtxProbability_sig.Write();
+  vtxProbability_bkg.Write();
   for (int vtxbin=0; vtxbin<3; vtxbin++){
     perEventBDToutput_vtxbin[vtxbin]-> Write();
     perEventBDToutput_sig_vtxbin[vtxbin]-> Write();
