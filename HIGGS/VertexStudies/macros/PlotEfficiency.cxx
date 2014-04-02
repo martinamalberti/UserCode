@@ -28,7 +28,9 @@ void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables
 
   //2012 rereco
   f[0] = TFile::Open("../lxbatch_scripts/Efficiency_DoubleMu_22JanReReco_2012/testEfficiency.root");
-  f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2012/testEfficiency.root");
+  f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2012_pixelcorr/testEfficiency.root");
+  //f[0] = TFile::Open("../lxbatch_scripts/Efficiency_DoubleMu_2012C/testEfficiency.root");
+  //f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2012C/testEfficiency.root");
   //2011 rereco
   //f[0] = TFile::Open("../lxbatch_scripts/Efficiency_DoubleMu_2011/testEfficiency.root");
   //f[1] = TFile::Open("../lxbatch_scripts/Efficiency_DYJetsToLL_2011/testEfficiency.root");
@@ -40,6 +42,7 @@ void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables
   //f[1] = TFile::Open("/afs/cern.ch/work/m/malberti/private/Eff_DYJetsToLL_Summer12_DR53X-PU_S10_minBiasXsec69400_corr_observed_Run2012D/testEfficiency.root");
 
   std::string text = "CMS preliminary #sqrt{s} = "+sqrts+" TeV L = "+lumi+" fb^{-1}";
+  //std::string text = "CMS preliminary #sqrt{s} = "+sqrts+" TeV  2012C";
 
   TLatex *latex = new TLatex(0.15,0.96,text.c_str());
   latex->SetNDC();
@@ -603,7 +606,8 @@ void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables
 
 
   if (saveScaleFactors){
-    TFile *fileout = new TFile("vtxIdScaleFactorFromZmumu_2012_legacypaper_v0.root","recreate");
+    //TFile *fileout = new TFile("vtxIdScaleFactorFromZmumu_2012_legacypaper_v0.root","recreate");
+    TFile *fileout = new TFile("sf_pixelcorr.root","recreate");
     ratioEffVsPt_BDT->Write("hscaleFactor");
     gratioEffVsPt_BDT->SetTitle("scaleFactor");
     gratioEffVsPt_BDT->Write("scaleFactor");
@@ -631,7 +635,7 @@ void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables
     cSumpt2.SaveAs("sumpt2_zmumu.png");
     cPtbal.SaveAs("ptbal_zmumu.png");
     cPtasym.SaveAs("ptasym_zmumu.png");
- }
+  }
 
 
 
@@ -647,7 +651,36 @@ void PlotEfficiency(string outdir, string sqrts, string lumi, bool plotVariables
     cSumpt2.SaveAs("sumpt2_zmumu.pdf");
     cPtbal.SaveAs("ptbal_zmumu.pdf");
     cPtasym.SaveAs("ptasym_zmumu.pdf");
- }
+  }
+
+  cNvtx.SaveAs("nvtx_zmumu.C");
+  c1.SaveAs("efficiency_vs_nvtx_zmumu.C");
+  c2.SaveAs("efficiency_vs_pt_zmumu.C");
+  cRatioNvtx.SaveAs("efficiencyRatio_vs_nvtx_zmumu.C");
+  cRatioPt.SaveAs("efficiencyRatio_vs_pt_zmumu.C");
+  cVertexMva.SaveAs("vertex_mva_zmumu.C");
+  cEventMva.SaveAs("event_mva_zmumu.C");
+  cProbability.SaveAs("vertex_probability_zmumu.C");
+  if (plotVariables){ 
+    cSumpt2.SaveAs("sumpt2_zmumu.C");
+    cPtbal.SaveAs("ptbal_zmumu.C");
+    cPtasym.SaveAs("ptasym_zmumu.C");
+  }
+
+  cNvtx.SaveAs("nvtx_zmumu.root");
+  c1.SaveAs("efficiency_vs_nvtx_zmumu.root");
+  c2.SaveAs("efficiency_vs_pt_zmumu.root");
+  cRatioNvtx.SaveAs("efficiencyRatio_vs_nvtx_zmumu.root");
+  cRatioPt.SaveAs("efficiencyRatio_vs_pt_zmumu.root");
+  cVertexMva.SaveAs("vertex_mva_zmumu.root");
+  cEventMva.SaveAs("event_mva_zmumu.root");
+  cProbability.SaveAs("vertex_probability_zmumu.root");
+  if (plotVariables){ 
+    cSumpt2.SaveAs("sumpt2_zmumu.root");
+    cPtbal.SaveAs("ptbal_zmumu.root");
+    cPtasym.SaveAs("ptasym_zmumu.root");
+  }
+
   gApplication->Run();
 
 
